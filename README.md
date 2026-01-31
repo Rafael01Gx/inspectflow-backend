@@ -390,8 +390,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 Desenvolvido com ❤️ por [RafaelMoraes]
 
 ### Contato
-- 💼 LinkedIn: [Seu LinkedIn](https://www.linkedin.com/in/rafael-moraes-dev)
-- 🐙 GitHub: [@Rafael01Gx](https://github.com/Rafael01Gx)
+- 💼 LinkedIn: [LinkedIn](https://www.linkedin.com/in/rafael-moraes-dev)
+- 🐙 GitHub: [Rafael01Gx](https://github.com/Rafael01Gx)
 
 ---
 

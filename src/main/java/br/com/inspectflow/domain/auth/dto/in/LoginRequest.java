@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.user.dto.in;
+package br.com.inspectflow.domain.auth.dto.in;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

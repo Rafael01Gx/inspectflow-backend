@@ -1,4 +1,4 @@
-package br.com.inspectflow.infra.security;
+package br.com.inspectflow.domain.auth.models;
 
 import br.com.inspectflow.domain.user.models.User;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class SecurityUser implements UserDetails {
@@ -19,9 +19,14 @@ public class SecurityUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+ role))
-                .collect(Collectors.toSet());
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+    }
+
+    public UUID getId() {
+        return user.getId();
+    }
+    public String getName() {
+        return user.getName();
     }
 
     @Override

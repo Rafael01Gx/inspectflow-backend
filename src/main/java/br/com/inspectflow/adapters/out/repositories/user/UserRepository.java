@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.user.repositories;
+package br.com.inspectflow.adapters.out.repositories.user;
 
 import br.com.inspectflow.domain.user.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

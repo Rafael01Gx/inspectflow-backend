@@ -2,6 +2,7 @@ package br.com.inspectflow.application.services.auth;
 
 import br.com.inspectflow.adapters.in.mappers.UserMapper;
 import br.com.inspectflow.adapters.out.repositories.UserRepository;
+import br.com.inspectflow.application.handlers.EmailAlreadyRegisteredException;
 import br.com.inspectflow.domain.auth.dto.in.RegisterRequest;
 import br.com.inspectflow.domain.auth.dto.out.AuthResult;
 import br.com.inspectflow.domain.auth.models.SecurityUser;
@@ -43,7 +44,7 @@ public class AuthService {
     public AuthResult register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new EmailAlreadyRegisteredException();
         }
 
         var user = new User().builder()

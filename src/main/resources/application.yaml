@@ -27,9 +27,10 @@ spring:
 app:
   security:
     jwt:
-      secret: ${JWT_SECRET:hde478sf00fr210h}
       expiration: ${JWT_EXPIRATION:86400000}  # 24 hours
       cookie-name: ${JWT_COOKIE_NAME:auth-token}
       cookie-secure: ${COOKIE_SECURE:false}
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+      private-key-path: "classpath:keys/private.pem"
+      public-key-path: "classpath:keys/public.pem"

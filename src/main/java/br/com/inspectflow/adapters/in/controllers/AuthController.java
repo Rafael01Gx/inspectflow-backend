@@ -1,4 +1,4 @@
-package br.com.inspectflow.adapters.in.controllers.auth;
+package br.com.inspectflow.adapters.in.controllers;
 
 import br.com.inspectflow.application.services.auth.AuthService;
 import br.com.inspectflow.application.services.auth.CookieService;

@@ -1,13 +1,13 @@
 package br.com.inspectflow.application.services.auth;
 
 import br.com.inspectflow.adapters.in.mappers.UserMapper;
-import br.com.inspectflow.adapters.out.repositories.UserRepository;
+import br.com.inspectflow.adapters.in.web.auth.dto.AuthResponse;
+import br.com.inspectflow.adapters.in.web.auth.dto.RegisterRequest;
+import br.com.inspectflow.adapters.in.web.auth.security.SecurityUser;
 import br.com.inspectflow.application.handlers.EmailAlreadyRegisteredException;
-import br.com.inspectflow.domain.auth.dto.in.RegisterRequest;
-import br.com.inspectflow.domain.auth.dto.out.AuthResult;
-import br.com.inspectflow.domain.auth.models.SecurityUser;
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.domain.user.models.User;
+import br.com.inspectflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +28,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public AuthResult authenticate(String email, String password) {
+    public AuthResponse authenticate(String email, String password) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
@@ -38,10 +38,10 @@ public class AuthService {
 
         String token = tokenService.generateToken(authentication);
 
-        return new AuthResult(token, UserMapper.toUserResponse(principal));
+        return new AuthResponse(token, UserMapper.toUserResponse(principal));
     }
 
-    public AuthResult register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
             throw new EmailAlreadyRegisteredException();
@@ -65,6 +65,6 @@ public class AuthService {
 
         String token = tokenService.generateToken(authentication);
 
-        return new AuthResult(token,  UserMapper.toUserResponse(user));
+        return new AuthResponse(token,  UserMapper.toUserResponse(user));
     }
 }

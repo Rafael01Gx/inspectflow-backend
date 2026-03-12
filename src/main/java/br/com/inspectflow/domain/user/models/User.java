@@ -12,9 +12,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 public class User {
 
@@ -31,11 +31,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "role")
+    @Column(name = "role",nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean active;
+    private boolean active;
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)

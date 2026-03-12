@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.auth.models;
+package br.com.inspectflow.adapters.in.web.auth.security;
 
 import br.com.inspectflow.domain.user.models.User;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +56,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getActive();
+        return user.isActive();
     }
 }

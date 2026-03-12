@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.user.dto.out;
+package br.com.inspectflow.adapters.in.web.user.dto;
 
 import br.com.inspectflow.domain.user.enums.Role;
 

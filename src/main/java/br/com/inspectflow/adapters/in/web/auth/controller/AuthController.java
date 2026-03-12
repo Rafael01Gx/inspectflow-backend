@@ -1,11 +1,11 @@
-package br.com.inspectflow.adapters.in.controllers;
+package br.com.inspectflow.adapters.in.web.auth.controller;
 
+import br.com.inspectflow.adapters.in.web.auth.dto.AuthResponse;
+import br.com.inspectflow.adapters.in.web.auth.dto.LoginRequest;
+import br.com.inspectflow.adapters.in.web.auth.dto.RegisterRequest;
+import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
 import br.com.inspectflow.application.services.auth.AuthService;
 import br.com.inspectflow.application.services.auth.CookieService;
-import br.com.inspectflow.domain.auth.dto.in.LoginRequest;
-import br.com.inspectflow.domain.auth.dto.in.RegisterRequest;
-import br.com.inspectflow.domain.auth.dto.out.AuthResult;
-import br.com.inspectflow.domain.user.dto.out.UserResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
 
-        AuthResult authResult = authService.authenticate(
+        AuthResponse authResult = authService.authenticate(
                 request.email(),
                 request.password()
         );
@@ -45,7 +45,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
 
-        AuthResult result = authService.register(request);
+        AuthResponse result = authService.register(request);
 
         Cookie cookie = cookieService.createSessionCookie(result.token());
 

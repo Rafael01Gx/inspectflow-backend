@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.InspectionItem.models;
 
-import br.com.inspectflow.domain.InspectionItem.enums.CategoryItem;
+import br.com.inspectflow.domain.InspectionItem.enums.InspectionCategoryItem;
 import br.com.inspectflow.domain.InspectionItem.enums.InspectionStatus;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -32,7 +32,7 @@ public class InspectionItem {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CategoryItem category;
+    private InspectionCategoryItem category;
 
     @Column(nullable = false)
     private boolean impedimentItem;

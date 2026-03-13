@@ -1,0 +1,7 @@
+package br.com.inspectflow.domain.stock.repository;
+
+import br.com.inspectflow.domain.stock.models.StockItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StockItemRepository extends JpaRepository<StockItem, Long> {
+}

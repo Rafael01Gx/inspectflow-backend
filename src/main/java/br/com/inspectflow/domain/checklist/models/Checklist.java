@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.checklist.models;
 
-import br.com.inspectflow.domain.InspectionItem.models.InspectionItem;
+import br.com.inspectflow.domain.Inspection_item.models.InspectionItem;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;

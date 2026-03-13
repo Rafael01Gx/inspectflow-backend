@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.equipment_component.models;
 
-import br.com.inspectflow.domain.equipamento.models.Equipment;
+import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment_component.enums.EquipmentComponentCategory;
 import jakarta.persistence.*;
 import lombok.*;

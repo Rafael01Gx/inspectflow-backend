@@ -38,6 +38,7 @@ public class AuthService {
 
         String token = tokenService.generateToken(authentication);
 
+        assert principal != null;
         return new AuthResponse(token, UserMapper.toUserResponse(principal));
     }
 
@@ -47,7 +48,8 @@ public class AuthService {
             throw new EmailAlreadyRegisteredException();
         }
 
-        var user = new User().builder()
+        new User();
+        var user = User.builder()
                 .name(request.name())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
@@ -65,6 +67,6 @@ public class AuthService {
 
         String token = tokenService.generateToken(authentication);
 
-        return new AuthResponse(token,  UserMapper.toUserResponse(user));
+        return new AuthResponse(token, UserMapper.toUserResponse(user));
     }
 }

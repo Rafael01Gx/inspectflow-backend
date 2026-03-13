@@ -11,9 +11,16 @@ import java.util.Objects;
 @Component
 public class UserMapper {
     public static UserResponse toUserResponse(SecurityUser user){
+
+        Role role = user.getAuthorities().stream()
+                .map(auth -> Objects.requireNonNull(auth.getAuthority()).replace("ROLE_", ""))
+                .map(Role::valueOf)
+                .findFirst()
+                .orElse(Role.USUARIO);
+
         return new UserResponse(user.getId(),
                 user.getUsername(),
-                Role.valueOf(Objects.requireNonNull(user.getAuthorities().iterator().next().getAuthority()).substring(5)),
+                role,
                 user.isEnabled());
     }
 

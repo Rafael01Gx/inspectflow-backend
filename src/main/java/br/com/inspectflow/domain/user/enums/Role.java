@@ -8,7 +8,8 @@ public enum Role {
     USUARIO,
     ADMINISTRADOR,
     ELETRICISTA,
-    MECANICO;
+    MECANICO,
+    INSPETOR;
 
     public static Role valueOf(GrantedAuthority grantedAuthority) {
         return Role.valueOf(Objects.requireNonNull(grantedAuthority.getAuthority()).substring(5));

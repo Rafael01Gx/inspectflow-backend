@@ -6,7 +6,7 @@ import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateUserService {
+public class UserService {
 
     public UserResponse create(LoginRequest loginRequest) {
         return null;

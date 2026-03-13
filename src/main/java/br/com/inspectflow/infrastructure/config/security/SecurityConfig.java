@@ -21,14 +21,16 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(request -> {
+                    request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
+                    request.anyRequest().authenticated();
+                        }
                 )
 
                 .oauth2ResourceServer(oauth ->

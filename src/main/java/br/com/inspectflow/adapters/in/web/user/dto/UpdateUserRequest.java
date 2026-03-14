@@ -1,0 +1,14 @@
+package br.com.inspectflow.adapters.in.web.user.dto;
+
+import br.com.inspectflow.domain.user.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record UpdateUserRequest(
+        @NotBlank String name,
+        @NotBlank @Email String email,
+        @NotNull Role role,
+        @NotNull Boolean active
+) {
+}

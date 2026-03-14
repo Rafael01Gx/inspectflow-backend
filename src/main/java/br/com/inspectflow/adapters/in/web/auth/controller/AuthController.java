@@ -4,8 +4,9 @@ import br.com.inspectflow.adapters.in.web.auth.dto.AuthResponse;
 import br.com.inspectflow.adapters.in.web.auth.dto.LoginRequest;
 import br.com.inspectflow.adapters.in.web.auth.dto.RegisterRequest;
 import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
-import br.com.inspectflow.application.services.auth.AuthService;
-import br.com.inspectflow.application.services.auth.CookieService;
+import br.com.inspectflow.application.auth.CookieService;
+import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
+import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth/")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final AuthenticateUseCase authenticate;
+    private final RegisterUseCase register;
     private final CookieService cookieService;
 
     @PostMapping("/login")
@@ -29,7 +31,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
 
-        AuthResponse authResult = authService.authenticate(
+        AuthResponse authResult = authenticate.execute(
                 request.email(),
                 request.password()
         );
@@ -45,7 +47,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
 
-        AuthResponse result = authService.register(request);
+        AuthResponse result = register.execute(request);
 
         Cookie cookie = cookieService.createSessionCookie(result.token());
 

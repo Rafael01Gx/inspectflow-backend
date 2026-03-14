@@ -1,10 +1,12 @@
 package br.com.inspectflow.adapters.in.web.stock.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/stocks")
+@RequiredArgsConstructor
 public class StockController {
 
     @GetMapping

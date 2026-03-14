@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.equipment_component.repository;
+package br.com.inspectflow.domain.equipment_component.repositories;
 
 import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
 import org.springframework.data.jpa.repository.JpaRepository;

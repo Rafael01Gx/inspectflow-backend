@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.checklist.repository;
+package br.com.inspectflow.domain.checklist.repositories;
 
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import org.springframework.data.jpa.repository.JpaRepository;

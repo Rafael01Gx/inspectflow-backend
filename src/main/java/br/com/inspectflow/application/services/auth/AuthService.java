@@ -7,7 +7,7 @@ import br.com.inspectflow.adapters.in.web.auth.security.SecurityUser;
 import br.com.inspectflow.application.handlers.EmailAlreadyRegisteredException;
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.domain.user.models.User;
-import br.com.inspectflow.domain.user.repository.UserRepository;
+import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

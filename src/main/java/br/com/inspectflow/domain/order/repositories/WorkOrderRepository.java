@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.order.repository;
+package br.com.inspectflow.domain.order.repositories;
 
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,11 +1,11 @@
-package br.com.inspectflow.adapters.in.web.equipment.controller;
+package br.com.inspectflow.adapters.in.web.Inspection.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/equipments")
-public class EquipmentController {
+@RequestMapping("/inspections")
+public class InspectionController {
 
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -13,22 +13,19 @@ public class EquipmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById() {
+    public  ResponseEntity<?> getById(@PathVariable String id) {
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<?> addEquipment() {
+    public ResponseEntity<?> addInspection() {
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEquipment() {
+    public ResponseEntity<?> updateInspection() {
         return ResponseEntity.ok().build();
     }
-    
-    @PostMapping("/{id}")
-    public ResponseEntity<?> disableEquipment() {
-        return ResponseEntity.ok().build();
-    }
+
+
 }

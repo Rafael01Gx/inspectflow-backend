@@ -1,10 +1,15 @@
 package br.com.inspectflow.domain.Inspection_item.repositories;
 
 import br.com.inspectflow.domain.Inspection_item.models.InspectionItem;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.inspectflow.domain.common.pagination.PageRequest;
+import br.com.inspectflow.domain.common.pagination.PagedResponse;
+import java.util.Optional;
+import java.util.List;
 
-public interface InspectionItemRepository extends JpaRepository<InspectionItem, Long>
-{
-
-
+public interface InspectionItemRepository {
+    InspectionItem save(InspectionItem inspectionItem);
+    Optional<InspectionItem> findById(Long id);
+    List<InspectionItem> findAll();
+    PagedResponse<InspectionItem> findAll(PageRequest pageRequest);
+    void deleteById(Long id);
 }

@@ -1,10 +1,12 @@
 package br.com.inspectflow.application.common.validators;
 
 import br.com.inspectflow.application.http.handlers.IdMismatchException;
+import org.springframework.stereotype.Component;
 
-public class IdConsistencyValidator {
+@Component
+public class IdConsistencyValidator<T>{
 
-    public static void validate(Long pathId, Long bodyId) {
+    public void execute(T pathId, T bodyId) {
         if (pathId == null || !pathId.equals(bodyId)) {
             throw new IdMismatchException();
         }

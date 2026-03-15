@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.stock.models;
 
+import br.com.inspectflow.application.stock.dto.UpdateStockItemRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
@@ -8,8 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "stock_items")
@@ -43,7 +43,7 @@ public class StockItem {
     @ManyToMany(mappedBy = "partsInStock")
     @JsonBackReference
     @Setter
-    private List<Equipment> linkedEquipmentIds = new ArrayList<>();
+    private Set<Equipment> linkedEquipments = new HashSet<>();
 
     @Column(nullable = false)
     private String location;
@@ -53,15 +53,38 @@ public class StockItem {
 
     public void addEquipament(Equipment equipment) {
         if (equipment == null) return;
-        linkedEquipmentIds.add(equipment);
+        if (!this.linkedEquipments.contains(equipment)) { // Verifica antes de adicionar
+            this.linkedEquipments.add(equipment);
+        }
     }
 
     public void removeEquipament(Equipment equipment) {
-        linkedEquipmentIds.remove(equipment);
+        linkedEquipments.remove(equipment);
     }
 
     public void deductStock(Integer quantity){
         this.quantity -= quantity;
+    }
+
+    public void update(UpdateStockItemRequest dto){
+        Optional.of(dto.name()).ifPresent(name -> this.name = name);
+        Optional.of(dto.type()).ifPresent(type -> this.type = type);
+        Optional.of(dto.partCategory()).ifPresent(partCategory -> this.partCategory = partCategory);
+        Optional.of(dto.quantity()).ifPresent(quantity -> this.quantity = quantity);
+        Optional.of(dto.supplierCode()).ifPresent(supplierCode -> this.supplierCode = supplierCode);
+        Optional.of(dto.location()).ifPresent(location -> this.location = location);
+        Optional.of(dto.minQuantity()).ifPresent(minQuantity -> this.minQuantity = minQuantity);
+    }
+
+    public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){
+        this.update(dto);
+        this.linkedEquipments.addAll(linkedEquipment);
+    }
+
+    public void addEquipments(List<Equipment> equipmentsToAdd) {
+        if (equipmentsToAdd != null) {
+            this.linkedEquipments.addAll(equipmentsToAdd);
+        }
     }
 
 }

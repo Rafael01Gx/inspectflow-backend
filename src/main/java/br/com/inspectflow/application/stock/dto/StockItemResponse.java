@@ -1,6 +1,5 @@
 package br.com.inspectflow.application.stock.dto;
 
-import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import lombok.Builder;
 
@@ -29,8 +28,8 @@ public record StockItemResponse(
                 .partCategory(stockItem.getPartCategory().name())
                 .quantity(stockItem.getQuantity())
                 .supplierCode(stockItem.getSupplierCode())
-                .linkedEquipmentIds(stockItem.getLinkedEquipmentIds() != null ?
-                        stockItem.getLinkedEquipmentIds().stream()
+                .linkedEquipmentIds(stockItem.getLinkedEquipments() != null ?
+                        stockItem.getLinkedEquipments().stream()
                                 .map(equipment -> equipment.getId().toString())
                                 .toList() : Collections.emptyList())
                 .location(stockItem.getLocation())

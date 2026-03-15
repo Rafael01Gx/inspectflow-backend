@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DeductStockItemService implements DeductStockItemUseCase {
     private final StockItemRepository repository;
+    private final IdConsistencyValidator<Long> idValidator;
 
     @Override
     @Transactional
     public void execute(Long id, DeductStockRequest dto) {
-        IdConsistencyValidator.validate(id, dto.id());
+        idValidator.execute(id, dto.id());
 
         StockItem item = repository.findById(id).orElseThrow(()-> new StockItemNotFoundException("Item não encontrado"));
 

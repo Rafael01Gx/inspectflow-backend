@@ -54,6 +54,6 @@ public class StockController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItem(){
-        return ResponseEntity.ok("Este item não pode deletado!");
+        return ResponseEntity.ok("Um item não pode deletado!");
     }
 }

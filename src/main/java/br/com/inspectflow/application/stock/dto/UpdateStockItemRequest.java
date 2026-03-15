@@ -1,33 +1,41 @@
 package br.com.inspectflow.application.stock.dto;
 
+import br.com.inspectflow.domain.stock.enums.PartCategory;
+import br.com.inspectflow.domain.stock.enums.StockType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record UpdateStockItemRequest(
 
-        @Size(min = 3, max = 50)
+        @NotNull(message = "O ID é obrigatório")
+        Long id,
+
+        @Size(min = 3, max = 50, message = "O nome deve ter entre 3 e 50 caracteres")
         String name,
 
-        @Size(min = 3, max = 50)
-        String type,
+        @NotNull(message = "O tipo é obrigatório")
+        StockType type,
 
-        String partCategory,
+        @NotNull(message = "A categoria é obrigatória")
+        PartCategory partCategory,
 
-        @PositiveOrZero
+        @PositiveOrZero(message = "A quantidade deve ser um número positivo ou zero")
         Integer quantity,
 
         String supplierCode,
 
-        List<String> linkedEquipmentIds,
+        List<UUID> linkedEquipmentIds,
 
-        @Size(min = 3, max = 50)
+        @Size(min = 3, max = 50, message = "A localização deve ter entre 3 e 50 caracteres")
         String location,
 
-        @PositiveOrZero
+        @PositiveOrZero(message = "O valor deve ser um número positivo ou zero")
         Integer minQuantity
 ) {
 }

@@ -3,3 +3,9 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+app:
+  security:
+    jwt:
+      cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:false}
+      cookie-same-site: ${JWT_COOKIE_SAME_SITE:None}

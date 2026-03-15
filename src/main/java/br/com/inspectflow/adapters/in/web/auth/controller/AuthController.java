@@ -1,5 +1,7 @@
 package br.com.inspectflow.adapters.in.web.auth.controller;
 
+import br.com.inspectflow.adapters.in.mappers.UserMapper;
+import br.com.inspectflow.adapters.in.web.auth.security.SecurityUser;
 import br.com.inspectflow.application.auth.dto.AuthResponse;
 import br.com.inspectflow.application.auth.dto.LoginRequest;
 import br.com.inspectflow.application.auth.dto.RegisterRequest;
@@ -13,10 +15,8 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth/")
@@ -63,5 +63,10 @@ public class AuthController {
         response.addCookie(cookie);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal SecurityUser user) {
+        return ResponseEntity.ok(UserMapper.toUserResponse(user));
     }
 }

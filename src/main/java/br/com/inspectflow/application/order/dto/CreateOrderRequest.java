@@ -1,37 +1,43 @@
-package br.com.inspectflow.adapters.in.web.order.dto;
+package br.com.inspectflow.application.order.dto;
 
 import br.com.inspectflow.domain.order.models.MaintenancePart;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
-public record UpdateOrderRequest(
+public record CreateOrderRequest(
+
         @NotBlank
-        String id,
-
         @Size(min = 5, max = 100)
         String title,
 
+        @NotBlank
         @Size(min = 5, max = 100)
         String description,
 
-        String orderStatus,
+        @NotBlank
+        @Size(min = 3, max = 100)
+        String equipmentName,
 
+        @NotBlank
+        String equipmentId,
+
+        @NotBlank
         String orderPriority,
 
+        @NotBlank
         @Future
         LocalDate dueDate,
 
-        Set<MaintenancePart> parts,
+        @NotBlank
+        @Size(min = 3, max = 100)
+        String assignee,
 
-        @Size(min = 10)
-        String performedWork,
+        List<MaintenancePart> parts
 
-        @FutureOrPresent
-        LocalDate completionDate
+
 ) {
 }

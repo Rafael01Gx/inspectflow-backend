@@ -1,11 +1,15 @@
-package br.com.inspectflow.adapters.in.web.stock.dto;
+package br.com.inspectflow.application.stock.dto;
 
+import br.com.inspectflow.domain.stock.enums.PartCategory;
+import br.com.inspectflow.domain.stock.enums.StockType;
+import br.com.inspectflow.domain.stock.models.StockItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record CreateStockItemRequest(
@@ -15,18 +19,18 @@ public record CreateStockItemRequest(
 
         @NotBlank
         @Size(min = 3, max = 50)
-        String type,
+        StockType type,
 
         @NotBlank
-        String partCategory,
+        PartCategory partCategory,
 
         @PositiveOrZero
         Integer quantity,
 
-        @NotBlank
+        @Size(min = 3, max = 50)
         String supplierCode,
 
-        List<String> linkedEquipmentIds,
+        List<UUID> linkedEquipmentIds,
 
         @NotBlank
         @Size(min = 3, max = 50)
@@ -35,4 +39,5 @@ public record CreateStockItemRequest(
         @PositiveOrZero
         Integer minQuantity
 ) {
+
 }

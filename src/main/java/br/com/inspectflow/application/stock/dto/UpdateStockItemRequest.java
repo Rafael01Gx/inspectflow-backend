@@ -1,4 +1,4 @@
-package br.com.inspectflow.adapters.in.web.stock.dto;
+package br.com.inspectflow.application.stock.dto;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;

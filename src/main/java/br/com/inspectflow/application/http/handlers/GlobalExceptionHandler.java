@@ -86,6 +86,31 @@ public class GlobalExceptionHandler extends RuntimeException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
+    @ExceptionHandler(EquipmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEquipmentNotFound(
+            EquipmentNotFoundException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DuplicationFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicationFound(
+            DuplicationFoundException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+
     private Map<String, String> errorMap( BindException ex){
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
@@ -94,5 +119,7 @@ public class GlobalExceptionHandler extends RuntimeException {
 
         return errors;
     };
+
+
 
 }

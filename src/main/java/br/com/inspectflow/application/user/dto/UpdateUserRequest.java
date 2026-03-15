@@ -1,14 +1,14 @@
-package br.com.inspectflow.adapters.in.web.user.dto;
+package br.com.inspectflow.application.user.dto;
 
 import br.com.inspectflow.domain.user.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record CreateUserRequest(
+public record UpdateUserRequest(
         @NotBlank String name,
         @NotBlank @Email String email,
-        @NotBlank String password,
-        @NotNull Role role
+        @NotNull Role role,
+        @NotNull Boolean active
 ) {
 }

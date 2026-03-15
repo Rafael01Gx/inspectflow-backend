@@ -60,4 +60,5 @@ public class StockItem {
         linkedEquipmentIds.remove(equipment);
     }
 
+
 }

@@ -1,9 +1,9 @@
 package br.com.inspectflow.application.auth.services;
 
-import br.com.inspectflow.adapters.in.web.auth.dto.AuthResponse;
-import br.com.inspectflow.adapters.in.web.auth.dto.RegisterRequest;
-import br.com.inspectflow.adapters.in.web.user.dto.CreateUserRequest;
-import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
+import br.com.inspectflow.application.auth.dto.AuthResponse;
+import br.com.inspectflow.application.auth.dto.RegisterRequest;
+import br.com.inspectflow.application.user.dto.CreateUserRequest;
+import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.auth.TokenService;
 import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
 import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;

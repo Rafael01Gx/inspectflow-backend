@@ -45,4 +45,9 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public boolean existsByNameOrSupplierCode(String name, String supplierCode) {
+        return repository.existsByNameOrSupplierCode(name, supplierCode);
+    }
 }

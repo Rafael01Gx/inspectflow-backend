@@ -1,4 +1,4 @@
-package br.com.inspectflow.adapters.in.web.order.dto;
+package br.com.inspectflow.application.order.dto;
 
 import br.com.inspectflow.domain.order.models.MaintenancePart;
 

@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.user.services;
 
-import br.com.inspectflow.adapters.in.web.user.dto.UpdateUserRequest;
-import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
+import br.com.inspectflow.application.user.dto.UpdateUserRequest;
+import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.ports.in.UpdateUserUseCase;
 import br.com.inspectflow.domain.user.models.User;

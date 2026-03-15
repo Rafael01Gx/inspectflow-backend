@@ -1,7 +1,7 @@
 package br.com.inspectflow.adapters.in.mappers;
 
 import br.com.inspectflow.adapters.in.web.auth.security.SecurityUser;
-import br.com.inspectflow.adapters.in.web.user.dto.UserResponse;
+import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.domain.user.models.User;
 import org.springframework.stereotype.Component;

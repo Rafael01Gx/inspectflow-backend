@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.stock.dto;
 
+import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import lombok.Builder;
 
@@ -36,4 +37,5 @@ public record StockItemResponse(
                 .minQuantity(stockItem.getMinQuantity())
                 .build();
     }
+
 }

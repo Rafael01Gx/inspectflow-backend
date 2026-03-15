@@ -15,4 +15,6 @@ public interface StockItemRepository {
     void deleteById(Long id);
 
     boolean existsByNameOrSupplierCode(String name,String supplierCode);
+
+    boolean existsById(Long id);
 }

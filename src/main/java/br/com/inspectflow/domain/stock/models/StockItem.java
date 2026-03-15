@@ -60,5 +60,8 @@ public class StockItem {
         linkedEquipmentIds.remove(equipment);
     }
 
+    public void deductStock(Integer quantity){
+        this.quantity -= quantity;
+    }
 
 }

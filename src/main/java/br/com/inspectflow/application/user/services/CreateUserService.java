@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.user.services;
 
+import br.com.inspectflow.application.http.handlers.DuplicationFoundException;
 import br.com.inspectflow.application.user.dto.CreateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.user.ports.in.CreateUserUseCase;
@@ -21,7 +22,7 @@ public class CreateUserService implements CreateUserUseCase {
     @Transactional
     public UserResponse execute(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Email já cadastrado!");
+            throw new DuplicationFoundException("Email já cadastrado!");
         }
 
         User user = User.builder()

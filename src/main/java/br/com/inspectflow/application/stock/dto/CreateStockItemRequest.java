@@ -4,6 +4,7 @@ import br.com.inspectflow.domain.stock.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -13,30 +14,29 @@ import java.util.UUID;
 
 @Builder
 public record CreateStockItemRequest(
-        @NotBlank
+        @NotBlank(message = "O nome é obrigatório")
         @Size(min = 3, max = 50)
         String name,
 
-        @NotBlank
-        @Size(min = 3, max = 50)
+        @NotNull(message = "O tipo é obrigatório")
         StockType type,
 
-        @NotBlank
+        @NotNull(message = "A categoria é obrigatória")
         PartCategory partCategory,
 
-        @PositiveOrZero
+        @PositiveOrZero(message = "A quantidade deve ser um número positivo ou zero")
         Integer quantity,
 
-        @Size(min = 3, max = 50)
+        @Size(min = 3, max = 50, message = "O código do fornecedor deve ter entre 3 e 50 caracteres")
         String supplierCode,
 
         List<UUID> linkedEquipmentIds,
 
-        @NotBlank
-        @Size(min = 3, max = 50)
+        @NotBlank(message = "A localização é obrigatória")
+        @Size(min = 3, max = 50, message = "A localização deve ter entre 3 e 50 caracteres")
         String location,
 
-        @PositiveOrZero
+        @PositiveOrZero(message = "O valor deve ser um número positivo ou zero")
         Integer minQuantity
 ) {
 

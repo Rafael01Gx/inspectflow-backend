@@ -1,13 +1,11 @@
 package br.com.inspectflow.domain.stock.repositories;
 
-import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import br.com.inspectflow.domain.stock.models.StockItem;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 public interface StockItemRepository {
     StockItem save(StockItem stockItem);
@@ -16,5 +14,5 @@ public interface StockItemRepository {
     PagedResponse<StockItem> findAll(PageRequest pageRequest);
     void deleteById(Long id);
 
-    boolean existsByNameOrSupplierCode(@NotBlank @Size(min = 3, max = 50) String name, @Size(min = 3, max = 50) String supplierCode);
+    boolean existsByNameOrSupplierCode(String name,String supplierCode);
 }

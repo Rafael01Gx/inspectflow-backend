@@ -14,8 +14,13 @@ public class ValidateStockItemDoesNotExist implements StockItemValidator<CreateS
 
     @Override
     public void execute(CreateStockItemRequest dto) {
-        if(repository.existsByNameOrSupplierCode(dto.name(), dto.supplierCode())){
-            throw new DuplicationFoundException("Já existe um item com esse nome ou código de fornecedor");
+        if(dto.supplierCode().isEmpty()) {
+            if(repository.existsByName(dto.name())){
+                throw new DuplicationFoundException("Já existe um item com esse nome");
+            }
+        } else if (repository.existsBySupplierCode(dto.supplierCode())) {
+            throw new DuplicationFoundException("Já existe um item com esse código");
         }
+
     }
 }

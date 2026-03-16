@@ -1,4 +1,4 @@
-CREATE TABLE equipments (
+CREATE TABLE IF NOT EXISTS equipments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     code VARCHAR(255) NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE equipments (
     next_inspection TIMESTAMP WITHOUT TIME ZONE
 );
 
-CREATE TABLE equipment_stock_items (
+CREATE TABLE  IF NOT EXISTS equipment_stock_items (
     equipment_id UUID NOT NULL,
     stock_item_id BIGINT NOT NULL,
     CONSTRAINT pk_equipment_stock_items PRIMARY KEY (equipment_id, stock_item_id),

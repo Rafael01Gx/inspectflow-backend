@@ -47,8 +47,13 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
-    public boolean existsByNameOrSupplierCode(String name, String supplierCode) {
-        return repository.existsByNameOrSupplierCode(name, supplierCode);
+    public boolean existsByName(String name) {
+        return repository.existsByName(name);
+    }
+
+    @Override
+    public boolean existsBySupplierCode(String code) {
+        return repository.existsBySupplierCode(code);
     }
 
     @Override

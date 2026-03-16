@@ -2,7 +2,6 @@ package br.com.inspectflow.application.stock.dto;
 
 import br.com.inspectflow.domain.stock.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
-import br.com.inspectflow.domain.stock.models.StockItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -27,13 +26,13 @@ public record CreateStockItemRequest(
         @PositiveOrZero(message = "A quantidade deve ser um número positivo ou zero")
         Integer quantity,
 
-        @Size(min = 3, max = 50, message = "O código do fornecedor deve ter entre 3 e 50 caracteres")
+        @Size(max = 50, message = "O código do fornecedor deve ter entre 3 e 50 caracteres")
         String supplierCode,
 
         List<UUID> linkedEquipmentIds,
 
         @NotBlank(message = "A localização é obrigatória")
-        @Size(min = 3, max = 50, message = "A localização deve ter entre 3 e 50 caracteres")
+        @Size(max = 50, message = "A localização deve ter entre 3 e 50 caracteres")
         String location,
 
         @PositiveOrZero(message = "O valor deve ser um número positivo ou zero")

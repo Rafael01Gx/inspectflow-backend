@@ -13,4 +13,15 @@ public enum StockType {
     StockType(String value) {
         this.value = value;
     }
+
+    public static StockType fromValue(String value) {
+        for (StockType type : StockType.values()) {
+            if (type.getValue().equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Tipo de estoque inválido: " + value);
+
+            }
+
 }

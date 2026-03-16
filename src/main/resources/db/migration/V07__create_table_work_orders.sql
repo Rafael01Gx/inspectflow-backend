@@ -1,4 +1,4 @@
-CREATE TABLE work_orders (
+CREATE TABLE IF NOT EXISTS work_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE work_orders (
     CONSTRAINT fk_work_order_equipment FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE SET NULL
 );
 
-CREATE TABLE work_order_parts (
+CREATE TABLE  IF NOT EXISTS work_order_parts (
     work_order_id UUID NOT NULL,
     stock_id BIGINT,
     name VARCHAR(255) NOT NULL,

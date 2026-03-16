@@ -4,5 +4,7 @@ import br.com.inspectflow.domain.stock.models.StockItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostgresStockItemRepository extends JpaRepository<StockItem, Long> {
-    boolean existsByNameOrSupplierCode(String name, String supplierCode);
+    boolean existsBySupplierCode(String supplierCode);
+
+    boolean existsByName(String name);
 }

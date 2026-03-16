@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum PartCategory {
-    MECHANICAL("MECANICO"),
-    ELECTRIC("ELETRICO"),
-    PNEUMATIC("PNEUMATICO"),
-    HYDRAULIC("HIDRAULICO"),
-    OTHER("OUTROS");
+    MECHANICAL("MECANICA"),
+    ELECTRIC("ELETRICA"),
+    PNEUMATIC("PNEUMATICA"),
+    HYDRAULIC("HIDRAULICA"),
+    OTHER("OUTRAS");
 
     private final String value;
 

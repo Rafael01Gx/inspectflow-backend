@@ -47,6 +47,7 @@ public class Equipment {
 
     @Builder.Default
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<EquipmentComponent> components = new HashSet<>();
 
     @Builder.Default
@@ -57,7 +58,7 @@ public class Equipment {
             inverseJoinColumns = @JoinColumn(name = "stock_item_id")
     )
     @JsonManagedReference
-    private List<StockItem> partsInStock = new ArrayList<>();
+    private Set<StockItem> partsInStock = new HashSet<>();
 
     public void addComponent(EquipmentComponent component) {
         if (component == null) return;

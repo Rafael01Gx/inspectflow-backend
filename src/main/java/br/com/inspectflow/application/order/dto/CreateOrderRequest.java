@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.order.dto;
 
 import br.com.inspectflow.domain.order.models.MaintenancePart;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record CreateOrderRequest(
 
         @NotBlank

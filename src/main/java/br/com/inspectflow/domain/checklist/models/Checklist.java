@@ -32,9 +32,9 @@ public class Checklist {
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "checklist",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "checklist")
     @JsonManagedReference
-    private Set<InspectionItem> items  = new HashSet<>();
+    private Set<InspectionItem> items = new HashSet<>();
 
     @Column(nullable = false,updatable = false)
     @CreationTimestamp

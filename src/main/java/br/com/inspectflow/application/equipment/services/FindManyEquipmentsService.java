@@ -1,6 +1,5 @@
 package br.com.inspectflow.application.equipment.services;
 
-import br.com.inspectflow.application.equipment.EquipmentService;
 import br.com.inspectflow.application.equipment.ports.in.FindManyEquipmentsUseCase;
 import br.com.inspectflow.application.equipment.validators.AllEquipmentsExistValidator;
 import br.com.inspectflow.domain.equipment.models.Equipment;

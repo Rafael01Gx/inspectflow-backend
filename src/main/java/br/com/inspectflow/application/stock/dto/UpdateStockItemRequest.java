@@ -2,6 +2,7 @@ package br.com.inspectflow.application.stock.dto;
 
 import br.com.inspectflow.domain.stock.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateStockItemRequest(
 
         @NotNull(message = "O ID é obrigatório")

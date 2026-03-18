@@ -46,4 +46,9 @@ public class JpaEquipmentComponentRepositoryAdapter implements EquipmentComponen
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public List<EquipmentComponent> findAllByEquipmentIdIn(List<UUID> equipmentsIds) {
+        return repository.findAllByEquipmentIdIn(equipmentsIds);
+    }
 }

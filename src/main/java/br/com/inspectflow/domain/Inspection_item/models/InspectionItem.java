@@ -3,6 +3,7 @@ package br.com.inspectflow.domain.Inspection_item.models;
 import br.com.inspectflow.domain.Inspection_item.enums.InspectionCategoryItem;
 import br.com.inspectflow.domain.Inspection_item.enums.InspectionStatus;
 import br.com.inspectflow.domain.checklist.models.Checklist;
+import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,8 +13,8 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class InspectionItem {
 
     @Id
@@ -21,17 +22,19 @@ public class InspectionItem {
     private Long id;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String title;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String description;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InspectionStatus status;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @EqualsAndHashCode.Include
     private InspectionCategoryItem category;
 
     @Column(nullable = false)
@@ -41,9 +44,21 @@ public class InspectionItem {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checklist_id", nullable = false)
+    @JoinColumn(name = "equipment_component_id")
+    @JsonBackReference
+    private EquipmentComponent equipmentComponent;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "checklist_id")
     @JsonBackReference
     private Checklist checklist;
 
+    public void setEquipmentComponent(EquipmentComponent equipmentComponent) {
+        this.equipmentComponent = equipmentComponent;
+    }
 
+    public void setChecklist(Checklist checklist) {
+        this.checklist = checklist;
+    }
 }

@@ -13,4 +13,6 @@ public interface EquipmentComponentRepository {
     List<EquipmentComponent> findAll();
     PagedResponse<EquipmentComponent> findAll(PageRequest pageRequest);
     void deleteById(UUID id);
+
+    List<EquipmentComponent> findAllByEquipmentIdIn(List<UUID> equipmentsIds);
 }

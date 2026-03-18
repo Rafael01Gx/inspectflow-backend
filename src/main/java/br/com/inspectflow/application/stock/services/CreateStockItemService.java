@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.stock.services;
 
-import br.com.inspectflow.application.equipment.services.FindManyEquipmentsService;
+import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByCodeService;
+import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByIdByIdService;
 import br.com.inspectflow.application.stock.dto.CreateStockItemRequest;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.application.stock.mappers.StockItemMapper;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class CreateStockItemService implements CreateStockItemsUseCase {
 
     private final StockItemRepository stockItemRepository;
-    private final FindManyEquipmentsService findManyEquipmentsService;
+    private final FindManyEquipmentsByCodeService findManyEquipmentsByCodeService;
     private final ValidateStockItemDoesNotExist validate;
 
     @Override
@@ -30,16 +31,16 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
         validate.execute(dto);
         StockItem stockItem = StockItemMapper.toStockItem(dto);
 
-        if(dto.linkedEquipmentIds() != null){
-            linkEquipmentsTo(stockItem, dto.linkedEquipmentIds());
+        if(dto.linkedEquipments() != null){
+            linkEquipmentsTo(stockItem, dto.linkedEquipments());
         }
         return StockItemResponse.from(stockItemRepository.save(stockItem));
     }
 
 
-    private void linkEquipmentsTo(StockItem stockItem, List<UUID> equipmentIds) {
+    private void linkEquipmentsTo(StockItem stockItem, List<String> equipmentIds) {
         if (equipmentIds == null || equipmentIds.isEmpty()) return;
-        List<Equipment> foundEquipments = findManyEquipmentsService.execute(equipmentIds);
+        List<Equipment> foundEquipments = findManyEquipmentsByCodeService.execute(equipmentIds);
         foundEquipments.forEach(stockItem::addEquipament);
     }
 }

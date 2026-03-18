@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class AllEquipmentsExistValidator implements EquipmentValidator<List<UUID>>{
+public class AllEquipmentIdsExistValidator implements EquipmentValidator<List<UUID>>{
 
     private final EquipmentRepository repository;
 
@@ -30,5 +30,6 @@ public class AllEquipmentsExistValidator implements EquipmentValidator<List<UUID
             throw new EquipmentNotFoundException("Equipamentos não encontrados: " + missingIds);
         }
     }
+
 
 }

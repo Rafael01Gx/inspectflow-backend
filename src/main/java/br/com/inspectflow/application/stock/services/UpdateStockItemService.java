@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.stock.services;
 
 import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
-import br.com.inspectflow.application.equipment.services.FindManyEquipmentsService;
+import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByIdByIdService;
 import br.com.inspectflow.application.http.handlers.StockItemNotFoundException;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.application.stock.dto.UpdateStockItemRequest;
@@ -21,7 +21,7 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
 
     private final StockItemRepository repository;
     private final IdConsistencyValidator<Long> idConsistencyValidator;
-    private final FindManyEquipmentsService findManyEquipmentsService;
+    private final FindManyEquipmentsByIdByIdService findManyEquipmentsByIdService;
 
     @Override
     @Transactional
@@ -32,7 +32,7 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
         item.update(dto);
 
         if(dto.linkedEquipmentIds() != null) {
-            List<Equipment> equipments = findManyEquipmentsService.execute(dto.linkedEquipmentIds());
+            List<Equipment> equipments = findManyEquipmentsByIdService.execute(dto.linkedEquipmentIds());
             item.addEquipments(equipments);
 
         }

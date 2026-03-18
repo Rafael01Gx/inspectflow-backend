@@ -16,4 +16,6 @@ public interface EquipmentRepository {
     Optional<Equipment> findByCode(String code);
 
     List<Equipment> findAllById(List<UUID> uuids);
+
+    List<Equipment> findAllByCodeIn(List<String> code);
 }

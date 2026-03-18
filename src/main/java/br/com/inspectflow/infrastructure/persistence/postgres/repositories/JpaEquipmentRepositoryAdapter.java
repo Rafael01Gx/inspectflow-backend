@@ -57,4 +57,9 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     public List<Equipment> findAllById(List<UUID> uuids) {
         return repository.findAllById(uuids);
     }
+
+    @Override
+    public List<Equipment> findAllByCodeIn(List<String> code) {
+        return repository.findAllByCodeIn(code);
+    }
 }

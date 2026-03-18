@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.equipment.services;
 
-import br.com.inspectflow.application.equipment.ports.in.FindManyEquipmentsUseCase;
-import br.com.inspectflow.application.equipment.validators.AllEquipmentsExistValidator;
+import br.com.inspectflow.application.equipment.ports.in.FindManyEquipmentsByIdUseCase;
+import br.com.inspectflow.application.equipment.validators.AllEquipmentIdsExistValidator;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FindManyEquipmentsService implements FindManyEquipmentsUseCase {
+public class FindManyEquipmentsByIdByIdService implements FindManyEquipmentsByIdUseCase {
     private final EquipmentRepository repository;
-    private final AllEquipmentsExistValidator validator;
+    private final AllEquipmentIdsExistValidator validator;
 
     @Override
     public List<Equipment> execute(List<UUID> ids) {

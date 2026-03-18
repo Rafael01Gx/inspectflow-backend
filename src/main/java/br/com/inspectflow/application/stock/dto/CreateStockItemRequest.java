@@ -2,6 +2,7 @@ package br.com.inspectflow.application.stock.dto;
 
 import br.com.inspectflow.domain.stock.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +32,8 @@ public record CreateStockItemRequest(
         @Size(max = 50, message = "O código do fornecedor deve ter entre 3 e 50 caracteres")
         String supplierCode,
 
-        List<UUID> linkedEquipmentIds,
+        @JsonAlias("linkedEquipmentIds")
+        List<String> linkedEquipments,
 
         @NotBlank(message = "A localização é obrigatória")
         @Size(max = 50, message = "A localização deve ter entre 3 e 50 caracteres")

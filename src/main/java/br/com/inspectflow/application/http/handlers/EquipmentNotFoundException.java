@@ -5,4 +5,8 @@ public class EquipmentNotFoundException extends RuntimeException{
         super(message);
     }
 
+    public EquipmentNotFoundException() {
+        super("Equipamento não encontrado");
+    }
+
 }

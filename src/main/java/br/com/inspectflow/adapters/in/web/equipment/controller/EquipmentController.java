@@ -1,11 +1,9 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
 import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
-import br.com.inspectflow.application.equipment.services.CreateEquipmentService;
-import br.com.inspectflow.application.equipment.services.FindAllEquipmentService;
-import br.com.inspectflow.application.equipment.services.FindByEquipmentCodeService;
-import br.com.inspectflow.application.equipment.services.FindByIdEquipmentService;
-import br.com.inspectflow.application.equipment_component.dto.EquipmentResponse;
+import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
+import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
+import br.com.inspectflow.application.equipment.services.*;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
@@ -26,10 +24,13 @@ public class EquipmentController {
     private final FindAllEquipmentService findAllEquipmentService;
     private final FindByIdEquipmentService findByIdEquipmentService;
     private final FindByEquipmentCodeService findByEquipmentCodeService;
+    private final UpdateEquipmentService updateEquipmentService;
 
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(findAllEquipmentService.execute(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())));
+        return ResponseEntity.ok(
+                findAllEquipmentService.execute(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()))
+        );
     }
 
     @GetMapping("code/{code}")
@@ -47,8 +48,8 @@ public class EquipmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEquipment() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @RequestBody @Valid UpdateEquipmentRequest dto) {
+        return ResponseEntity.ok(updateEquipmentService.execute(id, dto));
     }
     
     @PostMapping("/{id}")

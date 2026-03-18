@@ -29,9 +29,6 @@ public class InspectionItem {
     @EqualsAndHashCode.Include
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private InspectionStatus status;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @EqualsAndHashCode.Include
@@ -40,25 +37,25 @@ public class InspectionItem {
     @Column(nullable = false)
     private boolean impedimentItem;
 
-    private String observation;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_component_id")
     @JsonBackReference
     private EquipmentComponent equipmentComponent;
 
-    @Setter
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checklist_id")
     @JsonBackReference
     private Checklist checklist;
 
     public void setEquipmentComponent(EquipmentComponent equipmentComponent) {
+        if (equipmentComponent == null) return;
         this.equipmentComponent = equipmentComponent;
     }
 
     public void setChecklist(Checklist checklist) {
+        if (checklist == null) return;
         this.checklist = checklist;
     }
 }

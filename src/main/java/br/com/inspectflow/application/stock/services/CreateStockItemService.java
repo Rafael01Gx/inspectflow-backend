@@ -1,7 +1,6 @@
 package br.com.inspectflow.application.stock.services;
 
 import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByCodeService;
-import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByIdByIdService;
 import br.com.inspectflow.application.stock.dto.CreateStockItemRequest;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.application.stock.mappers.StockItemMapper;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

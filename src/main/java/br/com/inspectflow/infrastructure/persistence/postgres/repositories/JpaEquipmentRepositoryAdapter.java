@@ -62,4 +62,9 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     public List<Equipment> findAllByCodeIn(List<String> code) {
         return repository.findAllByCodeIn(code);
     }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return repository.existsByCode(code);
+    }
 }

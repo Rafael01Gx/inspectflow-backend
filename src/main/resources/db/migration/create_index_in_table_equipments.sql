@@ -1,1 +1,0 @@
-CREATE INDEX CONCURRENTLY idx_equipments_name ON equipments (name);

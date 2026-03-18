@@ -30,6 +30,7 @@ public class Equipment {
     @Column(nullable = false, unique = true)
     private String code;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EquipmentStatus status;
@@ -41,8 +42,10 @@ public class Equipment {
     @Column(nullable = false)
     private String location;
 
+    @Setter
     private LocalDateTime lastInspection;
 
+    @Setter
     private LocalDateTime nextInspection;
 
     @Builder.Default
@@ -59,6 +62,13 @@ public class Equipment {
     )
     @JsonManagedReference
     private Set<StockItem> partsInStock = new HashSet<>();
+
+    public void update(String name, EquipmentStatus status, EquipmentType type, String location){
+        Optional.of(name).ifPresent(n -> this.name = n);
+        Optional.of(status).ifPresent(s -> this.status = s);
+        Optional.of(type).ifPresent(t -> this.type = t);
+        Optional.of(location).ifPresent(l -> this.location = l);
+    }
 
     public void addComponent(EquipmentComponent component) {
         if (component == null) return;

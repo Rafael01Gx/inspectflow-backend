@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.Set;
@@ -20,6 +21,8 @@ public record CreateEquipmentRequest(
 
         @NotBlank(message = "O código é obrigatório")
         @Size(min = 3, max = 50)
+        @Pattern(regexp = "^[a-zA-Z]{1,5}-[0-9]{1,5}$",
+                message = "O formato deve ser de 1-5 letras, um hífen e 1-5 números (ex: ABC-123)")
         String code,
 
         @NotNull(message = "O status do equipamento é obrigatório")

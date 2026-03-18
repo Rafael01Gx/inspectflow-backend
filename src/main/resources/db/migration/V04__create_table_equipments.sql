@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS equipments (
     last_inspection TIMESTAMP WITHOUT TIME ZONE,
     next_inspection TIMESTAMP WITHOUT TIME ZONE
 );
+CREATE INDEX IF NOT EXISTS idx_equipments_name ON equipments (name);
 
 CREATE TABLE  IF NOT EXISTS equipment_stock_items (
     equipment_id UUID NOT NULL,

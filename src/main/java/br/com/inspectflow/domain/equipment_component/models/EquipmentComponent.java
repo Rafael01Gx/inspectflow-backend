@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -47,6 +48,12 @@ public class EquipmentComponent {
     @JoinColumn(name = "equipment_id")
     @JsonBackReference
     private Equipment equipment;
+
+
+    public void update(String name, EquipmentComponentCategory category){
+        Optional.of(name).ifPresent(s -> this.name = s);
+        Optional.of(category).ifPresent(c -> this.category = c);
+    }
 
 
     public void addInspectionItem(InspectionItem item) {

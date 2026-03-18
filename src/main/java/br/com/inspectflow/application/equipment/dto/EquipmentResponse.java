@@ -1,4 +1,4 @@
-package br.com.inspectflow.application.equipment_component.dto;
+package br.com.inspectflow.application.equipment.dto;
 
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;

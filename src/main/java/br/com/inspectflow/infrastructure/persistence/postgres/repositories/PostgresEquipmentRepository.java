@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UUID> {
     Optional<Equipment> findByCode(String code);
-
+    boolean existsByCode(String code);
     List<Equipment> findAllByCodeIn(List<String> code);
 }

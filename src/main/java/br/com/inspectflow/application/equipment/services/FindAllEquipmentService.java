@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.equipment.services;
 
 import br.com.inspectflow.application.equipment.ports.in.FindAllEquipmentUseCase;
-import br.com.inspectflow.application.equipment_component.dto.EquipmentResponse;
+import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;

@@ -18,4 +18,6 @@ public interface EquipmentRepository {
     List<Equipment> findAllById(List<UUID> uuids);
 
     List<Equipment> findAllByCodeIn(List<String> code);
+
+    boolean existsByCode(String code);
 }

@@ -1,12 +1,12 @@
 package br.com.inspectflow.domain.Inspection_item.models;
 
 import br.com.inspectflow.domain.Inspection_item.enums.InspectionCategoryItem;
-import br.com.inspectflow.domain.Inspection_item.enums.InspectionStatus;
-import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Optional;
 
 @Entity
 @Table(name = "inspection_items")
@@ -37,25 +37,20 @@ public class InspectionItem {
     @Column(nullable = false)
     private boolean impedimentItem;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_component_id")
     @JsonBackReference
     private EquipmentComponent equipmentComponent;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checklist_id")
-    @JsonBackReference
-    private Checklist checklist;
+    public void update(String title, String description, InspectionCategoryItem category, Boolean impedimentItem){
+        Optional.ofNullable(title).ifPresent(t -> this.title = t);
+        Optional.ofNullable(description).ifPresent(d -> this.description = d);
+        Optional.ofNullable(category).ifPresent(c -> this.category = c);
+        Optional.ofNullable(impedimentItem).ifPresent(i -> this.impedimentItem = i);
+    }
 
     public void setEquipmentComponent(EquipmentComponent equipmentComponent) {
         if (equipmentComponent == null) return;
         this.equipmentComponent = equipmentComponent;
-    }
-
-    public void setChecklist(Checklist checklist) {
-        if (checklist == null) return;
-        this.checklist = checklist;
     }
 }

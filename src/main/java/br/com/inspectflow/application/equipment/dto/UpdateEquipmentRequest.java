@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public record UpdateEquipmentRequest(
 
-        @NotNull
+        @NotNull(message = "O id é obrigatório")
         UUID id,
 
-        @Size(max = 255)
+        @Size(max = 255, message = "O nome deve ter no máximo 255 caracteres")
         String name,
 
         EquipmentStatus status,

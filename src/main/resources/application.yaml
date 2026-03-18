@@ -7,7 +7,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://admin:admin_pass@mongodb:27017/inspectflow
+      uri: mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:inspectflow}?createDatabaseIfNotExist=true

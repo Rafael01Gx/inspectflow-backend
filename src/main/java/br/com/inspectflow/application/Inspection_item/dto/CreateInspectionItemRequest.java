@@ -14,9 +14,7 @@ public record CreateInspectionItemRequest(
         @NotNull
         InspectionCategoryItem category,
         @NotNull
-        boolean impedimentItem,
-
-        String observation
+        boolean impedimentItem
 ) {
 
 }

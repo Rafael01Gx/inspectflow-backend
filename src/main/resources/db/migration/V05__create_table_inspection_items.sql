@@ -4,14 +4,10 @@ CREATE TABLE IF NOT EXISTS inspection_items (
     description TEXT NOT NULL,
     category VARCHAR(50) NOT NULL,
     impediment_item BOOLEAN NOT NULL DEFAULT FALSE,
-
     equipment_component_id UUID NOT NULL,
 
-    checklist_id BIGINT,
 
     CONSTRAINT fk_inspection_item_component
-        FOREIGN KEY (equipment_component_id) REFERENCES equipment_components(id) ON DELETE CASCADE,
+        FOREIGN KEY (equipment_component_id) REFERENCES equipment_components(id) ON DELETE CASCADE
 
-    CONSTRAINT fk_inspection_item_checklist
-        FOREIGN KEY (checklist_id) REFERENCES checklists(id) ON DELETE SET NULL
 );

@@ -9,7 +9,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "equipments")
@@ -62,6 +65,10 @@ public class Equipment {
     )
     @JsonManagedReference
     private Set<StockItem> partsInStock = new HashSet<>();
+
+    @Setter
+    private String checklistId;
+
 
     public void update(String name, EquipmentStatus status, EquipmentType type, String location){
         Optional.of(name).ifPresent(n -> this.name = n);

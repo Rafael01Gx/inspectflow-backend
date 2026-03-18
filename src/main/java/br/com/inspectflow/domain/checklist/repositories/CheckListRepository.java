@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CheckListRepository {
     Checklist save(Checklist checklist);
-    Optional<Checklist> findById(Long id);
+    Optional<Checklist> findById(String id); // Mudança para String
     List<Checklist> findAll();
     PagedResponse<Checklist> findAll(PageRequest pageRequest);
-    void deleteById(Long id);
+    void deleteById(String id); // Mudança para String
     Optional<Checklist> findByCode(String code);
 }

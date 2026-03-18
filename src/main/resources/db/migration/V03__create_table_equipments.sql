@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS equipments (
     status VARCHAR(50) NOT NULL,
     type VARCHAR(50) NOT NULL,
     location VARCHAR(255) NOT NULL,
+    checklistId VARCHAR(255) ,
     last_inspection TIMESTAMP WITHOUT TIME ZONE,
     next_inspection TIMESTAMP WITHOUT TIME ZONE
 );

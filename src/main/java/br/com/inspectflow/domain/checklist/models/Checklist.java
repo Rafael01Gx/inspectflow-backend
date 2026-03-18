@@ -1,58 +1,59 @@
 package br.com.inspectflow.domain.checklist.models;
 
-import br.com.inspectflow.domain.Inspection_item.models.InspectionItem;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-@Entity
-@Table(name = "checklists")
+@Document(collection = "checklists")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Checklist {
 
     @Id
     @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
     private String code;
 
-    @Column(nullable = false)
     private String name;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "checklist")
-    @JsonManagedReference
-    private Set<InspectionItem> items = new HashSet<>();
+    private UUID equipmentId;
 
-    @Column(nullable = false,updatable = false)
-    @CreationTimestamp
+    private String equipmentName;
+
+    @Builder.Default
+    private List<ChecklistItem> items = new ArrayList<>();
+
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void addItem(InspectionItem item) {
+
+    public void addItem(ChecklistItem item) {
         if (item == null) return;
         items.add(item);
-        item.setChecklist(this);
     }
 
-    public void removeItem(InspectionItem item) {
+    public void removeItem(ChecklistItem item) {
+
         items.remove(item);
-        item.setChecklist(null);
     }
+    public void removeAllItems(){
+        items.clear();
+    }
+
 
 }

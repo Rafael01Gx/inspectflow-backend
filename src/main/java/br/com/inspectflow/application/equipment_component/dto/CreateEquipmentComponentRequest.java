@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public record CreateEquipmentComponentRequest(
 
         @NotBlank(message = "Nome do componente é obrigatório")

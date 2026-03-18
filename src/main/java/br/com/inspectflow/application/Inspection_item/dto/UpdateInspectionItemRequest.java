@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateInspectionItemRequest(
-        @NotNull
+
         Long id,
         @NotBlank
         String title,
@@ -14,8 +14,6 @@ public record UpdateInspectionItemRequest(
         @NotNull
         InspectionCategoryItem category,
         @NotNull
-        boolean impedimentItem,
-
-        String observation
+        boolean impedimentItem
 ) {
 }

@@ -9,11 +9,13 @@ import org.springframework.boot.mongodb.autoconfigure.MongoClientSettingsBuilder
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingEntityCallback;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
+@EnableMongoAuditing
 @EnableMongoRepositories(
         basePackages = "br.com.inspectflow.infrastructure.persistence.mongo.repositories"
 )

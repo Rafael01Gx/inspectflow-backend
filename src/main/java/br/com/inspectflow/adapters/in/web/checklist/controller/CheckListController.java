@@ -1,6 +1,7 @@
 package br.com.inspectflow.adapters.in.web.checklist.controller;
 
 import br.com.inspectflow.application.checklist.services.FindAllCheckListService;
+import br.com.inspectflow.application.checklist.services.FindByIdCheclistService;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class CheckListController {
 
     private final FindAllCheckListService findAllCheckListService;
+    private final FindByIdCheclistService findByIdCheclistService;
 
     @GetMapping
     public ResponseEntity<PagedResponse<Checklist>> getAll(@PageableDefault Pageable pageable) {
@@ -24,8 +26,8 @@ public class CheckListController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(){
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Checklist> getById(@PathVariable String id) {
+        return ResponseEntity.ok(findByIdCheclistService.execute(id));
     }
 
     @PostMapping

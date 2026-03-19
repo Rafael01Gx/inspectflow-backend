@@ -1,7 +1,7 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
-import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
 import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
+import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
 import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
 import br.com.inspectflow.application.equipment.services.*;
@@ -14,7 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 

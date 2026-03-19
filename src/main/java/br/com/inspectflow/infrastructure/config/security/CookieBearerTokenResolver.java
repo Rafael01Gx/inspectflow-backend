@@ -1,16 +1,17 @@
 package br.com.inspectflow.infrastructure.config.security;
 
+import br.com.inspectflow.infrastructure.config.properties.JwtProperties;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class CookieBearerTokenResolver implements BearerTokenResolver {
 
-    @Value("${app.security.jwt.cookie-name}")
-    private String cookieName;
+    private final JwtProperties properties;
 
     @Override
     public String resolve(HttpServletRequest request) {
@@ -20,7 +21,7 @@ public class CookieBearerTokenResolver implements BearerTokenResolver {
         }
 
         for (Cookie cookie : request.getCookies()) {
-            if (cookieName.equals(cookie.getName())) {
+            if (properties.cookieName().equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

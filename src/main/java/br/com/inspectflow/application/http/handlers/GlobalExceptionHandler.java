@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,14 +36,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) { // Renomeado o método
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         ErrorResponse error = ErrorResponse.builder()
-                .status(HttpStatus.UNAUTHORIZED.value()) // Alterado para UNAUTHORIZED
-                .message("Credenciais inválidas") // Mensagem mais genérica por segurança
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .message("Credenciais inválidas")
                 .timestamp(LocalDateTime.now())
                 .build();
         log.warn("BadCredentialsException: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error); // Alterado para UNAUTHORIZED
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(EquipmentComponentNotFoundExceprion.class)
@@ -64,7 +65,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
         log.warn("EmailAlreadyRegisteredException: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // Alterado para CONFLICT
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -200,7 +201,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         String message = "Violação de integridade de dados. Verifique os dados informados.";
         if (ex.getCause() != null && ex.getCause().getMessage() != null) {
-            // Tenta extrair uma mensagem mais específica do erro do banco
             if (ex.getCause().getMessage().contains("duplicate key")) {
                 message = "Dados duplicados. Um registro com essa informação já existe.";
             } else if (ex.getCause().getMessage().contains("foreign key")) {
@@ -240,7 +240,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        log.error("Erro interno não tratado: {}", ex.getMessage(), ex); // Melhor log para erros genéricos
+        log.error("Erro interno não tratado: {}", ex.getMessage(), ex);
 
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -261,6 +261,28 @@ public class GlobalExceptionHandler {
                 .build();
         log.warn("CheckListNotFoundException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(EquipmentAttachmentException.class)
+    public ResponseEntity<ErrorResponse> handleEquipmentAttachment(EquipmentAttachmentException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("EquipmentAttachmentException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("Tipo de conteúdo não suportado.")
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("HttpMediaTypeNotSupportedException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     private Map<String, String> errorMap(BindException ex) {

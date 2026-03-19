@@ -1,14 +1,14 @@
 package br.com.inspectflow.application.equipment.mappers;
 
-import br.com.inspectflow.application.Inspection_item.dto.CreateInspectionItemRequest;
-import br.com.inspectflow.application.Inspection_item.dto.UpdateInspectionItemRequest;
+import br.com.inspectflow.application.Inspection.dto.CreateInspectionItemRequest;
+import br.com.inspectflow.application.Inspection.dto.UpdateInspectionItemRequest;
 import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
-import br.com.inspectflow.application.equipment_component.dto.CreateEquipmentComponentRequest;
-import br.com.inspectflow.application.equipment_component.dto.UpdateEquipmentComponentRequest;
-import br.com.inspectflow.domain.Inspection_item.models.InspectionItem;
+import br.com.inspectflow.application.equipment.dto.CreateEquipmentComponentRequest;
+import br.com.inspectflow.application.equipment.dto.UpdateEquipmentComponentRequest;
+import br.com.inspectflow.domain.inspection.models.InspectionItem;
 import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
+import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
 
 import java.util.List;
 import java.util.Map;

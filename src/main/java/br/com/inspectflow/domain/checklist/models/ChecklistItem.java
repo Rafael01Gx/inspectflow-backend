@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.checklist.models;
 
-import br.com.inspectflow.domain.Inspection_item.enums.InspectionCategoryItem;
+import br.com.inspectflow.domain.inspection.enums.InspectionCategoryItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

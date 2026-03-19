@@ -3,8 +3,6 @@ package br.com.inspectflow.domain.stock.repositories;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.models.StockItem;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.Optional;

@@ -5,9 +5,6 @@ spring:
   profiles:
     active: ${SPRING_PROFILE:dev}
 
-  data:
-    mongodb:
-      uri: mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:inspectflow}?createDatabaseIfNotExist=true
@@ -34,3 +31,15 @@ app:
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}
       private-key-path: "classpath:keys/private.pem"
       public-key-path: "classpath:keys/public.pem"
+
+  data:
+    mongodb:
+      uri: mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin
+      database: inspectflow
+
+  bucket:
+    minio:
+      bucketName: inspectflow
+      endpoint: http://localhost:9000
+      access-key: admin
+      secret-key: admin123

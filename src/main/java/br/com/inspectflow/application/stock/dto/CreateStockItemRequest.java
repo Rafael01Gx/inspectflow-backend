@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
-import java.util.UUID;
 
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)

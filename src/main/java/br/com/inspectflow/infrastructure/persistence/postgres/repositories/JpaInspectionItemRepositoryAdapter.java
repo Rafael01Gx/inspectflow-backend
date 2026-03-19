@@ -1,7 +1,7 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
-import br.com.inspectflow.domain.Inspection_item.models.InspectionItem;
-import br.com.inspectflow.domain.Inspection_item.repositories.InspectionItemRepository;
+import br.com.inspectflow.domain.inspection.models.InspectionItem;
+import br.com.inspectflow.domain.inspection.repositories.InspectionItemRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;

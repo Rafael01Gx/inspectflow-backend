@@ -3,7 +3,7 @@ package br.com.inspectflow.application.checklist.mappers;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.checklist.models.ChecklistItem;
 import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
+import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -2,7 +2,6 @@ package br.com.inspectflow.domain.equipment.models;
 
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
-import br.com.inspectflow.domain.equipment_component.models.EquipmentComponent;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -69,6 +68,15 @@ public class Equipment {
     @Setter
     private String checklistId;
 
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "equipment",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private Set<EquipmentAttachment> attachments = new HashSet<>();
+
 
     public void update(String name, EquipmentStatus status, EquipmentType type, String location){
         Optional.of(name).ifPresent(n -> this.name = n);
@@ -98,4 +106,17 @@ public class Equipment {
         partsInStock.remove(part);
         part.removeEquipament(this);
     }
+
+    public void addAttachment(EquipmentAttachment attachment) {
+        if (attachment == null) return;
+        attachments.add(attachment);
+        attachment.setEquipment(this);
+    }
+
+    public void removeAttachment(EquipmentAttachment attachment) {
+        attachments.remove(attachment);
+        attachment.setEquipment(null);
+    }
+
+
 }

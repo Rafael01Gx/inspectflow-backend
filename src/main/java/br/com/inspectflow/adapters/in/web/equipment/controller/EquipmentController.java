@@ -1,5 +1,6 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
+import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
 import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
 import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class EquipmentController {
     private final FindByIdEquipmentService findByIdEquipmentService;
     private final FindByEquipmentCodeService findByEquipmentCodeService;
     private final UpdateEquipmentService updateEquipmentService;
+    private final UploadEquipmentAttachment uploadEquipmentAttachment;
 
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
@@ -37,6 +40,7 @@ public class EquipmentController {
     public ResponseEntity<EquipmentResponse> getByCode(@PathVariable @Valid String code) {
         return ResponseEntity.ok(findByEquipmentCodeService.execute(code));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<EquipmentResponse> getById(@PathVariable @Valid UUID id) {
         return ResponseEntity.ok(findByIdEquipmentService.execute(id));
@@ -47,13 +51,24 @@ public class EquipmentController {
         return ResponseEntity.ok(createEquipmentService.execute(dto));
     }
 
+    @PostMapping(value = "/{id}/attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> addAttachment(
+            @PathVariable UUID id,
+            @ModelAttribute EquipmentAttachmentRequest dto
+    ) {
+        uploadEquipmentAttachment.execute(id,dto);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @RequestBody @Valid UpdateEquipmentRequest dto) {
         return ResponseEntity.ok(updateEquipmentService.execute(id, dto));
     }
-    
+
     @PostMapping("/{id}")
     public ResponseEntity<?> disableEquipment() {
         return ResponseEntity.ok().build();
     }
+
+
 }

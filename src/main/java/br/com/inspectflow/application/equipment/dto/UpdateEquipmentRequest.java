@@ -1,6 +1,5 @@
 package br.com.inspectflow.application.equipment.dto;
 
-import br.com.inspectflow.application.equipment_component.dto.UpdateEquipmentComponentRequest;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import jakarta.validation.Valid;

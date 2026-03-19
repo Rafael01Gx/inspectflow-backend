@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.inspection.models;
 
-import br.com.inspectflow.domain.Inspection_item.enums.InspectionStatus;
+import br.com.inspectflow.domain.inspection.enums.InspectionStatus;
 import lombok.Builder;
 
 @Builder

@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.equipment.services;
 
 import br.com.inspectflow.application.bucket.services.UploadFileService;
+import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
 import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
 import br.com.inspectflow.application.equipment.mappers.AttachmentMapper;
 import br.com.inspectflow.application.equipment.ports.in.UploadEquipmentAttachmentUseCase;
@@ -22,12 +23,13 @@ public class UploadEquipmentAttachment implements UploadEquipmentAttachmentUseCa
     private final EquipmentRepository repository;
     private final UploadFileService uploadFileService;
     private final AttachmentFileIsValid fileValidator;
-
+    private final IdConsistencyValidator<UUID> idConsistencyValidator;
     @Override
     @Transactional
     public void execute(UUID id, EquipmentAttachmentRequest dto) {
 
-        fileValidator.execute(dto.file());
+        idConsistencyValidator.execute(id, dto.equipmentId());
+        fileValidator.execute(dto);
 
         Equipment equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
 

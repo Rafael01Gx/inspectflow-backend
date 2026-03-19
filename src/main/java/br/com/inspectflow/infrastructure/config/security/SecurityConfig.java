@@ -33,6 +33,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
                     request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();

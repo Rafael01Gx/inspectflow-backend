@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.bucket.dto;
 
-public record UploadResponse(
+public record UploadRequest(
         String fileName,
         String fileUrl
 ) {

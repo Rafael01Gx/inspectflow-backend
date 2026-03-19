@@ -1,6 +1,7 @@
 package br.com.inspectflow.infrastructure.persistence.bucket;
 
-import br.com.inspectflow.domain.bucket.dto.UploadResponse;
+import br.com.inspectflow.application.http.handlers.BusinessException;
+import br.com.inspectflow.domain.bucket.dto.UploadRequest;
 import br.com.inspectflow.domain.bucket.repository.BucketRepository;
 import br.com.inspectflow.domain.equipment.enums.AttachmentType;
 import br.com.inspectflow.infrastructure.config.properties.MinioProperties;
@@ -27,7 +28,7 @@ public class BucketAdapterImpl implements BucketRepository {
     private final MinioProperties minioProperties;
 
     @Override
-    public UploadResponse uploadFile(String equipmentCode, AttachmentType attType, MultipartFile file){
+    public UploadRequest uploadFile(String equipmentCode, AttachmentType attType, MultipartFile file){
         var fileNameLocalNameUrl= createFileLocalNameUrl(equipmentCode, attType);
         var bucketUrlFile = getFileURL(fileNameLocalNameUrl);
 
@@ -60,16 +61,16 @@ public class BucketAdapterImpl implements BucketRepository {
             throw new RuntimeException(e);
         }
 
-        return new UploadResponse(equipmentCode.toLowerCase() +"-"+ new Date().getTime(),bucketUrlFile) ;
+        return new UploadRequest(equipmentCode.toLowerCase() +"-"+ new Date().getTime(),bucketUrlFile) ;
     }
 
     @Override
-    public InputStream getFile(String fileName) {
+    public InputStream getFile(String fileUrl) {
         try {
             return minioClient.getObject(
                     GetObjectArgs.builder()
                             .bucket(minioProperties.bucketName())
-                            .object(fileName)
+                            .object(getObjectFile(fileUrl))
                             .build()
             );
         } catch (ErrorResponseException e) {
@@ -94,12 +95,12 @@ public class BucketAdapterImpl implements BucketRepository {
     }
 
     @Override
-    public void deleteFile(String fileName) {
+    public void deleteFile(String fileUrl) {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
-                            .bucket("equipments")
-                            .object(fileName)
+                            .bucket(minioProperties.bucketName())
+                            .object(getObjectFile(fileUrl))
                             .build()
             );
         } catch (ErrorResponseException e) {
@@ -126,12 +127,18 @@ public class BucketAdapterImpl implements BucketRepository {
 
 
     private String getFileURL(String fileLocalUrl){
-        return minioProperties.endpoint()+
-                "/" + minioProperties.bucketName() +
+        return  minioProperties.bucketName() +
                 "/"+ fileLocalUrl;
     }
 
     private String createFileLocalNameUrl(String equipmentCode, AttachmentType attType){
-        return  attType.getValue().toLowerCase() +"/"+ equipmentCode.toLowerCase() +"-"+ new Date().getTime();
+        return  equipmentCode.toLowerCase() +"/"+ attType.getValue().toLowerCase() +"/"+ new Date().getTime();
+    }
+
+    private String getObjectFile(String fileLocalNameUrl) {
+        if (fileLocalNameUrl == null || !fileLocalNameUrl.contains(minioProperties.bucketName() + "/")) {
+            throw new BusinessException("Caminho do arquivo inválido para remoção no MinIO");
+        }
+        return fileLocalNameUrl.split(minioProperties.bucketName() + "/")[1];
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ public class EquipmentController {
     private final FindByEquipmentCodeService findByEquipmentCodeService;
     private final UpdateEquipmentService updateEquipmentService;
     private final UploadEquipmentAttachment uploadEquipmentAttachment;
+    private final DeleteEquipmentAttachmentService deleteEquipmentAttachmentService;
 
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
@@ -40,6 +42,7 @@ public class EquipmentController {
     public ResponseEntity<EquipmentResponse> getByCode(@PathVariable @Valid String code) {
         return ResponseEntity.ok(findByEquipmentCodeService.execute(code));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<EquipmentResponse> getById(@PathVariable @Valid UUID id) {
@@ -70,5 +73,9 @@ public class EquipmentController {
         return ResponseEntity.ok().build();
     }
 
-
+    @DeleteMapping({"/{id}/attachments/{attachmentId}"})
+    public ResponseEntity<Void> deleteAttachment(@PathVariable UUID id, @PathVariable UUID attachmentId) {
+        deleteEquipmentAttachmentService.execute(id, attachmentId);
+        return ResponseEntity.ok().build();
+    }
 }

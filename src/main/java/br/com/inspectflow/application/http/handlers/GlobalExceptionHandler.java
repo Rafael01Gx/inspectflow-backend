@@ -284,6 +284,16 @@ public class GlobalExceptionHandler {
         log.warn("HttpMediaTypeNotSupportedException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+    @ExceptionHandler(BucketFileNotFoundExeption.class)
+    public ResponseEntity<ErrorResponse> handleBucketFileNotFound(BucketFileNotFoundExeption ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("BucketFileNotFoundExeption: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
     private Map<String, String> errorMap(BindException ex) {
         Map<String, String> errors = new HashMap<>();

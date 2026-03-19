@@ -7,6 +7,6 @@ public class IdMismatchException extends RuntimeException{
     }
 
     public IdMismatchException() {
-        super("O ID informado na URL não corresponde ao ID do corpo da requisição.");
+        super("O ID informado na URL não corresponde ao ID do corpo da requisição ou não foi informado");
     }
 }

@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.bucket.services;
 
 import br.com.inspectflow.application.bucket.ports.in.UploadFileUseCase;
-import br.com.inspectflow.domain.bucket.dto.UploadResponse;
+import br.com.inspectflow.domain.bucket.dto.UploadRequest;
 import br.com.inspectflow.domain.bucket.repository.BucketRepository;
 import br.com.inspectflow.domain.equipment.enums.AttachmentType;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UploadFileService implements UploadFileUseCase {
 
 
     @Override
-    public UploadResponse execute(String equipmentCode, AttachmentType attType, MultipartFile file) {
+    public UploadRequest execute(String equipmentCode, AttachmentType attType, MultipartFile file) {
 
        return repository.uploadFile(equipmentCode, attType,file);
     }

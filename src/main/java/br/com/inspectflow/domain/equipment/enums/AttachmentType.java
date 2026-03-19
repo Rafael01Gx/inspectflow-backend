@@ -15,4 +15,14 @@ public enum AttachmentType {
     AttachmentType(String value) {
         this.value = value;
     }
+
+    public static AttachmentType fromValue(String value) {
+        for (AttachmentType type : values()) {
+            if (type.getValue().equalsIgnoreCase(value)) {
+                return type;
+            }
+            return null;
+        }
+        return null;
+    };
 }

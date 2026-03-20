@@ -25,6 +25,7 @@ public class EquipmentMapper {
                 .status(dto.status())
                 .type(dto.type())
                 .location(dto.location())
+                .consignmentCodes(dto.consignmentCodes())
                 .build();
 
         if (dto.components() != null) {
@@ -70,6 +71,10 @@ public class EquipmentMapper {
                             });
                 }
             });
+        }
+
+        if (dto.consignmentCodes() != null){
+            equipment.setConsignmentCodes(dto.consignmentCodes());
         }
         return equipment;
     }

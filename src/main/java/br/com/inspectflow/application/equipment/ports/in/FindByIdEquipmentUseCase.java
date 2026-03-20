@@ -1,9 +1,9 @@
 package br.com.inspectflow.application.equipment.ports.in;
 
-import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
+import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 
 import java.util.UUID;
 
 public interface FindByIdEquipmentUseCase {
-    EquipmentResponse execute(UUID id);
+    EquipmentDetailsResponse execute(UUID id);
 }

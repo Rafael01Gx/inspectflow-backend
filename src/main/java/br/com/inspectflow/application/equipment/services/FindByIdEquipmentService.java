@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.equipment.services;
 
+import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 import br.com.inspectflow.application.equipment.ports.in.FindByIdEquipmentUseCase;
 import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
@@ -16,8 +17,8 @@ public class FindByIdEquipmentService implements FindByIdEquipmentUseCase {
     private final EquipmentRepository repository;
 
     @Override
-    public EquipmentResponse execute(UUID id) {
+    public EquipmentDetailsResponse execute(UUID id) {
         var equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
-        return EquipmentResponse.from(equipment);
+        return EquipmentDetailsResponse.from(equipment);
     }
 }

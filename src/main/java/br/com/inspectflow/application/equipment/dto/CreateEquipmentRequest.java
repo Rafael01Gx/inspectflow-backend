@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.equipment.dto;
 
+import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.Map;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,6 +34,8 @@ public record CreateEquipmentRequest(
 
         @NotBlank(message = "A localização é obrigatória")
         String location,
+
+        Map<EquipmentComponentCategory, String> consignmentCodes ,
 
         @Valid
         Set<CreateEquipmentComponentRequest> components

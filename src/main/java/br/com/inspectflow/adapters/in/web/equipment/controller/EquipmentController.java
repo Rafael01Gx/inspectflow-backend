@@ -1,9 +1,6 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
-import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
-import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
-import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
-import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
+import br.com.inspectflow.application.equipment.dto.*;
 import br.com.inspectflow.application.equipment.services.*;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -44,7 +41,7 @@ public class EquipmentController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<EquipmentResponse> getById(@PathVariable @Valid UUID id) {
+    public ResponseEntity<EquipmentDetailsResponse> getById(@PathVariable @Valid UUID id) {
         return ResponseEntity.ok(findByIdEquipmentService.execute(id));
     }
 

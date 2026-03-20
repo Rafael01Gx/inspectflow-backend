@@ -34,7 +34,6 @@ public class AttachmentsController {
             .contentType(MediaType.parseMediaType(req.contentType()))
             .body(responseBody);
 
-
     }
 
     @GetMapping("{id}/view")

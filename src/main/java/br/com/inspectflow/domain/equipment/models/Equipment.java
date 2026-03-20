@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.equipment.models;
 
+import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.stock.models.StockItem;
@@ -8,10 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "equipments")
@@ -78,6 +76,15 @@ public class Equipment {
     private Set<EquipmentAttachment> attachments = new HashSet<>();
 
 
+
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "equipment_consignment_codes",joinColumns = @JoinColumn(name = "equipment_id"))
+    @MapKeyColumn(name = "consignment_key")
+    @Column(name = "consignment_value")
+    private Map<EquipmentComponentCategory, String> consignmentCodes = new HashMap<>();
+
+
     public void update(String name, EquipmentStatus status, EquipmentType type, String location){
         Optional.of(name).ifPresent(n -> this.name = n);
         Optional.of(status).ifPresent(s -> this.status = s);
@@ -118,5 +125,18 @@ public class Equipment {
         attachment.setEquipment(null);
     }
 
+    public void addConsignmentCode(EquipmentComponentCategory key, String value) {
+        if (key == null || value == null) return;
+        this.consignmentCodes.put(key, value);
+    }
+    public void removeConsignmentCode(EquipmentComponentCategory key){
+        if (key == null) return;
+        this.consignmentCodes.remove(key);
+    }
+    public void setConsignmentCodes(Map<EquipmentComponentCategory, String> consignmentCodes){
+        if (consignmentCodes == null) return;
+        this.consignmentCodes.clear();
+        this.consignmentCodes.putAll(consignmentCodes);
+    }
 
 }

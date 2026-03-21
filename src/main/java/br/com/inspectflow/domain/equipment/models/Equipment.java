@@ -136,7 +136,7 @@ public class Equipment {
     public void setConsignmentCodes(Map<EquipmentComponentCategory, String> consignmentCodes){
         if (consignmentCodes == null) return;
         this.consignmentCodes.clear();
-        this.consignmentCodes.putAll(consignmentCodes);
+       consignmentCodes.forEach((e,s) -> this.consignmentCodes.put(e,s.toUpperCase()));
     }
 
 }

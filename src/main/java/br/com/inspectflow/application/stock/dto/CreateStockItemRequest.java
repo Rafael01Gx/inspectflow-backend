@@ -31,8 +31,8 @@ public record CreateStockItemRequest(
         @Size(max = 50, message = "O código do fornecedor deve ter entre 3 e 50 caracteres")
         String supplierCode,
 
-        @JsonAlias("linkedEquipmentIds")
-        List<String> linkedEquipments,
+        @JsonAlias("linkedEquipmentCodes")
+        List<String> linkedEquipmentCodes,
 
         @NotBlank(message = "A localização é obrigatória")
         @Size(max = 50, message = "A localização deve ter entre 3 e 50 caracteres")

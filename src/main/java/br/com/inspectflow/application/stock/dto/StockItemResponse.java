@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.stock.dto;
 
+import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import lombok.Builder;
 
@@ -14,7 +15,7 @@ public record StockItemResponse(
         String partCategory,
         Integer quantity,
         String supplierCode,
-        List<String> linkedEquipmentIds,
+        List<String> linkedEquipmentCodes,
         String location,
         Integer minQuantity
 ) {
@@ -28,9 +29,9 @@ public record StockItemResponse(
                 .partCategory(stockItem.getPartCategory().name())
                 .quantity(stockItem.getQuantity())
                 .supplierCode(stockItem.getSupplierCode())
-                .linkedEquipmentIds(stockItem.getLinkedEquipments() != null ?
+                .linkedEquipmentCodes(stockItem.getLinkedEquipments() != null ?
                         stockItem.getLinkedEquipments().stream()
-                                .map(equipment -> equipment.getId().toString())
+                                .map(Equipment::getCode)
                                 .toList() : Collections.emptyList())
                 .location(stockItem.getLocation())
                 .minQuantity(stockItem.getMinQuantity())

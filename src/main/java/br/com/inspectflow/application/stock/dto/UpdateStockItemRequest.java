@@ -32,7 +32,7 @@ public record UpdateStockItemRequest(
 
         String supplierCode,
 
-        List<UUID> linkedEquipmentIds,
+        List<String> linkedEquipmentCodes,
 
         @Size(min = 3, max = 50, message = "A localização deve ter entre 3 e 50 caracteres")
         String location,

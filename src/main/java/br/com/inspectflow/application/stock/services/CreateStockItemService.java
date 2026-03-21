@@ -29,9 +29,11 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
         validate.execute(dto);
         StockItem stockItem = StockItemMapper.toStockItem(dto);
 
-        if(dto.linkedEquipments() != null){
-            linkEquipmentsTo(stockItem, dto.linkedEquipments());
+        if(dto.linkedEquipmentCodes() != null){
+            linkEquipmentsTo(stockItem, dto.linkedEquipmentCodes());
         }
+
+        stockItem.getLinkedEquipments().forEach(equipment -> {IO.println(equipment.getName());});
         return StockItemResponse.from(stockItemRepository.save(stockItem));
     }
 
@@ -39,6 +41,10 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
     private void linkEquipmentsTo(StockItem stockItem, List<String> equipmentIds) {
         if (equipmentIds == null || equipmentIds.isEmpty()) return;
         List<Equipment> foundEquipments = findManyEquipmentsByCodeService.execute(equipmentIds);
-        foundEquipments.forEach(stockItem::addEquipament);
+
+        foundEquipments.forEach(equipment -> {
+            equipment.getPartsInStock().add(stockItem);
+            stockItem.getLinkedEquipments().add(equipment);
+        });
     }
 }

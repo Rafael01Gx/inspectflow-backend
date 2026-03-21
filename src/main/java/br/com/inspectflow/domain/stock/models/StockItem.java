@@ -25,6 +25,7 @@ public class StockItem {
     private Long id;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String name;
 
     @Column(nullable = false)
@@ -54,13 +55,15 @@ public class StockItem {
 
     public void addEquipament(Equipment equipment) {
         if (equipment == null) return;
-        if (!this.linkedEquipments.contains(equipment)) { // Verifica antes de adicionar
-            this.linkedEquipments.add(equipment);
-        }
+        this.linkedEquipments.add(equipment);
+        // IMPORTANTE: Adiciona este StockItem à coleção do Equipment (Lado Dono)
+        // Isso garante que o relacionamento seja persistido na tabela de junção.
+        equipment.getPartsInStock().add(this);
     }
 
     public void removeEquipament(Equipment equipment) {
         linkedEquipments.remove(equipment);
+        equipment.getPartsInStock().remove(this);
     }
 
     public void deductStock(Integer quantity){
@@ -79,12 +82,15 @@ public class StockItem {
 
     public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){
         this.update(dto);
-        this.linkedEquipments.addAll(linkedEquipment);
+        // Para update, usamos addEquipament para garantir a sincronização bidirecional
+        if (linkedEquipment != null) {
+            linkedEquipment.forEach(this::addEquipament);
+        }
     }
 
     public void addEquipments(List<Equipment> equipmentsToAdd) {
         if (equipmentsToAdd != null) {
-            this.linkedEquipments.addAll(equipmentsToAdd);
+            equipmentsToAdd.forEach(this::addEquipament);
         }
     }
 

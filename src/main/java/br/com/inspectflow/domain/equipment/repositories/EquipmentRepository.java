@@ -20,4 +20,6 @@ public interface EquipmentRepository {
     List<Equipment> findAllByCodeIn(List<String> code);
 
     boolean existsByCode(String code);
+
+    void saveAndFlush(Equipment equipment);
 }

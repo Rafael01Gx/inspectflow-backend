@@ -67,4 +67,9 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     public boolean existsByCode(String code) {
         return repository.existsByCode(code);
     }
+
+    @Override
+    public void saveAndFlush(Equipment equipment) {
+        repository.saveAndFlush(equipment);
+    }
 }

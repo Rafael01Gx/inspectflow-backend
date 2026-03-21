@@ -51,12 +51,12 @@ public class EquipmentController {
     }
 
     @PostMapping(value = "/{id}/attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> addAttachment(
+    public ResponseEntity<EquipmentDetailsResponse> addAttachment(
             @PathVariable UUID id,
             @ModelAttribute EquipmentAttachmentRequest dto
     ) {
-        uploadEquipmentAttachment.execute(id,dto);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(uploadEquipmentAttachment.execute(id,dto));
     }
 
     @PutMapping("/{id}")

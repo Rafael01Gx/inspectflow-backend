@@ -2,7 +2,6 @@ package br.com.inspectflow.application.equipment.services;
 
 import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 import br.com.inspectflow.application.equipment.ports.in.FindByIdEquipmentUseCase;
-import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;

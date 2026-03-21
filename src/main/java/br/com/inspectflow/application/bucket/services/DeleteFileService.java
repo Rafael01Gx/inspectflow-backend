@@ -16,6 +16,6 @@ public class DeleteFileService implements DeleteFileUseCase {
 
     @Override
     public void deleteFile(String url) {
-        Optional.ofNullable(url).ifPresentOrElse(repository::deleteFile, BucketFileNotFoundExeption::new);
+        Optional.ofNullable(url).ifPresentOrElse(repository::deleteFile, () -> { throw new BucketFileNotFoundExeption(); });
     }
 }

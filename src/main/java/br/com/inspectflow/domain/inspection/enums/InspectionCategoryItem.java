@@ -14,6 +14,16 @@ public enum InspectionCategoryItem {
     private final String value;
 
     InspectionCategoryItem(String value) {
+
         this.value = value;
     }
+
+    public static InspectionCategoryItem fromValue(String value) {
+        for (InspectionCategoryItem item : InspectionCategoryItem.values()) {
+            if (item.getValue().equals(value)) {
+                return item;
+            }
+        }
+        return null;
+            }
 }

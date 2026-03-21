@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.stock.dto;
 
-import br.com.inspectflow.domain.stock.enums.PartCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

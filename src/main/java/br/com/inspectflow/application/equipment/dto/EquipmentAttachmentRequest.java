@@ -9,8 +9,14 @@ import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record EquipmentAttachmentRequest(
-        @NotNull UUID equipmentId,
-        @NotNull AttachmentType type,
-        @NotNull MultipartFile file
+
+        @NotNull(message = "Id do equipamento é obrigatório")
+        UUID equipmentId,
+
+        @NotNull(message = "Tipo do anexo é obrigatório")
+        AttachmentType type,
+
+        @NotNull(message = "Arquivo é obrigatório")
+        MultipartFile file
 ) {
 }

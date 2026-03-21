@@ -1,6 +1,7 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
 import br.com.inspectflow.application.equipment.dto.*;
+import br.com.inspectflow.application.equipment.ports.in.*;
 import br.com.inspectflow.application.equipment.services.*;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -19,13 +20,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EquipmentController {
 
-    private final CreateEquipmentService createEquipmentService;
-    private final FindAllEquipmentService findAllEquipmentService;
-    private final FindByIdEquipmentService findByIdEquipmentService;
-    private final FindByEquipmentCodeService findByEquipmentCodeService;
-    private final UpdateEquipmentService updateEquipmentService;
-    private final UploadEquipmentAttachment uploadEquipmentAttachment;
-    private final DeleteEquipmentAttachmentService deleteEquipmentAttachmentService;
+    private final CreateEquipmentUseCase createEquipmentService;
+    private final FindAllEquipmentUseCase findAllEquipmentService;
+    private final FindByIdEquipmentUseCase findByIdEquipmentService;
+    private final FindByEquipmentCodeUseCase findByEquipmentCodeService;
+    private final UpdateEquipmentUseCase updateEquipmentService;
+    private final UploadEquipmentAttachmentUseCase uploadEquipmentAttachment;
+    private final DeleteEquipmentAttachmentUseCase deleteEquipmentAttachmentService;
 
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {

@@ -2,7 +2,7 @@ package br.com.inspectflow.domain.stock.models;
 
 import br.com.inspectflow.application.stock.dto.UpdateStockItemRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.stock.enums.PartCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

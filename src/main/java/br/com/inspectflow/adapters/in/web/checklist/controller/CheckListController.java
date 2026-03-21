@@ -1,7 +1,8 @@
 package br.com.inspectflow.adapters.in.web.checklist.controller;
 
-import br.com.inspectflow.application.checklist.services.FindAllCheckListService;
-import br.com.inspectflow.application.checklist.services.FindByIdCheclistService;
+import br.com.inspectflow.application.checklist.ports.in.FindAllCheckListUseCase;
+import br.com.inspectflow.application.checklist.ports.in.FindChecklistByIdUseCase;
+import br.com.inspectflow.application.checklist.services.FindChecklistByIdService;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -16,18 +17,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CheckListController {
 
-    private final FindAllCheckListService findAllCheckListService;
-    private final FindByIdCheclistService findByIdCheclistService;
+    private final FindAllCheckListUseCase findAllCheckList;
+    private final FindChecklistByIdUseCase findChecklistById;
 
     @GetMapping
     public ResponseEntity<PagedResponse<Checklist>> getAll(@PageableDefault Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        return ResponseEntity.ok(findAllCheckListService.execute(pageRequest));
+        return ResponseEntity.ok(findAllCheckList.execute(pageRequest));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Checklist> getById(@PathVariable String id) {
-        return ResponseEntity.ok(findByIdCheclistService.execute(id));
+        return ResponseEntity.ok(findChecklistById.execute(id));
     }
 
     @PostMapping

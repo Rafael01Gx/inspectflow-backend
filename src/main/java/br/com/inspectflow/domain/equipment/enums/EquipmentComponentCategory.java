@@ -15,4 +15,6 @@ public enum EquipmentComponentCategory {
     EquipmentComponentCategory(String value) {
         this.value = value;
     }
+
+
 }

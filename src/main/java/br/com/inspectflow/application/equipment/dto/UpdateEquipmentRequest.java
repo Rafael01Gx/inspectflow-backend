@@ -3,6 +3,7 @@ package br.com.inspectflow.application.equipment.dto;
 import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
+import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,6 +27,8 @@ public record UpdateEquipmentRequest(
         String location,
 
         Map<EquipmentComponentCategory, String> consignmentCodes ,
+
+        InspectionFrequency inspectionfrequency,
 
         @Valid
         Set<UpdateEquipmentComponentRequest> components

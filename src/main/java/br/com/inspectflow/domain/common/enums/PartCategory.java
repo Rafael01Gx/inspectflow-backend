@@ -1,4 +1,4 @@
-package br.com.inspectflow.domain.stock.enums;
+package br.com.inspectflow.domain.common.enums;
 
 import lombok.Getter;
 
@@ -14,5 +14,14 @@ public enum PartCategory {
 
     PartCategory(String value) {
         this.value = value;
+    }
+
+    public static PartCategory fromValue(String value) {
+        for (PartCategory item : PartCategory.values()) {
+            if (item.getValue().equals(value)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

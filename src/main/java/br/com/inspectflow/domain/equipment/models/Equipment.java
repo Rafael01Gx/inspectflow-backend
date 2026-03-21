@@ -3,6 +3,7 @@ package br.com.inspectflow.domain.equipment.models;
 import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
+import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -76,6 +77,7 @@ public class Equipment {
     private Set<EquipmentAttachment> attachments = new HashSet<>();
 
 
+    private InspectionFrequency inspectionfrequency ;
 
     @Builder.Default
     @ElementCollection
@@ -85,11 +87,12 @@ public class Equipment {
     private Map<EquipmentComponentCategory, String> consignmentCodes = new HashMap<>();
 
 
-    public void update(String name, EquipmentStatus status, EquipmentType type, String location){
+    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionfrequency){
         Optional.of(name).ifPresent(n -> this.name = n);
         Optional.of(status).ifPresent(s -> this.status = s);
         Optional.of(type).ifPresent(t -> this.type = t);
         Optional.of(location).ifPresent(l -> this.location = l);
+        Optional.of(inspectionfrequency).ifPresent(f-> this.inspectionfrequency = f);
     }
 
     public void addComponent(EquipmentComponent component) {
@@ -137,6 +140,12 @@ public class Equipment {
         if (consignmentCodes == null) return;
         this.consignmentCodes.clear();
        consignmentCodes.forEach((e,s) -> this.consignmentCodes.put(e,s.toUpperCase()));
+    }
+
+    public void updateInspection(){
+        var dateNow = LocalDateTime.now();
+        this.nextInspection = dateNow.plusDays(this.inspectionfrequency.getDias());
+        this.lastInspection = dateNow;
     }
 
 }

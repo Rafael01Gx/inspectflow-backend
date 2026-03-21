@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.checklist.services;
 
-import br.com.inspectflow.application.checklist.ports.in.FindByIdUseCase;
+import br.com.inspectflow.application.checklist.ports.in.FindChecklistByIdUseCase;
 import br.com.inspectflow.application.http.handlers.CheckListNotFoundException;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.checklist.repositories.CheckListRepository;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FindByIdCheclistService implements FindByIdUseCase {
+public class FindChecklistByIdService implements FindChecklistByIdUseCase {
 
     private final CheckListRepository repository;
 

@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.stock.dto;
 
-import br.com.inspectflow.domain.stock.enums.PartCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.stock.enums.StockType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
-import java.util.UUID;
 
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)

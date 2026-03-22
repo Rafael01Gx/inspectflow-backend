@@ -9,3 +9,10 @@ app:
     jwt:
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:false}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:None}
+
+springdoc:
+  api-docs:
+    enabled: true
+
+scalar:
+  enabled: true

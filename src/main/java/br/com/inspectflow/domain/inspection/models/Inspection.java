@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,13 +38,16 @@ public class Inspection {
     private InspectionCategory inspectionCategory;
 
     @NotNull
-    private LocalDate date;
+    private LocalDateTime date;
 
     @NotBlank
     private String status;
 
     @NotBlank
     private String technician;
+
+    @NotBlank
+    private String technicianId;
 
 
     private String notes;

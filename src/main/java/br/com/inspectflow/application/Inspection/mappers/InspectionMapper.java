@@ -12,7 +12,7 @@ import br.com.inspectflow.domain.inspection.models.InspectionItemResult;
 import br.com.inspectflow.domain.user.models.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class InspectionMapper {
@@ -30,9 +30,10 @@ public class InspectionMapper {
                             default -> InspectionCategory.INSPECAO;
                         }
                 )
-                .date(LocalDate.now())
+                .date(LocalDateTime.now())
                 .status(InspectionStatusHelper.resolve(dto).getValue())
-                .technician(user.getId().toString())
+                .technician(user.getName())
+                .technicianId(user.getId().toString())
                 .notes(dto.notes())
                 .build();
     }

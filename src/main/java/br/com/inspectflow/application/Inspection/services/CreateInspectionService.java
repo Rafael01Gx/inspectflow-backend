@@ -9,6 +9,8 @@ import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import br.com.inspectflow.domain.inspection.models.Inspection;
+import br.com.inspectflow.domain.inspection.models.InspectionHistory;
+import br.com.inspectflow.domain.inspection.repositories.InspectionHistoryRepository;
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateInspectionService implements CreateInspectionUseCase {
 
     private final InspectionRepository inspectionRepository;
+    private final InspectionHistoryRepository inspectionHistoryRepository;
     private final EquipmentRepository equipmentRepository;
     private final QualifiedProfessionalValidator  qualifiedProfessionalValidator;
     private final UserRepository userRepository;
@@ -43,6 +46,18 @@ public class CreateInspectionService implements CreateInspectionUseCase {
         inspectionRepository.save(inspection);
 
         equipment.updateInspection();
+
+        InspectionHistory historico = InspectionHistory.builder()
+                .inspectionId(inspection.getId())
+                .equipmentId(equipment.getId())
+                .inspectorId(user.getId())
+                .inspectorName(user.getName())
+                .date(inspection.getDate())
+                .category(inspection.getInspectionCategory())
+                .status(inspection.getStatus())
+                .build();
+
+        inspectionHistoryRepository.save(historico);
 
 
         return inspection;

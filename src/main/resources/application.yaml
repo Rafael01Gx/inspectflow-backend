@@ -20,6 +20,11 @@ spring:
       minimum-idle: 5
       connection-timeout: 30000
 
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
+
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -47,3 +52,10 @@ app:
       endpoint: http://localhost:9000
       access-key: admin
       secret-key: admin123
+
+springdoc:
+  api-docs:
+    enabled: false
+
+scalar:
+  enabled: false

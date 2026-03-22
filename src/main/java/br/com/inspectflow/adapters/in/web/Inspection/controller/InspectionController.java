@@ -2,7 +2,6 @@ package br.com.inspectflow.adapters.in.web.Inspection.controller;
 
 import br.com.inspectflow.application.Inspection.dto.InspectionRequest;
 import br.com.inspectflow.application.Inspection.ports.in.CreateInspectionUseCase;
-import com.sun.security.auth.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

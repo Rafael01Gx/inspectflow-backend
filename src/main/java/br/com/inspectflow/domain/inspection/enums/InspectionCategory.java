@@ -6,7 +6,6 @@ import lombok.Getter;
 public enum InspectionCategory {
     MECANICA,
     INSPECAO,
-    ELETRICA;
-
+    ELETRICA
 
 }

@@ -13,7 +13,6 @@ import br.com.inspectflow.domain.user.models.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 public class InspectionMapper {
@@ -40,24 +39,12 @@ public class InspectionMapper {
 
 
 
-    private List<ComponentResults> fromComponentResultsRequest(List<InspectionComponentResultsRequest> componentResults){
-        return componentResults.stream()
-                .map(this::fromComponentResultsRequest)
-                .toList();
-    }
-
     private ComponentResults fromComponentResultsRequest(InspectionComponentResultsRequest dto){
         return ComponentResults.builder()
                 .componentId(dto.componentId().toString())
                 .componentName(dto.componentName())
                 .items(dto.items().stream().map(this::fromInspectionItemResultsRequest).toList())
                 .build();
-    }
-
-    private List<InspectionItemResult> fromInspectionItemResultsRequest(List<InspectionItemResultRequest> dto){
-        return dto.stream().map(this::fromInspectionItemResultsRequest).toList();
-
-
     }
 
     private InspectionItemResult fromInspectionItemResultsRequest(InspectionItemResultRequest dto){

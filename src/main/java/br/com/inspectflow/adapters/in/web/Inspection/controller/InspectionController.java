@@ -28,6 +28,7 @@ public class InspectionController {
 
     @PostMapping
     public ResponseEntity<?> addInspection(@RequestBody @Valid InspectionRequest dto, Authentication user) {
+
         return ResponseEntity.ok(createInspection.execute(dto,user));
     }
 

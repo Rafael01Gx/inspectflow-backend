@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.inspection.models;
 
+import br.com.inspectflow.domain.inspection.enums.InspectionCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,9 @@ public class Inspection {
 
     @NotBlank
     private String equipmentName;
+
+    @NotNull
+    private InspectionCategory inspectionCategory;
 
     @NotNull
     private LocalDate date;

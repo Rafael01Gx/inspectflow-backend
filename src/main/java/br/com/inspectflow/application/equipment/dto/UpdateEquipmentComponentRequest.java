@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.equipment.dto;
 
 import br.com.inspectflow.application.Inspection.dto.UpdateInspectionItemRequest;
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +17,7 @@ public record UpdateEquipmentComponentRequest(
         String name,
 
         @NotNull(message = "Categoria do componente é obrigatória")
-        EquipmentComponentCategory category,
+        PartCategory category,
 
         @NotNull(message = "Lista de itens de inspeção é obrigatória")
         @JsonAlias("inspectionItem")

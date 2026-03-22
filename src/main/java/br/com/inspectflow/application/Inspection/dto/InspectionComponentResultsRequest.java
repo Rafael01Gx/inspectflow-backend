@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.Inspection.dto;
 
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +16,9 @@ public record InspectionComponentResultsRequest(
 
         @NotBlank(message = "Nome do componente é obrigatório")
         String componentName,
+
+        @NotNull
+        PartCategory category,
 
         @Valid
         List<InspectionItemResultRequest> items

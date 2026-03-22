@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.equipment.dto;
 
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
@@ -36,10 +36,10 @@ public record CreateEquipmentRequest(
         @NotBlank(message = "A localização é obrigatória")
         String location,
 
-        Map<EquipmentComponentCategory, String> consignmentCodes ,
+        Map<PartCategory, String> consignmentCodes ,
 
         @NotNull
-        InspectionFrequency inspectionfrequency,
+        InspectionFrequency inspectionFrequency,
 
         @Valid
         Set<CreateEquipmentComponentRequest> components

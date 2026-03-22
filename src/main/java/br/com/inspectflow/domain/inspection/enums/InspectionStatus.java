@@ -1,5 +1,8 @@
 package br.com.inspectflow.domain.inspection.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum InspectionStatus {
     CONFORMING("Conforme"),
 
@@ -13,10 +16,10 @@ public enum InspectionStatus {
         this.value = value;
     }
 
-    public static String fromValue(String value) {
-        for (InspectionCategoryItem item : InspectionCategoryItem.values()) {
+    public static InspectionStatus fromValue(String value) {
+        for (InspectionStatus item : InspectionStatus.values()) {
             if (item.getValue().equals(value)) {
-                return item.getValue();
+                return item;
             }
             return null;
         }

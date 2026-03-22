@@ -56,8 +56,6 @@ public class StockItem {
     public void addEquipament(Equipment equipment) {
         if (equipment == null) return;
         this.linkedEquipments.add(equipment);
-        // IMPORTANTE: Adiciona este StockItem à coleção do Equipment (Lado Dono)
-        // Isso garante que o relacionamento seja persistido na tabela de junção.
         equipment.getPartsInStock().add(this);
     }
 
@@ -82,7 +80,6 @@ public class StockItem {
 
     public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){
         this.update(dto);
-        // Para update, usamos addEquipament para garantir a sincronização bidirecional
         if (linkedEquipment != null) {
             linkedEquipment.forEach(this::addEquipament);
         }

@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.equipment.dto;
 
 import br.com.inspectflow.application.Inspection.dto.CreateInspectionItemRequest;
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public record CreateEquipmentComponentRequest(
         String name,
 
         @NotNull(message = "Categoria do componente é obrigatória")
-        EquipmentComponentCategory category,
+        PartCategory category,
 
         @NotNull(message = "Lista de itens de inspeção é obrigatória")
         @Valid

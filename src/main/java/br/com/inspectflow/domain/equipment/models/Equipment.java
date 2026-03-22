@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.equipment.models;
 
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
@@ -77,22 +77,22 @@ public class Equipment {
     private Set<EquipmentAttachment> attachments = new HashSet<>();
 
 
-    private InspectionFrequency inspectionfrequency ;
+    private InspectionFrequency inspectionFrequency ;
 
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "equipment_consignment_codes",joinColumns = @JoinColumn(name = "equipment_id"))
     @MapKeyColumn(name = "consignment_key")
     @Column(name = "consignment_value")
-    private Map<EquipmentComponentCategory, String> consignmentCodes = new HashMap<>();
+    private Map<PartCategory, String> consignmentCodes = new HashMap<>();
 
 
-    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionfrequency){
+    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency){
         Optional.of(name).ifPresent(n -> this.name = n);
         Optional.of(status).ifPresent(s -> this.status = s);
         Optional.of(type).ifPresent(t -> this.type = t);
         Optional.of(location).ifPresent(l -> this.location = l);
-        Optional.of(inspectionfrequency).ifPresent(f-> this.inspectionfrequency = f);
+        Optional.of(inspectionFrequency).ifPresent(f-> this.inspectionFrequency = f);
     }
 
     public void addComponent(EquipmentComponent component) {
@@ -128,15 +128,15 @@ public class Equipment {
         attachment.setEquipment(null);
     }
 
-    public void addConsignmentCode(EquipmentComponentCategory key, String value) {
+    public void addConsignmentCode(PartCategory key, String value) {
         if (key == null || value == null) return;
         this.consignmentCodes.put(key, value);
     }
-    public void removeConsignmentCode(EquipmentComponentCategory key){
+    public void removeConsignmentCode(PartCategory key){
         if (key == null) return;
         this.consignmentCodes.remove(key);
     }
-    public void setConsignmentCodes(Map<EquipmentComponentCategory, String> consignmentCodes){
+    public void setConsignmentCodes(Map<PartCategory, String> consignmentCodes){
         if (consignmentCodes == null) return;
         this.consignmentCodes.clear();
        consignmentCodes.forEach((e,s) -> this.consignmentCodes.put(e,s.toUpperCase()));
@@ -144,7 +144,7 @@ public class Equipment {
 
     public void updateInspection(){
         var dateNow = LocalDateTime.now();
-        this.nextInspection = dateNow.plusDays(this.inspectionfrequency.getDias());
+        this.nextInspection = dateNow.plusDays(this.inspectionFrequency.getDias());
         this.lastInspection = dateNow;
     }
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum OrderStatus {
     PENDING("PENDENTE"),
     IN_PROGRESS("EM ANDAMENTO"),
-    COMPLETED("CONCLUIDO"),
+    COMPLETED("CONCLUÍDO"),
     CANCELLED("CANCELADO");
 
     private final String value;

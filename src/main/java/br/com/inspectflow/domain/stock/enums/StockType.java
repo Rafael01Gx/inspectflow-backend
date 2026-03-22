@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum StockType {
     EQUIPMENT("EQUIPAMENTO"),
-    PIECES("PECAS"),
+    PIECES("PEÇAS"),
     OTHER("OUTROS");
 
     private final String value;

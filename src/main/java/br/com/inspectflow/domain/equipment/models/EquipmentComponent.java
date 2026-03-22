@@ -1,7 +1,7 @@
 package br.com.inspectflow.domain.equipment.models;
 
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.inspection.models.InspectionItem;
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -32,7 +32,7 @@ public class EquipmentComponent {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @EqualsAndHashCode.Include
-    private EquipmentComponentCategory category;
+    private PartCategory category;
 
     @Setter
     @Builder.Default
@@ -48,7 +48,7 @@ public class EquipmentComponent {
     private Equipment equipment;
 
 
-    public void update(String name, EquipmentComponentCategory category){
+    public void update(String name, PartCategory category){
         Optional.of(name).ifPresent(s -> this.name = s);
         Optional.of(category).ifPresent(c -> this.category = c);
     }

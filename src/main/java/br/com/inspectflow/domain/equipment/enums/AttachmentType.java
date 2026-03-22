@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum AttachmentType {
-    TECHNICAL("TECNICO"),
-    OPERATION("OPERACAO"),
-    MAINTENANCE("MANUTENCAO"),
-    SAFETY("SEGURANCA"),
+    TECHNICAL("TÉCNICO"),
+    OPERATION("OPERAÇÃO"),
+    MAINTENANCE("MANUTENÇÃO"),
+    SAFETY("SEGURANÇA"),
     ;
 
     private final String value;

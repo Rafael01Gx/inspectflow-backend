@@ -1,6 +1,6 @@
 package br.com.inspectflow.domain.checklist.models;
 
-import br.com.inspectflow.domain.inspection.enums.InspectionCategoryItem;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +14,6 @@ public class ChecklistItem {
     private String componentName;
     private String title;
     private String description;
-    private InspectionCategoryItem category;
+    private PartCategory category;
     private boolean impedimentItem;
 }

@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.Inspection.dto;
 
-import br.com.inspectflow.domain.inspection.enums.InspectionCategoryItem;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,7 +12,7 @@ public record UpdateInspectionItemRequest(
         @NotBlank
         String description,
         @NotNull
-        InspectionCategoryItem category,
+        PartCategory category,
         @NotNull
         boolean impedimentItem
 ) {

@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum EquipmentType {
-    ELECTRICAL_PANEL("PAINEL_ELETRICO"),
-    MACHINE("MAQUINA"),
+    ELECTRICAL_PANEL("PAINEL_ELÉTRICO"),
+    MACHINE("MÁQUINA"),
     PUMP("BOMBA"),
     COMPRESSOR("COMPRESSOR"),
     SENSOR("SENSOR"),
-    VALVE("VALVULA"),
+    VALVE("VÁLVULA"),
     OTHER("OUTROS");
 
     private final String value;

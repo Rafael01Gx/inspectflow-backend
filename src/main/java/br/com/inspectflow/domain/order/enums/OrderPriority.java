@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum OrderPriority {
     LOW("BAIXA"),
-    MEDIUM("MEDIA"),
+    MEDIUM("MÉDIA"),
     HIGH("ALTA");
 
     private final String value;

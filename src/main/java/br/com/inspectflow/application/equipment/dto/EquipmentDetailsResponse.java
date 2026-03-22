@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.equipment.dto;
 
-import br.com.inspectflow.domain.equipment.enums.EquipmentComponentCategory;
+import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.models.Equipment;
@@ -23,7 +23,7 @@ public record EquipmentDetailsResponse(
         LocalDateTime nextInspection,
         Set<EquipmentComponent> components,
         Set<EquipmentAttachmentResponse> attachments,
-        Map<EquipmentComponentCategory, String> consignmentCodes
+        Map<PartCategory, String> consignmentCodes
 ) {
     public static EquipmentDetailsResponse from(Equipment equipment) {
         return new EquipmentDetailsResponse(

@@ -10,6 +10,7 @@ public record JwtProperties(
         Boolean cookieHttpOnly,
         String cookieSameSite,
         String privateKeyPath,
-        String publicKeyPath
+        String publicKeyPath,
+        String issuer
 ) {
 }

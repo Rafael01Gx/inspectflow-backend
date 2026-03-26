@@ -1,4 +1,4 @@
-package br.com.inspectflow.adapters.in.web.auth.security;
+package br.com.inspectflow.application.user.services;
 
 import br.com.inspectflow.domain.user.models.User;
 import lombok.RequiredArgsConstructor;

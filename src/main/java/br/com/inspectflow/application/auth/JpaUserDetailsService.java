@@ -1,6 +1,6 @@
 package br.com.inspectflow.application.auth;
 
-import br.com.inspectflow.adapters.in.web.auth.security.SecurityUser;
+import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -3,7 +3,6 @@ package br.com.inspectflow.application.Inspection.mappers;
 import br.com.inspectflow.application.Inspection.dto.InspectionComponentResultsRequest;
 import br.com.inspectflow.application.Inspection.dto.InspectionItemResultRequest;
 import br.com.inspectflow.application.Inspection.dto.InspectionRequest;
-import br.com.inspectflow.application.Inspection.helpers.InspectionStatusHelper;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.inspection.enums.InspectionCategory;
 import br.com.inspectflow.domain.inspection.models.ComponentResults;
@@ -31,7 +30,6 @@ public class InspectionMapper {
                         }
                 )
                 .date(LocalDateTime.now())
-                .status(InspectionStatusHelper.resolve(dto).getValue())
                 .technician(user.getName())
                 .technicianId(user.getId().toString())
                 .notes(dto.notes())

@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.order.services;
 
+import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
 import br.com.inspectflow.application.order.dto.OrderResponse;
 import br.com.inspectflow.application.order.ports.in.FindWorkOrderByIdUseCase;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
@@ -15,6 +16,7 @@ public class FindWorkOrderByIdService implements FindWorkOrderByIdUseCase {
 
     @Override
     public OrderResponse execute(UUID id) {
-        return null;
+
+        return repository.findById(id).map(OrderResponse::from).orElseThrow(WorkerOrderNotFoundException::new);
     }
 }

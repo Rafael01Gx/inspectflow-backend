@@ -3,16 +3,15 @@ package br.com.inspectflow.domain.order.models;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.order.enums.OrderPriority;
 import br.com.inspectflow.domain.order.enums.OrderStatus;
+import br.com.inspectflow.domain.user.models.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Entity
 @Table(name = "work_orders")
@@ -47,13 +46,20 @@ public class WorkOrder {
     @Column(nullable = false)
     private LocalDate dueDate;
 
-    @Column(nullable = false)
-    private String assignee;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignee_id", nullable = false)
+    private User assignee;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "work_order_parts", joinColumns = @JoinColumn(name = "work_order_id"))
     @Builder.Default
     private Set<MaintenancePart> parts = new HashSet<>();
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    @Builder.Default
+    private List<String> systemInfo = new ArrayList<>();
 
     @Column(nullable = false)
     private String performedWork;
@@ -89,4 +95,7 @@ public class WorkOrder {
     }
 
 
+    public void addSystemInfo(String info){
+        this.systemInfo.add(LocalDate.now().format(DateTimeFormatter.ofPattern("%d/%M/%y")) + " - " + info);
+    }
 }

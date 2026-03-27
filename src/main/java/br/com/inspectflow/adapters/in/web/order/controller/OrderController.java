@@ -2,6 +2,7 @@ package br.com.inspectflow.adapters.in.web.order.controller;
 
 import br.com.inspectflow.application.order.dto.*;
 import br.com.inspectflow.application.order.ports.in.*;
+import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,7 +31,6 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<OrderResponse>> getAll(@PageableDefault Pageable page) {
-
         return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize())));
     }
 
@@ -40,12 +41,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> addOrder(@RequestBody @Valid CreateOrderRequest dto) {
-        return ResponseEntity.ok(createWorkOrder.execute(dto));
+    public ResponseEntity<OrderResponse> addOrder(@RequestBody @Valid CreateOrderRequest dto, Authentication authentication ) {
+        var user = (SecurityUser) authentication.getPrincipal();
+        return ResponseEntity.ok(createWorkOrder.execute(user.getId(),dto));
     }
 
     @PostMapping("/{id}/complete")
-    public ResponseEntity<?> completeOrder(@PathVariable UUID id,@RequestBody @Valid CompleteOrderRequest dto) {
+    public ResponseEntity<OrderResponse> completeOrder(@PathVariable UUID id,@RequestBody @Valid CompleteOrderRequest dto) {
         return ResponseEntity.ok(completeWorkOrder.execute(id,dto));
     }
 

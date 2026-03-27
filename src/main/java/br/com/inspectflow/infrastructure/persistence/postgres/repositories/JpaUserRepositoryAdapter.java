@@ -56,4 +56,9 @@ public class JpaUserRepositoryAdapter implements UserRepository {
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public User getReferenceById(UUID id) {
+        return repository.getReferenceById(id);
+    }
 }

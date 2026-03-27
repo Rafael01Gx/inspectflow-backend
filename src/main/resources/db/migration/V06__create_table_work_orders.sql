@@ -7,11 +7,25 @@ CREATE TABLE IF NOT EXISTS work_orders (
     order_status VARCHAR(50),
     order_priority VARCHAR(50),
     due_date DATE NOT NULL,
-    assignee VARCHAR(255) NOT NULL,
-    performed_work TEXT NOT NULL,
+    system_info JSONB,
+    assignee_id UUID NOT NULL,
+
+    performed_work TEXT,
     completion_date DATE,
-    CONSTRAINT fk_work_order_equipment FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE SET NULL
+
+    CONSTRAINT fk_work_order_equipment
+        FOREIGN KEY (equipment_id)
+        REFERENCES equipments(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_work_order_user
+        FOREIGN KEY (assignee_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
 );
+
+CREATE INDEX idx_work_orders_assignee_id
+    ON work_orders (assignee_id);
 
 CREATE TABLE  IF NOT EXISTS work_order_parts (
     work_order_id UUID NOT NULL,

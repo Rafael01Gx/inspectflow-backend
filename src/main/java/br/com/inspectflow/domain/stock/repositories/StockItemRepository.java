@@ -19,4 +19,6 @@ public interface StockItemRepository {
     boolean existsByName(String name);
 
     boolean existsBySupplierCode(String code);
+
+    StockItem getReferenceById(Long id);
 }

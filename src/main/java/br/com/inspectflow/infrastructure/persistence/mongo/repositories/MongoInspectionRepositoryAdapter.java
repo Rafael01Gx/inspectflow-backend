@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MongoInspectionRepositoryAdapter implements InspectionRepository {
 
-    private final PostgresInspectionRepository repository;
+    private final MongoInspectionRepository repository;
 
     @Override
     public Inspection save(Inspection inspection) {

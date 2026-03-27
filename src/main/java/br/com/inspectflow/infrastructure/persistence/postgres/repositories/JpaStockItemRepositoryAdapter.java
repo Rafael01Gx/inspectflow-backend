@@ -57,6 +57,11 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
+    public StockItem getReferenceById(Long id) {
+        return repository.getReferenceById(id);
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }

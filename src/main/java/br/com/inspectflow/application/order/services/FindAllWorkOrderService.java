@@ -15,6 +15,14 @@ public class FindAllWorkOrderService implements FindAllWorkOrderUseCase {
 
     @Override
     public PagedResponse<OrderResponse> execute(PageRequest pageRequest) {
-        return null;
+        var page = repository.findAll(pageRequest);
+        return new PagedResponse<OrderResponse>(
+                page.content().stream().map(OrderResponse::from).toList(),
+                page.pageNumber(),
+                page.pageSize(),
+                page.totalElements(),
+                page.totalPages(),
+                page.isLast()
+        );
     }
 }

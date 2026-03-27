@@ -15,4 +15,6 @@ public interface UserRepository {
     List<User> findAll();
     PagedResponse<User> findAll(PageRequest pageRequest);
     void deleteById(UUID id);
+
+    User getReferenceById(UUID id);
 }

@@ -96,6 +96,6 @@ public class WorkOrder {
 
 
     public void addSystemInfo(String info){
-        this.systemInfo.add(LocalDate.now().format(DateTimeFormatter.ofPattern("%d/%M/%y")) + " - " + info);
+        this.systemInfo.add(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " - " + info);
     }
 }

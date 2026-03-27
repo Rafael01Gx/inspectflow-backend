@@ -21,4 +21,6 @@ public interface StockItemRepository {
     boolean existsBySupplierCode(String code);
 
     StockItem getReferenceById(Long id);
+
+    List<StockItem> findByNameStartingWithIgnoreCase(String name);
 }

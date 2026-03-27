@@ -22,6 +22,7 @@ public record StockItemResponse(
 
 
     public static StockItemResponse from(StockItem stockItem) {
+        if (stockItem == null) return null;
         return StockItemResponse.builder()
                 .id(stockItem.getId())
                 .name(stockItem.getName())

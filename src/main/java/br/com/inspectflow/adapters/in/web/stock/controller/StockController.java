@@ -14,6 +14,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/stocks")
 @RequiredArgsConstructor
@@ -24,11 +26,17 @@ public class StockController {
     private final FindStockItemByIdUseCase findStockItemById;
     private final UpdateStockItemUseCase updateStockItem;
     private final DeductStockItemUseCase deductStockItem;
+    private final SearchByNameStockItemUseCase searchByNameStockItem;
 
     @GetMapping
     public ResponseEntity<PagedResponse<StockItemResponse>> getAll(@PageableDefault Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(findAllStockItems.execute(pageRequest));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<StockItemResponse>> search(@RequestParam String q ){
+        return ResponseEntity.ok(searchByNameStockItem.execute(q));
     }
 
     @GetMapping("/{id}")

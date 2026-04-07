@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/stocks")
@@ -24,6 +25,7 @@ public class StockController {
     private final CreateStockItemsUseCase createStockItems;
     private final FindAllStockItemsUseCase findAllStockItems;
     private final FindStockItemByIdUseCase findStockItemById;
+    private final FindAllByEquipmentIdUseCase findAllByEquipmentId;
     private final UpdateStockItemUseCase updateStockItem;
     private final DeductStockItemUseCase deductStockItem;
     private final SearchByNameStockItemUseCase searchByNameStockItem;
@@ -37,6 +39,11 @@ public class StockController {
     @GetMapping("/search")
     public ResponseEntity<List<StockItemResponse>> search(@RequestParam String q ){
         return ResponseEntity.ok(searchByNameStockItem.execute(q));
+    }
+
+    @GetMapping("/search/equipment/{equipmentId}")
+    public ResponseEntity<List<StockItemResponse>> search(@PathVariable UUID equipmentId ){
+        return ResponseEntity.ok(findAllByEquipmentId.execute(equipmentId));
     }
 
     @GetMapping("/{id}")

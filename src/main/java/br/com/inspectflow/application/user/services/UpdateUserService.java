@@ -35,6 +35,6 @@ public class UpdateUserService implements UpdateUserUseCase {
                 .build();
 
         User savedUser = userRepository.save(updatedUser);
-        return new UserResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getRole(), savedUser.isActive());
+        return new UserResponse(savedUser.getId(),user.getName() ,savedUser.getEmail(), savedUser.getRole(), savedUser.isActive());
     }
 }

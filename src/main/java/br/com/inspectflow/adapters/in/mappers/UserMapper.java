@@ -19,6 +19,7 @@ public class UserMapper {
                 .orElse(Role.USUARIO);
 
         return new UserResponse(user.getId(),
+                user.getName(),
                 user.getUsername(),
                 role,
                 user.isEnabled());
@@ -26,6 +27,7 @@ public class UserMapper {
 
     public static UserResponse toUserResponse(User user) {
         return new UserResponse(user.getId(),
+                user.getName(),
                 user.getEmail(),
                 user.getRole(),
                 user.isActive());

@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.order.models.MaintenancePart;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +24,8 @@ public record OrderResponse(
         Set<MaintenancePart> parts,
         List<String> systemInfo,
         String performedWork,
-        LocalDate completionDate
+        LocalDate completionDate,
+        LocalDateTime createdAt
 ) {
     public static OrderResponse from(WorkOrder order) {
         return new OrderResponse(
@@ -39,7 +41,8 @@ public record OrderResponse(
                 order.getParts(),
                 order.getSystemInfo(),
                 order.getPerformedWork(),
-                order.getCompletionDate()
+                order.getCompletionDate(),
+                order.getCreatedAt()
 
         );
     }

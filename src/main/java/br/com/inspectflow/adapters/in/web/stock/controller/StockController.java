@@ -25,14 +25,14 @@ public class StockController {
     private final CreateStockItemsUseCase createStockItems;
     private final FindAllStockItemsUseCase findAllStockItems;
     private final FindStockItemByIdUseCase findStockItemById;
-    private final FindAllByEquipmentIdUseCase findAllByEquipmentId;
+    private final FindAllStockItemByEquipmentIdUseCase findAllByEquipmentId;
     private final UpdateStockItemUseCase updateStockItem;
     private final DeductStockItemUseCase deductStockItem;
     private final SearchByNameStockItemUseCase searchByNameStockItem;
 
     @GetMapping
     public ResponseEntity<PagedResponse<StockItemResponse>> getAll(@PageableDefault Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC");
         return ResponseEntity.ok(findAllStockItems.execute(pageRequest));
     }
 

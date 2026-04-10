@@ -31,7 +31,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<OrderResponse>> getAll(@PageableDefault Pageable page) {
-        return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize())));
+        return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize(),null, "DESC")));
     }
 
     @GetMapping("/{id}")
@@ -42,13 +42,12 @@ public class OrderController {
 
     @GetMapping("/search") // implementar a busca por nome do equipamento et...
     public ResponseEntity<PagedResponse<OrderResponse>> search( @PageableDefault Pageable page) {
-        return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize())));
+        return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize(),"createdAt", "DESC")));
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> addOrder(@RequestBody @Valid CreateOrderRequest dto, Authentication authentication ) {
-        var user = (SecurityUser) authentication.getPrincipal();
-        return ResponseEntity.ok(createWorkOrder.execute(user.getId(),dto));
+    public ResponseEntity<OrderResponse> addOrder(@RequestBody @Valid CreateOrderRequest dto, Authentication authUser ) {
+        return ResponseEntity.ok(createWorkOrder.execute(dto,authUser));
     }
 
     @PostMapping("/{id}/complete")

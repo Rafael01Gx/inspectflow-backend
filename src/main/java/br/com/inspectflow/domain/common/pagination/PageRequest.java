@@ -6,8 +6,13 @@ public record PageRequest(
     String sortField,
     String sortDirection
 ) {
+    public static PageRequest of(int page, int size, String sortField, String sortDirection) {
+
+        return new PageRequest(page, size, sortField, sortDirection );
+    }
+
     public static PageRequest of(int page, int size) {
 
-        return new PageRequest(page, size, null, null);
+        return new PageRequest(page, size, null, null );
     }
 }

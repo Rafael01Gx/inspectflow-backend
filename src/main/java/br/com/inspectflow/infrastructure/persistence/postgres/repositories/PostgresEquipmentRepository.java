@@ -11,4 +11,5 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
     Optional<Equipment> findByCode(String code);
     boolean existsByCode(String code);
     List<Equipment> findAllByCodeIn(List<String> code);
+    List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1);
 }

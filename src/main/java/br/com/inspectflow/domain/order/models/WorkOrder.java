@@ -6,10 +6,12 @@ import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -33,6 +35,7 @@ public class WorkOrder {
 
     private String equipmentName;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_id")
     private Equipment equipment;
@@ -65,6 +68,10 @@ public class WorkOrder {
     private String performedWork;
 
     private LocalDate completionDate;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     @PostLoad

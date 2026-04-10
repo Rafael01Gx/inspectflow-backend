@@ -1,19 +1,18 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
-import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
+import br.com.inspectflow.domain.equipment.models.Equipment;
+import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -71,5 +70,10 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     @Override
     public void saveAndFlush(Equipment equipment) {
         repository.saveAndFlush(equipment);
+    }
+
+    @Override
+    public List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1) {
+        return repository.findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(q,q1);
     }
 }

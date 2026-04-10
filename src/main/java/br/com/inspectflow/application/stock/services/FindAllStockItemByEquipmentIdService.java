@@ -2,7 +2,7 @@ package br.com.inspectflow.application.stock.services;
 
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
-import br.com.inspectflow.application.stock.ports.in.FindAllByEquipmentIdUseCase;
+import br.com.inspectflow.application.stock.ports.in.FindAllStockItemByEquipmentIdUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FindAllByEquipmentIdService implements FindAllByEquipmentIdUseCase {
+public class FindAllStockItemByEquipmentIdService implements FindAllStockItemByEquipmentIdUseCase {
     private final EquipmentRepository equipmentRepository;
 
 

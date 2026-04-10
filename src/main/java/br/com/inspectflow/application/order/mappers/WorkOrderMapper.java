@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.order.mappers;
 
 import br.com.inspectflow.application.order.dto.CreateOrderRequest;
+import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 
 public class WorkOrderMapper {
@@ -11,6 +12,7 @@ public class WorkOrderMapper {
                 .description(dto.description())
                 .equipmentName(dto.equipmentName())
                 .orderPriority(dto.orderPriority())
+                .orderStatus(OrderStatus.PENDING)
                 .dueDate(dto.dueDate())
                 .build();
         if (!dto.parts().isEmpty()){

@@ -22,7 +22,7 @@ public class CheckListController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<Checklist>> getAll(@PageableDefault Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC");
         return ResponseEntity.ok(findAllCheckList.execute(pageRequest));
     }
 

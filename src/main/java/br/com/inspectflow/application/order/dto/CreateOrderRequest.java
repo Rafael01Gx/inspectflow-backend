@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.order.models.MaintenancePart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -26,13 +27,13 @@ public record CreateOrderRequest(
         @Size(min = 3, max = 100)
         String equipmentName,
 
-        @NotBlank
+        @NotNull
         UUID equipmentId,
 
-        @NotBlank
+        @NotNull
         OrderPriority orderPriority,
 
-        @NotBlank
+        @NotNull
         @Future
         LocalDate dueDate,
 

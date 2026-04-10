@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.equipment.repositories;
 
+import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -22,4 +23,6 @@ public interface EquipmentRepository {
     boolean existsByCode(String code);
 
     void saveAndFlush(Equipment equipment);
+
+    List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1);
 }

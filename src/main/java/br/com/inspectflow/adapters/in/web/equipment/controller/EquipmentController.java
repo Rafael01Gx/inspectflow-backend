@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,12 +27,13 @@ public class EquipmentController {
     private final FindByEquipmentCodeUseCase findByEquipmentCodeService;
     private final UpdateEquipmentUseCase updateEquipmentService;
     private final UploadEquipmentAttachmentUseCase uploadEquipmentAttachment;
+    private final SearchEquipmentUseCase searchEquipmentService;
     private final DeleteEquipmentAttachmentUseCase deleteEquipmentAttachmentService;
 
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok(
-                findAllEquipmentService.execute(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()))
+                findAllEquipmentService.execute(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC"))
         );
     }
 
@@ -40,6 +42,12 @@ public class EquipmentController {
         return ResponseEntity.ok(findByEquipmentCodeService.execute(code));
     }
 
+    @GetMapping("search")
+    public ResponseEntity<List<EquipmentResponse>> search(@RequestParam String q) {
+        return ResponseEntity.ok(
+                searchEquipmentService.execute(q)
+        );
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EquipmentDetailsResponse> getById(@PathVariable @Valid UUID id) {

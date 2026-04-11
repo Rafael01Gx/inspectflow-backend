@@ -67,6 +67,11 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
+    public List<StockItem> findTop5ByNameContainingIgnoreCase(String name) {
+        return repository.findTop5ByNameContainingIgnoreCase(name);
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }

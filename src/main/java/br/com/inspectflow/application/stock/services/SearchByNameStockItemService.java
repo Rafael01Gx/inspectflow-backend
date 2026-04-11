@@ -15,6 +15,6 @@ public class SearchByNameStockItemService implements SearchByNameStockItemUseCas
 
     @Override
     public List<StockItemResponse> execute(String name) {
-        return repository.findByNameStartingWithIgnoreCase(name).stream().map(StockItemResponse::from).toList();
+        return repository.findTop5ByNameContainingIgnoreCase(name).stream().map(StockItemResponse::from).toList();
     }
 }

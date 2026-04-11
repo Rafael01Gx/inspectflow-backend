@@ -4,6 +4,7 @@ import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.models.StockItem;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,6 @@ public interface StockItemRepository {
     StockItem getReferenceById(Long id);
 
     List<StockItem> findByNameStartingWithIgnoreCase(String name);
+
+    List<StockItem>  findTop5ByNameContainingIgnoreCase(String name);
 }

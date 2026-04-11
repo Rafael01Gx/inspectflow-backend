@@ -11,4 +11,6 @@ public interface PostgresStockItemRepository extends JpaRepository<StockItem, Lo
     boolean existsByName(String name);
 
     List<StockItem> findAllByNameStartingWithIgnoreCase(String name);
+
+    List<StockItem> findTop5ByNameContainingIgnoreCase(String name);
 }

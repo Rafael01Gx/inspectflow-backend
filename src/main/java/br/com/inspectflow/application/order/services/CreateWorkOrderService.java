@@ -18,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class CreateWorkOrderService implements CreateWorkOrderUseCase {
@@ -62,7 +60,6 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
                             + part.name().toUpperCase() + " (" + stockItem.getQuantity() + " em estoque)"
                             + " é menor que a quantidade (" + part.quantity() + ") necessária(s) para a manutenção." );
                 }
-                ;
             } else {
                 order.addSystemInfo("Um ou mais itens necessários para a manutenção não estão cadastrados no estoque!");
             }

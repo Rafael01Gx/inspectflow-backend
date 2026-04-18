@@ -19,7 +19,7 @@ public class DeleteUserService implements DeleteUserUseCase {
     @Transactional
     public void execute(UUID id) {
         if (!userRepository.findById(id).isPresent()) {
-            throw new UserNotFoundException("Usuário não encontrado!");
+            throw new UserNotFoundException();
         }
         userRepository.deleteById(id);
     }

@@ -19,7 +19,7 @@ public class FindUserByIdService implements FindUserByIdUseCase {
     @Override
     public UserResponse execute(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(UserNotFoundException::new);
         return new UserResponse(user.getId(),user.getName(), user.getEmail(), user.getRole(), user.isActive());
     }
 }

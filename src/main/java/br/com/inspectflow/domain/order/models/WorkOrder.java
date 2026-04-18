@@ -64,6 +64,7 @@ public class WorkOrder {
     @Builder.Default
     private List<String> systemInfo = new ArrayList<>();
 
+    @Setter
     @Column(nullable = false)
     private String performedWork;
 

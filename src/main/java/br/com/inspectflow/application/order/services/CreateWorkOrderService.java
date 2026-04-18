@@ -33,7 +33,7 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
     @Transactional
     public OrderResponse execute(CreateOrderRequest dto, Authentication authUser) {
 
-        User user = userRepository.findByEmail(authUser.getName()).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+        User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);
 
         Equipment equipment = equipmentRepository.findById(dto.equipmentId()).orElseThrow(EquipmentComponentNotFoundExceprion::new);
 

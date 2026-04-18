@@ -22,7 +22,7 @@ public class UpdateUserService implements UpdateUserUseCase {
     @Transactional
     public UserResponse execute(UUID id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(UserNotFoundException::new);
 
         User updatedUser = User.builder()
                 .id(user.getId())

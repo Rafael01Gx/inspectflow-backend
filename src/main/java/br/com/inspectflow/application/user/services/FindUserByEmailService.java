@@ -18,7 +18,7 @@ public class FindUserByEmailService implements FindUserByEmailUseCase {
     public UserResponse execute(String email) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(UserNotFoundException::new);
 
         return new UserResponse(user.getId(), user.getName(),user.getEmail(), user.getRole(), user.isActive());
     }

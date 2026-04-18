@@ -8,7 +8,6 @@ import java.util.List;
 public record CompleteOrderRequest(
         String performedWork,
         List<MaintenancePart> parts,
-        boolean reschedule,
-        LocalDate nextDate
+        boolean reschedule
 ) {
 }

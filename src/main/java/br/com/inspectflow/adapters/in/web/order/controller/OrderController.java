@@ -51,8 +51,8 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/complete")
-    public ResponseEntity<OrderResponse> completeOrder(@PathVariable UUID id,@RequestBody @Valid CompleteOrderRequest dto) {
-        return ResponseEntity.ok(completeWorkOrder.execute(id,dto));
+    public ResponseEntity<OrderResponse> completeOrder(@PathVariable UUID id,@RequestBody @Valid CompleteOrderRequest dto, Authentication authUser) {
+        return ResponseEntity.ok(completeWorkOrder.execute(id,dto,authUser));
     }
 
 

@@ -44,7 +44,7 @@ public class CreateInspectionService implements CreateInspectionUseCase {
 
         Equipment equipment = equipmentRepository.findById(dto.equipmentId()).orElseThrow(EquipmentNotFoundException::new);
 
-        User user = userRepository.findByEmail(auth.getName()).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+        User user = userRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
 
         qualifiedProfessionalValidator.validate(user,dto);
 

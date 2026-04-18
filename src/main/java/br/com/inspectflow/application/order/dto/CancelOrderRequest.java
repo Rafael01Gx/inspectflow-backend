@@ -1,4 +1,9 @@
 package br.com.inspectflow.application.order.dto;
 
-public record CancelOrderRequest() {
+import java.util.UUID;
+
+public record CancelOrderRequest(
+        UUID id,
+        String justification
+) {
 }

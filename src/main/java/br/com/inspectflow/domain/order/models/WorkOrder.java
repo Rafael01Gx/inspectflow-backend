@@ -92,6 +92,10 @@ public class WorkOrder {
         this.parts.remove(part);
     }
 
+    public void removeAllParts(){
+        this.parts.clear();
+    }
+
 
     public void completeOrder() {
         this.orderStatus = OrderStatus.COMPLETED;
@@ -100,10 +104,15 @@ public class WorkOrder {
 
     public void cancelOrder() {
         this.orderStatus = OrderStatus.CANCELLED;
+        this.completionDate = LocalDate.now();
     }
 
 
     public void addSystemInfo(String info){
         this.systemInfo.add(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " - " + info);
+    }
+
+    public void addAllParts(List<MaintenancePart> parts) {
+        this.parts.addAll(parts);
     }
 }

@@ -5,7 +5,7 @@ import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException
 import br.com.inspectflow.application.order.dto.CompleteOrderRequest;
 import br.com.inspectflow.application.order.dto.OrderResponse;
 import br.com.inspectflow.application.order.ports.in.CompleteWorkOrderUseCase;
-import br.com.inspectflow.application.order.validators.ServiceOrderUpdatePermissionValidator;
+import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
 import br.com.inspectflow.application.stock.dto.DeductStockRequest;
 import br.com.inspectflow.application.stock.services.DeductAllStockItemsService;
 import br.com.inspectflow.domain.order.models.MaintenancePart;
@@ -27,7 +27,7 @@ import java.util.UUID;
 public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
     private final WorkOrderRepository repository;
     private final UserRepository userRepository;
-    private final ServiceOrderUpdatePermissionValidator updatePermissionValidator;
+    private final WorkOrderUpdatePermissionValidator updatePermissionValidator;
     private final DeductAllStockItemsService deductAllStockItems;
 
     @Override
@@ -42,6 +42,8 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
 
         order.setPerformedWork(dto.performedWork());
         order.addSystemInfo("Ordem de serviço finalizada com sucesso por: " + user.getName());
+        order.removeAllParts();
+        order.addAllParts(dto.parts());
         order.completeOrder();
 
         return OrderResponse.from(order);
@@ -64,7 +66,6 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
                 order.addSystemInfo(part.name().toUpperCase() + " - " + part.quantity() + " unidades");
             }
         }
-
         if (!requests.isEmpty()) {
             deductAllStockItems.execute(requests);
         }

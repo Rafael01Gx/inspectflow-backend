@@ -2,7 +2,6 @@ package br.com.inspectflow.adapters.in.web.order.controller;
 
 import br.com.inspectflow.application.order.dto.*;
 import br.com.inspectflow.application.order.ports.in.*;
-import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
@@ -55,15 +54,16 @@ public class OrderController {
         return ResponseEntity.ok(completeWorkOrder.execute(id,dto,authUser));
     }
 
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelOrder(@PathVariable UUID id,@RequestBody @Valid CancelOrderRequest dto, Authentication authUser) {
+        cancelWorkOrder.execute(id,dto,authUser);
+        return ResponseEntity.ok().build();
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<OrderResponse> updateOrder(@PathVariable UUID id,@RequestBody @Valid UpdateOrderRequest dto) {
         return ResponseEntity.ok(updateWorkOrder.execute(id,dto));
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<?> cancelOrder(@PathVariable UUID id,@RequestBody @Valid CancelOrderRequest dto) {
-        cancelWorkOrder.execute(id,dto);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ServiceOrderUpdatePermissionValidator {
+public class WorkOrderUpdatePermissionValidator {
     private final WorkOrderBelongsToUserValidator belongsToUserValidator;
 
     public void execute(WorkOrder order, User user) {

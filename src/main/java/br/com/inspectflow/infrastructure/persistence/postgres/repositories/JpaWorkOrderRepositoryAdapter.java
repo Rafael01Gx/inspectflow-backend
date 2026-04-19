@@ -1,18 +1,18 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
-import br.com.inspectflow.domain.order.models.WorkOrder;
-import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
+import br.com.inspectflow.domain.order.models.WorkOrder;
+import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -45,5 +45,20 @@ public class JpaWorkOrderRepositoryAdapter implements WorkOrderRepository {
     @Override
     public void deleteById(UUID id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<Object[]> countWorkOrdersByStatus() {
+        return repository.countWorkOrdersByStatus();
+    }
+
+    @Override
+    public List<Object[]> countWorkOrdersByStatusMonthly() {
+        return repository.countWorkOrdersByStatusMonthly();
+    }
+
+    @Override
+    public Double calculateAverageRepairTimeInHours() {
+        return repository.calculateAverageRepairTimeInHours();
     }
 }

@@ -2,6 +2,7 @@ package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,4 +13,7 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
     boolean existsByCode(String code);
     List<Equipment> findAllByCodeIn(List<String> code);
     List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1);
+
+    @Query("SELECT e.status, COUNT(e) FROM Equipment e GROUP BY e.status")
+    List<Object[]> countEquipmentsByStatus();
 }

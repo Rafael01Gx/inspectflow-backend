@@ -1,12 +1,12 @@
 package br.com.inspectflow.domain.equipment.repositories;
 
-import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
-import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
+import br.com.inspectflow.domain.equipment.models.Equipment;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
 
 public interface EquipmentRepository {
     Equipment save(Equipment equipment);
@@ -25,4 +25,6 @@ public interface EquipmentRepository {
     void saveAndFlush(Equipment equipment);
 
     List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1);
+
+    List<Object[]> countEquipmentsByStatus();
 }

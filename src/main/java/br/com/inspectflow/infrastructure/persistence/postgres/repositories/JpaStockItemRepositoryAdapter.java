@@ -72,6 +72,11 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
+    public List<StockItem> findByLowQuantity() {
+        return repository.findByLowQuantity();
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }

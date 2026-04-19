@@ -76,4 +76,9 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     public List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1) {
         return repository.findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(q,q1);
     }
+
+    @Override
+    public List<Object[]> countEquipmentsByStatus() {
+        return repository.countEquipmentsByStatus();
+    }
 }

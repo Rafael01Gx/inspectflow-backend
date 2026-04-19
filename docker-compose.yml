@@ -22,7 +22,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   mongodb:
     image: mongo:8
     container_name: inspectflow-mongodb
@@ -36,7 +35,6 @@ services:
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
-    #  - ./docker/mongodb/init:/docker-entrypoint-initdb.d
     networks:
       - inspectflow-network
     healthcheck:
@@ -45,6 +43,30 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:8.4.2-alpine3.22
+    container_name: inspectflow-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - inspectflow-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-insight:
+    image: redis/redisinsight:3.2
+    container_name: inspectflow-redis-insight
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    networks:
+      - inspectflow-network
+    depends_on:
+      - redis
 
   pgadmin:
     image: dpage/pgadmin4:latest

@@ -6,10 +6,7 @@ import lombok.Getter;
 public enum EquipmentType {
     ELECTRICAL_PANEL("PAINEL_ELÉTRICO"),
     MACHINE("MÁQUINA"),
-    PUMP("BOMBA"),
-    COMPRESSOR("COMPRESSOR"),
-    SENSOR("SENSOR"),
-    VALVE("VÁLVULA"),
+    RESERVE("RESERVA"),
     OTHER("OUTROS");
 
     private final String value;

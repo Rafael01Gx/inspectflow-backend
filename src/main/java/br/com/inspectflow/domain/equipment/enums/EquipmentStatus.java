@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum EquipmentStatus {
     OPERATIONAL("OPERACIONAL"),
-    MAINTENANCE("MANUTENÇÃO"),
+    MAINTENANCE("EM MANUTENÇÃO"),
     CRITICAL("CRÍTICO"),
     DISABLED("DESABILITADO");
 

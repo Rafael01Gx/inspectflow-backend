@@ -67,7 +67,7 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
             }
         }
         if (!requests.isEmpty()) {
-            deductAllStockItems.execute(requests);
+            deductAllStockItems.execute(requests, order);
         }
     }
 }

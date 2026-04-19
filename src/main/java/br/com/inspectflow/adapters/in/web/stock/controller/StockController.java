@@ -1,9 +1,6 @@
 package br.com.inspectflow.adapters.in.web.stock.controller;
 
-import br.com.inspectflow.application.stock.dto.CreateStockItemRequest;
-import br.com.inspectflow.application.stock.dto.DeductStockRequest;
-import br.com.inspectflow.application.stock.dto.StockItemResponse;
-import br.com.inspectflow.application.stock.dto.UpdateStockItemRequest;
+import br.com.inspectflow.application.stock.dto.*;
 import br.com.inspectflow.application.stock.ports.in.*;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -29,6 +26,8 @@ public class StockController {
     private final UpdateStockItemUseCase updateStockItem;
     private final DeductStockItemUseCase deductStockItem;
     private final SearchByNameStockItemUseCase searchByNameStockItem;
+    private final FindAllStockItemUsageUseCase findAllStockItemUsage;
+
 
     @GetMapping
     public ResponseEntity<PagedResponse<StockItemResponse>> getAll(@PageableDefault Pageable pageable) {
@@ -44,6 +43,12 @@ public class StockController {
     @GetMapping("/search/equipment/{equipmentId}")
     public ResponseEntity<List<StockItemResponse>> search(@PathVariable UUID equipmentId ){
         return ResponseEntity.ok(findAllByEquipmentId.execute(equipmentId));
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<PagedResponse<StockItemUsageResponse>> getHistory(@PathVariable Long id, @PageableDefault Pageable pageable){
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC");
+        return ResponseEntity.ok(findAllStockItemUsage.execute(id,pageRequest));
     }
 
     @GetMapping("/{id}")

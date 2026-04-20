@@ -8,8 +8,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,14 +58,14 @@ public class StockController {
         return ResponseEntity.ok(findStockItemById.execute(id));
     }
 
-    @PostMapping
-    public ResponseEntity<StockItemResponse> createItem(@RequestBody @Valid CreateStockItemRequest dto){
-        return ResponseEntity.ok(createStockItems.execute(dto));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<StockItemResponse> createItem(@ModelAttribute @Valid CreateStockItemRequest dto,@RequestPart(value = "file", required = false) MultipartFile file){
+        return ResponseEntity.ok(createStockItems.execute(dto,file));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<StockItemResponse> updateItem(@PathVariable Long id, @RequestBody @Valid UpdateStockItemRequest dto){
-        return ResponseEntity.ok(updateStockItem.execute(id,dto));
+    @PutMapping(value = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<StockItemResponse> updateItem(@PathVariable Long id, @RequestPart("item") @Valid UpdateStockItemRequest dto,@RequestPart(value = "file", required = false) MultipartFile file){
+        return ResponseEntity.ok(updateStockItem.execute(id,dto,file));
     }
 
     @PostMapping("/deduct/{id}")

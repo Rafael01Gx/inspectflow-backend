@@ -17,7 +17,9 @@ public record StockItemResponse(
         String supplierCode,
         List<String> linkedEquipmentCodes,
         String location,
-        Integer minQuantity
+        Integer minQuantity,
+
+        String imageUrl
 ) {
 
 
@@ -36,6 +38,7 @@ public record StockItemResponse(
                                 .toList() : Collections.emptyList())
                 .location(stockItem.getLocation())
                 .minQuantity(stockItem.getMinQuantity())
+                .imageUrl(stockItem.getImageUrl())
                 .build();
     }
 

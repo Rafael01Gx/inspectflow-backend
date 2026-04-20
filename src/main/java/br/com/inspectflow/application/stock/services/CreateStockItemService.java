@@ -1,6 +1,8 @@
 package br.com.inspectflow.application.stock.services;
 
+import br.com.inspectflow.application.bucket.services.UploadFileService;
 import br.com.inspectflow.application.equipment.services.FindManyEquipmentsByCodeService;
+import br.com.inspectflow.application.equipment.validators.AttachmentFileIsValid;
 import br.com.inspectflow.application.stock.dto.CreateStockItemRequest;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.application.stock.mappers.StockItemMapper;
@@ -12,6 +14,7 @@ import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,10 +25,12 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
     private final StockItemRepository stockItemRepository;
     private final FindManyEquipmentsByCodeService findManyEquipmentsByCodeService;
     private final ValidateStockItemDoesNotExist validate;
+    private final AttachmentFileIsValid fileValidator;
+    private final UploadFileService uploadFileService;
 
     @Override
     @Transactional
-    public StockItemResponse execute(CreateStockItemRequest dto) {
+    public StockItemResponse execute(CreateStockItemRequest dto, MultipartFile file) {
         validate.execute(dto);
         StockItem stockItem = StockItemMapper.toStockItem(dto);
 
@@ -33,8 +38,15 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
             linkEquipmentsTo(stockItem, dto.linkedEquipmentCodes());
         }
 
-        stockItem.getLinkedEquipments().forEach(equipment -> {IO.println(equipment.getName());});
-        return StockItemResponse.from(stockItemRepository.save(stockItem));
+        var savedStockItem = stockItemRepository.save(stockItem);
+
+        if (file != null && !file.isEmpty()) {
+            fileValidator.execute(file);
+            var imageUrl = uploadFileService.execute("stock-item",file);
+            savedStockItem.setImageUrl(imageUrl);
+        }
+
+        return StockItemResponse.from(savedStockItem);
     }
 
 

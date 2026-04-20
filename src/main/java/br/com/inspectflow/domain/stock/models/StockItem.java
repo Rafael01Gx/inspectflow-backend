@@ -53,6 +53,11 @@ public class StockItem {
     @Min(0)
     private Integer minQuantity;
 
+    @Setter
+    @Column(name = "image_url")
+    private String imageUrl;
+
+
     public void addEquipament(Equipment equipment) {
         if (equipment == null) return;
         this.linkedEquipments.add(equipment);
@@ -68,14 +73,14 @@ public class StockItem {
         this.quantity -= quantity;
     }
 
-    public void update(UpdateStockItemRequest dto){
-        Optional.of(dto.name()).ifPresent(name -> this.name = name);
-        Optional.of(dto.type()).ifPresent(type -> this.type = type);
-        Optional.of(dto.partCategory()).ifPresent(partCategory -> this.partCategory = partCategory);
-        Optional.of(dto.quantity()).ifPresent(quantity -> this.quantity = quantity);
-        Optional.of(dto.supplierCode()).ifPresent(supplierCode -> this.supplierCode = supplierCode);
-        Optional.of(dto.location()).ifPresent(location -> this.location = location);
-        Optional.of(dto.minQuantity()).ifPresent(minQuantity -> this.minQuantity = minQuantity);
+    public void update(UpdateStockItemRequest dto) {
+        if (dto.name() != null) this.name = dto.name();
+        if (dto.type() != null) this.type = dto.type();
+        if (dto.partCategory() != null) this.partCategory = dto.partCategory();
+        if (dto.quantity() != null) this.quantity = dto.quantity();
+        if (dto.supplierCode() != null) this.supplierCode = dto.supplierCode();
+        if (dto.location() != null) this.location = dto.location();
+        if (dto.minQuantity() != null) this.minQuantity = dto.minQuantity();
     }
 
     public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){

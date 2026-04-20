@@ -40,6 +40,7 @@ public record CreateStockItemRequest(
 
         @PositiveOrZero(message = "O valor deve ser um número positivo ou zero")
         Integer minQuantity
+
 ) {
 
 }

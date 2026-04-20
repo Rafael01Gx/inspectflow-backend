@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,8 +56,8 @@ public class EquipmentController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<EquipmentResponse> addEquipment(@ModelAttribute @Valid CreateEquipmentRequest dto) {
-        return ResponseEntity.ok(createEquipmentService.execute(dto));
+    public ResponseEntity<EquipmentResponse> addEquipment(@RequestPart("equipment") @Valid CreateEquipmentRequest dto,@RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(createEquipmentService.execute(dto,file));
     }
 
     @PostMapping(value = "/{id}/attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -69,8 +70,8 @@ public class EquipmentController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @ModelAttribute @Valid UpdateEquipmentRequest dto) {
-        return ResponseEntity.ok(updateEquipmentService.execute(id, dto));
+    public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @RequestPart("equipment") @Valid UpdateEquipmentRequest dto,@RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(updateEquipmentService.execute(id, dto,file));
     }
 
     @PostMapping("/{id}")

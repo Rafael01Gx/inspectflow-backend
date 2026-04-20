@@ -22,6 +22,7 @@ public class AttachmentFileIsValid implements EquipmentValidator<EquipmentAttach
             "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "image/jpeg",
+            "image/jpg",
             "image/png",
             "image/webp"
     );

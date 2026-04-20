@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,14 +34,14 @@ public class UpdateEquipmentService implements UpdateEquipmentUseCase {
 
     @Override
     @Transactional
-    public EquipmentResponse execute(UUID id, UpdateEquipmentRequest dto) {
+    public EquipmentResponse execute(UUID id, UpdateEquipmentRequest dto, MultipartFile file) {
        idValidator.execute(id,dto.id());
 
        var equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
 
-        if (dto.file() != null && !dto.file().isEmpty()) {
-            fileValidator.execute(dto.file());
-            var imageUrl = uploadFileService.execute(equipment.getCode(),dto.file());
+        if (file != null && !file.isEmpty()) {
+            fileValidator.execute(file);
+            var imageUrl = uploadFileService.execute(equipment.getCode(),file);
             try {
                 Optional.ofNullable(equipment.getImageUrl()).ifPresent(deleteFileService::deleteFile);
                 equipment.setImageUrl(imageUrl);

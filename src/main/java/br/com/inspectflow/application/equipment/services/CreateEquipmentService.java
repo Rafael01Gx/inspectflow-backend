@@ -13,6 +13,7 @@ import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class CreateEquipmentService implements CreateEquipmentUseCase {
 
     @Override
     @Transactional
-    public EquipmentResponse execute(CreateEquipmentRequest dto) {
+    public EquipmentResponse execute(CreateEquipmentRequest dto, MultipartFile file) {
 
         validation.execute(dto.code());
 
@@ -35,9 +36,9 @@ public class CreateEquipmentService implements CreateEquipmentUseCase {
 
         Equipment savedEquipment = repository.save(equipment);
 
-        if (dto.file() != null && !dto.file().isEmpty()) {
-            fileValidator.execute(dto.file());
-            var imageUrl = uploadFileService.execute(dto.code(),dto.file());
+        if (file != null && !file.isEmpty()) {
+            fileValidator.execute(file);
+            var imageUrl = uploadFileService.execute(dto.code(),file);
             savedEquipment.setImageUrl(imageUrl);
         }
 

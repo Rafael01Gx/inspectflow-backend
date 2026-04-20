@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,8 @@ public record UpdateEquipmentRequest(
         InspectionFrequency inspectionFrequency,
 
         @Valid
-        Set<UpdateEquipmentComponentRequest> components
+        Set<UpdateEquipmentComponentRequest> components,
+
+        MultipartFile file
 ) {
 }

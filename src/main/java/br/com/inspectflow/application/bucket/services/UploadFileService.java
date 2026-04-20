@@ -18,6 +18,12 @@ public class UploadFileService implements UploadFileUseCase {
     @Override
     public UploadRequest execute(String equipmentCode, AttachmentType attType, MultipartFile file) {
 
-       return repository.uploadFile(equipmentCode, attType,file);
+       return repository.uploadDocFile(equipmentCode, attType,file);
+    }
+
+    @Override
+    public String execute(String equipmentCode, MultipartFile file) {
+
+       return repository.uploadImageFile(equipmentCode,file);
     }
 }

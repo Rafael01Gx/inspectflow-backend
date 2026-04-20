@@ -21,7 +21,9 @@ public record EquipmentResponse(
         InspectionFrequency inspectionFrequency,
         LocalDateTime lastInspection,
         LocalDateTime nextInspection,
-        Set<EquipmentComponent> components
+        Set<EquipmentComponent> components,
+
+        String imageUrl
 ) {
     public static EquipmentResponse from(Equipment equipment) {
         return new EquipmentResponse(
@@ -34,7 +36,8 @@ public record EquipmentResponse(
                 equipment.getInspectionFrequency(),
                 equipment.getLastInspection(),
                 equipment.getNextInspection(),
-                equipment.getComponents()
+                equipment.getComponents(),
+                equipment.getImageUrl()
         );
     }
 }

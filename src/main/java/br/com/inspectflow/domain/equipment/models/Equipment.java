@@ -86,13 +86,16 @@ public class Equipment {
     @Column(name = "consignment_value")
     private Map<PartCategory, String> consignmentCodes = new HashMap<>();
 
+    @Setter
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency){
-        Optional.of(name).ifPresent(n -> this.name = n);
-        Optional.of(status).ifPresent(s -> this.status = s);
-        Optional.of(type).ifPresent(t -> this.type = t);
-        Optional.of(location).ifPresent(l -> this.location = l);
-        Optional.of(inspectionFrequency).ifPresent(f-> this.inspectionFrequency = f);
+        if (name != null) this.name = name;
+        if (status != null) this.status = status;
+        if (type != null) this.type = type;
+        if (location != null) this.location = location;
+        if (inspectionFrequency != null) this.inspectionFrequency = inspectionFrequency;
     }
 
     public void addComponent(EquipmentComponent component) {

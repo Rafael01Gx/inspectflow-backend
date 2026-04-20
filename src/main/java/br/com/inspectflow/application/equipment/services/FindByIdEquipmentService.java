@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.equipment.services;
 
+import br.com.inspectflow.application.bucket.ports.in.CreatePresignedUrlUseCase;
 import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 import br.com.inspectflow.application.equipment.ports.in.FindByIdEquipmentUseCase;
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
@@ -14,10 +15,17 @@ import java.util.UUID;
 public class FindByIdEquipmentService implements FindByIdEquipmentUseCase {
 
     private final EquipmentRepository repository;
+    private final CreatePresignedUrlUseCase presignedUrl;
 
     @Override
     public EquipmentDetailsResponse execute(UUID id) {
         var equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
+
+        if (equipment.getImageUrl() != null && !equipment.getImageUrl().isEmpty()) {
+            var url = presignedUrl.execute(equipment.getImageUrl());
+            equipment.setImageUrl(url);
+        }
+
         return EquipmentDetailsResponse.from(equipment);
     }
 }

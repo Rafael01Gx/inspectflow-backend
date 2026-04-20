@@ -25,7 +25,9 @@ public record EquipmentDetailsResponse(
         LocalDateTime nextInspection,
         Set<EquipmentComponent> components,
         Set<EquipmentAttachmentResponse> attachments,
-        Map<PartCategory, String> consignmentCodes
+        Map<PartCategory, String> consignmentCodes,
+
+        String imageUrl
 ) {
     public static EquipmentDetailsResponse from(Equipment equipment) {
         return new EquipmentDetailsResponse(
@@ -42,7 +44,8 @@ public record EquipmentDetailsResponse(
                 equipment.getAttachments().stream()
                         .map(EquipmentAttachmentResponse::from)
                         .collect(Collectors.toSet()),
-                equipment.getConsignmentCodes()
+                equipment.getConsignmentCodes(),
+                equipment.getImageUrl()
         );
     }
 }

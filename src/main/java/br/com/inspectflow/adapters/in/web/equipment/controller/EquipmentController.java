@@ -54,8 +54,8 @@ public class EquipmentController {
         return ResponseEntity.ok(findByIdEquipmentService.execute(id));
     }
 
-    @PostMapping
-    public ResponseEntity<EquipmentResponse> addEquipment(@RequestBody @Valid CreateEquipmentRequest dto) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EquipmentResponse> addEquipment(@ModelAttribute @Valid CreateEquipmentRequest dto) {
         return ResponseEntity.ok(createEquipmentService.execute(dto));
     }
 
@@ -68,8 +68,8 @@ public class EquipmentController {
         return ResponseEntity.ok(uploadEquipmentAttachment.execute(id,dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @RequestBody @Valid UpdateEquipmentRequest dto) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EquipmentResponse> updateEquipment(@PathVariable UUID id, @ModelAttribute @Valid UpdateEquipmentRequest dto) {
         return ResponseEntity.ok(updateEquipmentService.execute(id, dto));
     }
 

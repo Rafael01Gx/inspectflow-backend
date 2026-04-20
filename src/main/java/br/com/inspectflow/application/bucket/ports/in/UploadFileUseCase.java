@@ -7,4 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UploadFileUseCase {
 
     UploadRequest execute(String equipmentId, AttachmentType attType, MultipartFile file);
+
+    String execute(String equipmentId, MultipartFile file);
 }

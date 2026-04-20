@@ -31,6 +31,7 @@ public class UploadEquipmentAttachment implements UploadEquipmentAttachmentUseCa
     private final AttachmentFileIsValid fileValidator;
     private final IdConsistencyValidator<UUID> idConsistencyValidator;
 
+
     @Override
     @Transactional
     public EquipmentDetailsResponse execute(UUID id, EquipmentAttachmentRequest dto) {

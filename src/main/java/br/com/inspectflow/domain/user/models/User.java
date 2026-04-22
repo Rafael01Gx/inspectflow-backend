@@ -22,6 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
@@ -31,10 +32,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Setter
     @Column(name = "role",nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Setter
     private boolean active;
 
     @Setter
@@ -52,4 +55,5 @@ public class User {
         this.password = password;
         this.mustChangePassword = false;
     }
+
 }

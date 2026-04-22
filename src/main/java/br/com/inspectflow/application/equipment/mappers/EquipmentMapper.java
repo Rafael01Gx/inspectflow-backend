@@ -62,7 +62,6 @@ public class EquipmentMapper {
                             mapUpdateItemsToCreateItems(compDto.items())
                     ));
                 } else {
-
                     equipment.getComponents().stream()
                             .filter(c -> c.getId().equals(compDto.id()))
                             .findFirst()

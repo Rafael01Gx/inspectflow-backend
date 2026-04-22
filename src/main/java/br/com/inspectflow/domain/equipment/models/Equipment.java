@@ -84,6 +84,7 @@ public class Equipment {
     @CollectionTable(name = "equipment_consignment_codes",joinColumns = @JoinColumn(name = "equipment_id"))
     @MapKeyColumn(name = "consignment_key")
     @Column(name = "consignment_value")
+    @MapKeyEnumerated(EnumType.STRING)
     private Map<PartCategory, String> consignmentCodes = new HashMap<>();
 
     @Setter

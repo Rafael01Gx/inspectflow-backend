@@ -50,7 +50,6 @@ public class UpdateEquipmentService implements UpdateEquipmentUseCase {
                 deleteFileService.deleteFile(imageUrl);
             }
         }
-
         EquipmentMapper.fromUpdateDto(equipment,dto);
 
         Equipment savedEquipment = repository.save(equipment);

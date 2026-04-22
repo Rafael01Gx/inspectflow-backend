@@ -8,11 +8,8 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateUserRequest(
         String name,
-        @Email String email,
 
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
-        String password,
-         Role role,
-        Boolean active
+        String password
 ) {
 }

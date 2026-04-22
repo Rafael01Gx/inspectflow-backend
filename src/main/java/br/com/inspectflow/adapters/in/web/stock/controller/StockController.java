@@ -59,7 +59,7 @@ public class StockController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<StockItemResponse> createItem(@ModelAttribute @Valid CreateStockItemRequest dto,@RequestPart(value = "file", required = false) MultipartFile file){
+    public ResponseEntity<StockItemResponse> createItem(@RequestPart("item") @Valid CreateStockItemRequest dto,@RequestPart(value = "file", required = false) MultipartFile file){
         return ResponseEntity.ok(createStockItems.execute(dto,file));
     }
 

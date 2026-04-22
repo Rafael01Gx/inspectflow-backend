@@ -45,7 +45,7 @@ services:
 
   redis:
     image: redis:8.4.2-alpine3.22
-    container_name: inspectflow-redis
+    container_name: inspectflow-redis-1
     restart: unless-stopped
     ports:
       - "6379:6379"

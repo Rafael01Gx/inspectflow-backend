@@ -2,6 +2,7 @@ package br.com.inspectflow.application.auth.services;
 
 import br.com.inspectflow.application.auth.dto.AuthResponse;
 import br.com.inspectflow.application.auth.dto.RegisterRequest;
+import br.com.inspectflow.application.email.ports.in.FirstAccessMailUseCase;
 import br.com.inspectflow.application.user.dto.CreateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.auth.TokenService;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService implements AuthenticateUseCase, RegisterUseCase {
@@ -24,6 +27,7 @@ public class AuthService implements AuthenticateUseCase, RegisterUseCase {
     private final TokenService tokenService;
     private final CreateUserUseCase createUserUseCase;
     private final FindUserByEmailUseCase findUserByEmailUseCase;
+    private final FirstAccessMailUseCase firstAccessMail;
 
 
     public AuthResponse authenticate(String email, String password) {
@@ -36,20 +40,21 @@ public class AuthService implements AuthenticateUseCase, RegisterUseCase {
 
     @Override
     @Transactional
-    public AuthResponse execute(RegisterRequest request) {
+    public void execute(RegisterRequest request) {
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
         UserResponse userResponse = createUserUseCase.execute(
                 new CreateUserRequest(
                         request.name(),
                         request.email(),
-                        request.password(),
+                        tempPassword,
                         Role.valueOf(request.role())
                 )
         );
+        firstAccessMail.execute(userResponse.email(), userResponse.name(), tempPassword);
+//        Authentication authentication = identityProvider.createAuthentication(userResponse.email(), userResponse.role().toString());
+//        String token = tokenService.generateToken(authentication);
 
-        Authentication authentication = identityProvider.createAuthentication(userResponse.email(), userResponse.role().toString());
-        String token = tokenService.generateToken(authentication);
-
-        return new AuthResponse(token, userResponse);
+//        return new AuthResponse(token, userResponse);
     }
 
     @Override

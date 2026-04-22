@@ -3,11 +3,12 @@ package br.com.inspectflow.adapters.in.web.auth.controller;
 import br.com.inspectflow.application.auth.CookieService;
 import br.com.inspectflow.application.auth.dto.AuthResponse;
 import br.com.inspectflow.application.auth.dto.LoginRequest;
-import br.com.inspectflow.application.auth.dto.RegisterRequest;
 import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
-import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
+import br.com.inspectflow.application.user.dto.ResetPasswordRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
-import br.com.inspectflow.application.user.services.FindUserByEmailService;
+import br.com.inspectflow.application.user.ports.in.FindUserByEmailUseCase;
+import br.com.inspectflow.application.user.ports.in.RecoveryPasswordUseCase;
+import br.com.inspectflow.application.user.ports.in.ResetUserPasswordUseCase;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,9 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticateUseCase authenticate;
-    private final RegisterUseCase register;
     private final CookieService cookieService;
-    private final FindUserByEmailService findUserByEmailService;
+    private final FindUserByEmailUseCase findUserByEmailService;
+    private final RecoveryPasswordUseCase recoveryPassword;
+    private final ResetUserPasswordUseCase resetUserPassword;
 
 
     @PostMapping("/login")
@@ -42,20 +44,6 @@ public class AuthController {
         return ResponseEntity.ok(authResult.user());
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<@NonNull UserResponse> register(
-            @Valid @RequestBody RegisterRequest request,
-            HttpServletResponse response
-    ) {
-
-        AuthResponse result = register.execute(request);
-
-        Cookie cookie = cookieService.createSessionCookie(result.token());
-
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(result.user());
-    }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
@@ -64,6 +52,18 @@ public class AuthController {
         response.addCookie(cookie);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/recovery-password")
+    public ResponseEntity<Void> recoveryPassword(@RequestParam String token,@Valid @RequestBody ResetPasswordRequest dto) {
+        resetUserPassword.execute(token,dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/recovery")
+    public ResponseEntity<Void> recoveryByEmail(@RequestBody String email) {
+        recoveryPassword.execute(email);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")

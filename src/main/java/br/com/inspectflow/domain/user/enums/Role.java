@@ -6,14 +6,16 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Objects;
 
 public enum Role {
-    USUARIO,
+
     ADMINISTRADOR {
         @Override
         public boolean canHandle(PartCategory category) {
             return true;
         }
     },
-    INSPETOR,
+    LIDER,
+    SUPERVISOR,
+    GESTOR,
 
     ELETRICISTA {
         @Override
@@ -35,5 +37,13 @@ public enum Role {
 
     public static Role valueOf(GrantedAuthority grantedAuthority) {
         return Role.valueOf(Objects.requireNonNull(grantedAuthority.getAuthority()).substring(5));
+    }
+
+    public static Role fromAuthority(GrantedAuthority grantedAuthority) {
+        String authority = grantedAuthority.getAuthority();
+        if (authority == null) return null;
+
+        String roleName = authority.startsWith("ROLE_") ? authority.substring(5) : authority;
+        return Role.valueOf(roleName);
     }
 }

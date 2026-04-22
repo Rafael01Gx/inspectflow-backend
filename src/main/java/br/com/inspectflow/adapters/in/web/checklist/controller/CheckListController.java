@@ -2,7 +2,6 @@ package br.com.inspectflow.adapters.in.web.checklist.controller;
 
 import br.com.inspectflow.application.checklist.ports.in.FindAllCheckListUseCase;
 import br.com.inspectflow.application.checklist.ports.in.FindChecklistByIdUseCase;
-import br.com.inspectflow.application.checklist.services.FindChecklistByIdService;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,6 +41,7 @@ public class CheckListController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('GESTOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteChecklist(){
         return ResponseEntity.ok().build();

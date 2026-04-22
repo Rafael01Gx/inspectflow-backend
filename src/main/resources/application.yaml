@@ -2,6 +2,10 @@ spring:
   application:
     name: inspectflow
 
+  threads:
+    virtual:
+      enabled: true
+
   profiles:
     active: ${SPRING_PROFILE:dev}
 
@@ -34,6 +38,26 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
 
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    from: "InspectFlow <noreply@inspectflow.com.br>"
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
 app:
   security:
     jwt:
@@ -57,6 +81,8 @@ app:
       endpoint: http://localhost:9000
       access-key: admin
       secret-key: admin123
+
+  api_host: "http://localhost:4200/login"
 
 springdoc:
   api-docs:

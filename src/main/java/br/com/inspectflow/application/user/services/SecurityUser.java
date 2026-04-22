@@ -18,8 +18,10 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        if (user.getRole() == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     public UUID getId() {
@@ -46,16 +48,20 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return user.isActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
         return user.isActive();
+    }
+
+    public User getUser() {
+        return this.user;
     }
 }

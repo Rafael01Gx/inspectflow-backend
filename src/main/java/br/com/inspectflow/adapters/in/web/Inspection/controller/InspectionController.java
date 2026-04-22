@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.inspection.models.InspectionHistory;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,12 +41,14 @@ public class InspectionController {
         return ResponseEntity.ok(findInspectionById.execute(id));
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ELETRICISTA', 'ROLE_MECANICO', 'ROLE_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<?> addInspection(@RequestBody @Valid InspectionRequest dto, Authentication user) {
 
         return ResponseEntity.ok(createInspection.execute(dto,user));
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ELETRICISTA', 'ROLE_MECANICO', 'ROLE_ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInspection() {
         return ResponseEntity.ok().build();

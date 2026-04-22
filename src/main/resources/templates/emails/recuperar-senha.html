@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="pt-BR"
+>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+        .wrapper { padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .header { background-color: #ef4444; color: white; padding: 25px; text-align: center; }
+        .content { padding: 30px; color: #1e293b; line-height: 1.6; }
+        .token-display { background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center; font-family: monospace; font-size: 1.2em; letter-spacing: 2px; margin: 20px 0; border: 1px dashed #cbd5e1; }
+        .button { display: block; background-color: #ef4444; color: #ffffff !important; text-decoration: none; padding: 14px; border-radius: 6px; text-align: center; font-weight: bold; margin-top: 25px; }
+        .footer { padding: 20px; text-align: center; font-size: 0.75em; color: #64748b; }
+        .warning { font-size: 0.85em; color: #94a3b8; margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <div class="header">
+            <h2>Recuperação de Senha</h2>
+        </div>
+        <div class="content">
+            <p>Olá, <strong th:text="${nome}">Usuário</strong>,</p>
+            <p>Recebemos uma solicitação para redefinir a senha da sua conta no <strong>InspectFlow</strong>.</p>
+
+            <p>Clique no botão abaixo para escolher uma nova senha:</p>
+
+            <a th:href="${urlRecuperacao}" class="button">Redefinir minha senha</a>
+
+            <div class="warning">
+                <p><strong>Atenção:</strong> Este link é válido por apenas <strong>1 hora</strong>. Se você não solicitou esta alteração, ignore este e-mail.</p>
+            </div>
+        </div>
+        <div class="footer">
+            <p>© 2026 InspectFlow - Sistema de Gestão Industrial</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,13 +1,19 @@
 package br.com.inspectflow.infrastructure.config.security;
 
+import br.com.inspectflow.domain.user.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -17,6 +23,7 @@ import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CookieBearerTokenResolver tokenResolver;
@@ -32,7 +39,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/logout","/auth/me").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/auth/register").hasRole(String.valueOf(Role.ADMINISTRADOR));
                     request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
@@ -44,10 +52,23 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth ->
                         oauth
                                 .bearerTokenResolver(tokenResolver)
-                                .jwt(Customizer.withDefaults())
+                                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
     }
 
     @Bean
@@ -68,4 +89,24 @@ public class SecurityConfig {
 
         return source;
     }
+
+
+    @Bean
+    static RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+
+                .role(Role.ADMINISTRADOR.name()).implies(Role.GESTOR.name())
+
+                .role(Role.GESTOR.name()).implies(Role.LIDER.name())
+                .role(Role.GESTOR.name()).implies(Role.SUPERVISOR.name())
+
+                .role(Role.LIDER.name()).implies(Role.ELETRICISTA.name())
+                .role(Role.LIDER.name()).implies(Role.MECANICO.name())
+
+                .role(Role.SUPERVISOR.name()).implies(Role.ELETRICISTA.name())
+                .role(Role.SUPERVISOR.name()).implies(Role.MECANICO.name())
+
+                .build();
+    }
+
 }

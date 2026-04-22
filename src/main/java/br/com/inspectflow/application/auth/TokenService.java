@@ -24,28 +24,19 @@ public class TokenService {
 
         Instant now = Instant.now();
 
-        String scope = authentication
-                .getAuthorities()
+        var authorities = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.toList());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtProperties.issuer())
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("upn", authentication.getName())
-                .claim("scope", scope)
-                .claim("groups", authentication
-                        .getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))
+                .claim("roles", authorities)
                 .build();
 
-        return jwtEncoder
-                .encode(JwtEncoderParameters.from(claims))
-                .getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }

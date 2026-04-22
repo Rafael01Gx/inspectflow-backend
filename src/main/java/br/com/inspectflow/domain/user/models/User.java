@@ -37,10 +37,19 @@ public class User {
 
     private boolean active;
 
+    @Setter
+    @Column(name = "must_change_password", nullable = false)
+    private boolean mustChangePassword;
+
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public void setPassword(String password) {
+        this.password = password;
+        this.mustChangePassword = false;
+    }
 }

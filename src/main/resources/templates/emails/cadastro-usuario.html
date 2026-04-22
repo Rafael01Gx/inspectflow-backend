@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="pt-BR"
+>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { background-color: #1e293b; color: #ffffff; padding: 30px; text-align: center; }
+        .content { padding: 30px; line-height: 1.6; color: #334155; }
+        .credentials-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; margin: 20px 0; }
+        .label { font-weight: bold; color: #64748b; font-size: 0.9em; }
+        .value { font-family: monospace; font-size: 1.1em; color: #0f172a; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+        .footer { background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 0.8em; color: #94a3b8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bem-vindo ao InspectFlow</h1>
+    </div>
+    <div class="content">
+        <p>Olá, <strong th:text="${nome}">Usuário</strong>,</p>
+        <p>Seu acesso à plataforma de gestão de inspeções foi criado com sucesso. Abaixo estão suas credenciais de primeiro acesso:</p>
+
+        <div class="credentials-box">
+            <div>
+                <span class="label">E-MAIL:</span><br>
+                <span class="value" th:text="${email}">usuario@email.com</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <span class="label">SENHA TEMPORÁRIA:</span><br>
+                <span class="value" th:text="${tempPassword}">#abc12345</span>
+            </div>
+        </div>
+
+        <p><strong>Atenção:</strong> Por motivos de segurança, você deverá alterar esta senha em seu primeiro login.</p>
+
+        <center>
+            <a th:href="${urlLogin}" class="button">Acessar Painel</a>
+        </center>
+    </div>
+    <div class="footer">
+        <p>© 2026 InspectFlow - Sistema de Gestão Industrial</p>
+        <p>Este é um e-mail automático, por favor não responda.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package br.com.inspectflow.adapters.in.mappers;
 
+import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.domain.user.enums.Role;
@@ -16,7 +17,7 @@ public class UserMapper {
                 .map(auth -> Objects.requireNonNull(auth.getAuthority()).replace("ROLE_", ""))
                 .map(Role::valueOf)
                 .findFirst()
-                .orElse(Role.USUARIO);
+                .orElseThrow(()-> new UserNotFoundException("Erro ao buscar permissão do usuário"));
 
         return new UserResponse(user.getId(),
                 user.getName(),

@@ -39,8 +39,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/logout","/auth/me").permitAll();
-                    request.requestMatchers(HttpMethod.POST, "/auth/register").hasRole(String.valueOf(Role.ADMINISTRADOR));
+                    request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();

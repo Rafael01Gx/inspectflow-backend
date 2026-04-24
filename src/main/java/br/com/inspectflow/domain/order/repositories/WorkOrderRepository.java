@@ -12,6 +12,7 @@ public interface WorkOrderRepository {
     WorkOrder save(WorkOrder workOrder);
     Optional<WorkOrder> findById(UUID id);
     List<WorkOrder> findAll();
+    List<WorkOrder> findAllByEquipmentCode(UUID equipmentCode);
     PagedResponse<WorkOrder> findAll(PageRequest pageRequest);
     void deleteById(UUID id);
     List<Object[]> countWorkOrdersByStatus();

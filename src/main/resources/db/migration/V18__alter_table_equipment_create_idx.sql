@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_equipment_code ON equipments(code);

@@ -8,6 +8,8 @@ import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FindAllStockItemsService implements FindAllStockItemsUseCase {
@@ -27,5 +29,11 @@ public class FindAllStockItemsService implements FindAllStockItemsUseCase {
                 page.totalPages(),
                 page.isLast()
                 );
+    }
+
+    @Override
+    public List<StockItemResponse> execute() {
+        return repository.findAll().stream().map(StockItemResponse::from)
+                .toList();
     }
 }

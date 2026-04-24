@@ -4,8 +4,12 @@ import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 
+import java.util.List;
+
 public interface FindAllStockItemsUseCase {
 
     PagedResponse<StockItemResponse> execute(PageRequest pageRequest);
+
+    List<StockItemResponse> execute();
 
 }

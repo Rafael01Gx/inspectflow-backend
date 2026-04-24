@@ -53,6 +53,13 @@ public class StockController {
         return ResponseEntity.ok(findAllStockItemUsage.execute(id,pageRequest));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<StockItemResponse>> getAll(){
+        return ResponseEntity.ok(findAllStockItems.execute());
+    }
+
+
+
     @GetMapping("/{id}")
     public ResponseEntity<StockItemResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(findStockItemById.execute(id));

@@ -2,6 +2,7 @@ package br.com.inspectflow.adapters.in.web.order.controller;
 
 import br.com.inspectflow.application.order.dto.*;
 import br.com.inspectflow.application.order.ports.in.*;
+import br.com.inspectflow.application.stock.ports.in.FindAllWorkOrderByEquipmentCodeUseCase;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -23,6 +25,7 @@ public class OrderController {
     private final CreateWorkOrderUseCase createWorkOrder;
     private final FindAllWorkOrderUseCase findAllWorkOrder;
     private final FindWorkOrderByIdUseCase findWorkOrderById;
+    private final FindAllWorkOrderByEquipmentCodeUseCase findAllWorkOrderByEquipmentCode;
     private final CompleteWorkOrderUseCase completeWorkOrder;
     private final UpdateWorkOrderUseCase updateWorkOrder;
     private final CancelWorkOrderUseCase cancelWorkOrder;
@@ -42,6 +45,11 @@ public class OrderController {
     @GetMapping("/search") // implementar a busca por nome do equipamento et...
     public ResponseEntity<PagedResponse<OrderResponse>> search( @PageableDefault Pageable page) {
         return ResponseEntity.ok(findAllWorkOrder.execute(PageRequest.of(page.getPageNumber(),page.getPageSize(),"createdAt", "DESC")));
+    }
+
+    @GetMapping("/search/equipment/{equipmentId}")
+    public ResponseEntity<List<OrderResponse>> search(@PathVariable UUID equipmentCode){
+        return ResponseEntity.ok(findAllWorkOrderByEquipmentCode.execute(equipmentCode));
     }
 
     @PostMapping

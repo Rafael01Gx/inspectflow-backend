@@ -1,16 +1,26 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
 import br.com.inspectflow.domain.order.models.WorkOrder;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PostgresWorkOrderRepository extends JpaRepository<WorkOrder, UUID> {
     
     @Query("SELECT wo.orderStatus, COUNT(wo) FROM WorkOrder wo GROUP BY wo.orderStatus")
     List<Object[]> countWorkOrdersByStatus();
+
+    @Query("""
+    SELECT wo
+    FROM WorkOrder wo
+    JOIN wo.equipment e
+    WHERE e.code = :code
+""")
+    List<WorkOrder> findAllByEquipmentCode(@Param("code") UUID code);
 
     @Query(value = """
            SELECT EXTRACT(YEAR FROM wo.created_at) as year,

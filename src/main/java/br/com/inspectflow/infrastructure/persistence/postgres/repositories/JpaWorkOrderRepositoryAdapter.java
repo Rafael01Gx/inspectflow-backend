@@ -36,6 +36,11 @@ public class JpaWorkOrderRepositoryAdapter implements WorkOrderRepository {
     }
 
     @Override
+    public List<WorkOrder> findAllByEquipmentCode(UUID equipmentCode) {
+        return repository.findAllByEquipmentCode(equipmentCode);
+    }
+
+    @Override
     public PagedResponse<WorkOrder> findAll(PageRequest pageRequest) {
         Pageable pageable = PaginationMapper.toPageable(pageRequest);
         Page<WorkOrder> page = repository.findAll(pageable);

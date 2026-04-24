@@ -82,7 +82,7 @@ app:
       access-key: admin
       secret-key: admin123
 
-  api_host: "http://localhost:4200/login"
+  api_host: "http://localhost:4200"
 
 springdoc:
   api-docs:

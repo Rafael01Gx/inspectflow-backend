@@ -22,7 +22,6 @@ public class RecoveryPasswordService implements RecoveryPasswordUseCase {
     @Override
     public void execute(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
-
         if (user == null) {
             return;
         }

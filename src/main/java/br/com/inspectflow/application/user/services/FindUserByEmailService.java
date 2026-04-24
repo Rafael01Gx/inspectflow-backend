@@ -20,6 +20,6 @@ public class FindUserByEmailService implements FindUserByEmailUseCase {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        return new UserResponse(user.getId(), user.getName(),user.getEmail(), user.getRole(), user.isActive());
+        return new UserResponse(user.getId(), user.getName(),user.getEmail(), user.getRole(), user.isActive(),user.isMustChangePassword());
     }
 }

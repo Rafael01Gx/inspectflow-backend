@@ -23,7 +23,7 @@ public class FindAllUsersService implements FindAllUsersUseCase {
         
         return new PagedResponse<>(
                 pagedUsers.content().stream()
-                        .map(user -> new UserResponse(user.getId(),user.getName() ,user.getEmail(), user.getRole(), user.isActive()))
+                        .map(user -> new UserResponse(user.getId(),user.getName() ,user.getEmail(), user.getRole(), user.isActive(),user.isMustChangePassword()))
                         .collect(Collectors.toList()),
                 pagedUsers.pageNumber(),
                 pagedUsers.pageSize(),

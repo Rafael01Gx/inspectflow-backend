@@ -20,6 +20,6 @@ public class FindUserByIdService implements FindUserByIdUseCase {
     public UserResponse execute(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        return new UserResponse(user.getId(),user.getName(), user.getEmail(), user.getRole(), user.isActive());
+        return new UserResponse(user.getId(),user.getName(), user.getEmail(), user.getRole(), user.isActive(),user.isMustChangePassword());
     }
 }

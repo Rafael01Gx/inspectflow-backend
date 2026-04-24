@@ -23,7 +23,9 @@ public class UserMapper {
                 user.getName(),
                 user.getUsername(),
                 role,
-                user.isEnabled());
+                user.isEnabled(),
+                user.isMustChangePassword()
+                );
     }
 
     public static UserResponse toUserResponse(User user) {
@@ -31,6 +33,7 @@ public class UserMapper {
                 user.getName(),
                 user.getEmail(),
                 user.getRole(),
-                user.isActive());
+                user.isActive(),
+                user.isMustChangePassword());
     }
 }

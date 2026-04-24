@@ -51,7 +51,6 @@ public class UserController {
         return ResponseEntity.ok(findAllUsers.execute(pageRequest));
     }
 
-    @PreAuthorize("hasRole('GESTOR')")
     @PatchMapping("/{id}/edit")
     public ResponseEntity<UserResponse> edit(@RequestBody @Valid UpdateUserRequest dto, @PathVariable UUID id, Authentication user) {
         return ResponseEntity.ok(updateUser.execute(id,user,dto));

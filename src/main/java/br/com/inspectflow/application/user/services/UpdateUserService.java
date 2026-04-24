@@ -48,6 +48,6 @@ public class UpdateUserService implements UpdateUserUseCase {
             user.setName(dto.name());
         }
 
-        return new UserResponse(user.getId(),user.getName() ,user.getEmail(), user.getRole(), user.isActive());
+        return new UserResponse(user.getId(),user.getName() ,user.getEmail(), user.getRole(), user.isActive(),user.isMustChangePassword());
     }
 }

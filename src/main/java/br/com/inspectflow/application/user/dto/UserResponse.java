@@ -9,7 +9,8 @@ public record UserResponse(
         String name,
         String email,
         Role role,
-        Boolean active
+        Boolean active,
+        Boolean mustChangePassword
 ) {
 
 }

@@ -64,4 +64,8 @@ public class SecurityUser implements UserDetails {
     public User getUser() {
         return this.user;
     }
+
+    public boolean isMustChangePassword() {
+        return user.isMustChangePassword();
+    }
 }

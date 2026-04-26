@@ -17,12 +17,10 @@ public record EquipmentResponse(
         EquipmentStatus status,
         EquipmentType type,
         String location,
-
         InspectionFrequency inspectionFrequency,
         LocalDateTime lastInspection,
         LocalDateTime nextInspection,
         Set<EquipmentComponent> components,
-
         String imageUrl
 ) {
     public static EquipmentResponse from(Equipment equipment) {

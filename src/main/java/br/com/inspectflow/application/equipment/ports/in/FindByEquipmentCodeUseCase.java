@@ -1,8 +1,8 @@
 package br.com.inspectflow.application.equipment.ports.in;
 
-import br.com.inspectflow.application.equipment.dto.EquipmentResponse;
+import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 
 public interface FindByEquipmentCodeUseCase {
-    EquipmentResponse execute(String code);
+    EquipmentDetailsResponse execute(String code);
 
 }

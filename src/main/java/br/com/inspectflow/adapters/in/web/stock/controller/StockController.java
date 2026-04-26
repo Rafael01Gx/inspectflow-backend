@@ -37,6 +37,11 @@ public class StockController {
         return ResponseEntity.ok(findAllStockItems.execute(pageRequest));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<StockItemResponse>> getAll(){
+        return ResponseEntity.ok(findAllStockItems.execute());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<StockItemResponse>> search(@RequestParam String q ){
         return ResponseEntity.ok(searchByNameStockItem.execute(q));
@@ -53,10 +58,6 @@ public class StockController {
         return ResponseEntity.ok(findAllStockItemUsage.execute(id,pageRequest));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<StockItemResponse>> getAll(){
-        return ResponseEntity.ok(findAllStockItems.execute());
-    }
 
 
 

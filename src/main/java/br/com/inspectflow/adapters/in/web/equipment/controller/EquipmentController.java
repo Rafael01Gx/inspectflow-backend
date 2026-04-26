@@ -39,7 +39,7 @@ public class EquipmentController {
     }
 
     @GetMapping("code/{code}")
-    public ResponseEntity<EquipmentResponse> getByCode(@PathVariable @Valid String code) {
+    public ResponseEntity<EquipmentDetailsResponse> getByCode(@PathVariable @Valid String code) {
         return ResponseEntity.ok(findByEquipmentCodeService.execute(code));
     }
 

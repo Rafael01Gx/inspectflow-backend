@@ -40,7 +40,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/equipments/**","/inspections/equipment/**","/orders/search/equipment/**").permitAll();
+                    request.requestMatchers(
+                            HttpMethod.GET,
+                            "/equipments/**",
+                            "/inspections/equipment/**",
+                            "/orders/search/equipment/**",
+                            "/attachments/**")
+                            .permitAll();
                     request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();

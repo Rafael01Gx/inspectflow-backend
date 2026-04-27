@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -49,32 +48,15 @@ public class BucketAdapterImpl implements BucketRepository {
     @Override
     public String getPresignedUrl(String objectKey) {
         if (objectKey == null) return null;
-
         try {
-            String url = minioClient.getPresignedObjectUrl(
+            return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(minioProperties.bucketName())
-                            .object(objectKey.replace(minioProperties.bucketName() + "/", ""))
+                            .object(objectKey.replace(minioProperties.bucketName()+"/", ""))
                             .expiry(2, TimeUnit.HOURS)
                             .build()
             );
-
-            URI original = URI.create(url);
-            URI publicUri = URI.create(minioProperties.publicUrl());
-
-            URI finalUri = new URI(
-                    publicUri.getScheme(),
-                    null,
-                    publicUri.getHost(),
-                    publicUri.getPort(),
-                    original.getPath(),
-                    original.getQuery(),
-                    null
-            );
-
-            return finalUri.toString();
-
         } catch (Exception e) {
             log.error("Error generating presigned URL", e);
             return null;

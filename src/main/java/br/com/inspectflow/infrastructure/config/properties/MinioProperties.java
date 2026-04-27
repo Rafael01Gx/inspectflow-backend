@@ -7,6 +7,8 @@ public record MinioProperties(
         String bucketName,
         String endpoint,
         String accessKey,
-        String secretKey
+        String secretKey,
+
+        String publicUrl
 ) {
 }

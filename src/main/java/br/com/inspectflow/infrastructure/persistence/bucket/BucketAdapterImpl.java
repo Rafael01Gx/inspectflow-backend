@@ -49,13 +49,17 @@ public class BucketAdapterImpl implements BucketRepository {
     public String getPresignedUrl(String objectKey) {
         if (objectKey == null) return null;
         try {
-            return minioClient.getPresignedObjectUrl(
+            String url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(minioProperties.bucketName())
                             .object(objectKey.replace(minioProperties.bucketName()+"/", ""))
                             .expiry(2, TimeUnit.HOURS)
                             .build()
+            );
+            return url.replace(
+                    minioProperties.endpoint(),
+                    minioProperties.publicUrl()
             );
         } catch (Exception e) {
             log.error("Error generating presigned URL", e);

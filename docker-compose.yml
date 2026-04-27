@@ -58,15 +58,13 @@ services:
       retries: 5
 
   inspectflow-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: xrafaelgx/inspectflow-api:latest
     container_name: inspectflow-api
     restart: always
     ports:
       - "8080:8080"
     env_file:
-      - .env.model
+      - .env
     depends_on:
       postgres:
         condition: service_healthy

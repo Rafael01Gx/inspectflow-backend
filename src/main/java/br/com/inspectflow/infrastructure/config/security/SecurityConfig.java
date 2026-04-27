@@ -1,6 +1,7 @@
 package br.com.inspectflow.infrastructure.config.security;
 
 import br.com.inspectflow.domain.user.enums.Role;
+import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final CookieBearerTokenResolver tokenResolver;
+    private final AppHostProperties appHosts;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -81,7 +83,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://web.rflgx.com.br"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4000",appHosts.web(), "https://web.rflgx.com.br"));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST","PATCH","PUT", "DELETE", "OPTIONS"));
 

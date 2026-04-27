@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.email.services;
 
 import br.com.inspectflow.application.email.ports.in.SendRecoveryMailUseCase;
+import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,18 @@ public class SendRecoveryMailService implements SendRecoveryMailUseCase {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+    private final AppHostProperties appHosts;
 
     @Value("${spring.mail.from:contato@inspectflow.com.br}")
     private String emailFrom;
 
-    @Value("${app.api_host}")
-    private String apiHost;
 
     @Override
     @Async
     public void execute(String to, String name, String token) {
         try {
 
-            String urlBase = apiHost + "/recovery-password";
+            String urlBase = appHosts.web() + "/recovery-password";
             String urlCompleta = urlBase + "?token=" + token;
 
             Context context = new Context();

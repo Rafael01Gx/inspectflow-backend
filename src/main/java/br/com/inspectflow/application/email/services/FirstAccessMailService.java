@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.email.services;
 
 import br.com.inspectflow.application.email.ports.in.FirstAccessMailUseCase;
+import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,11 @@ public class FirstAccessMailService implements FirstAccessMailUseCase {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+    private final AppHostProperties appHosts;
 
     @Value("${spring.mail.from:contato@inspectflow.com.br}")
     private String emailFrom;
 
-    @Value("${app.api_host}")
-    private String apiHost;
 
 
 
@@ -37,7 +37,7 @@ public class FirstAccessMailService implements FirstAccessMailUseCase {
             context.setVariable("nome", nome);
             context.setVariable("email", to);
             context.setVariable("tempPassword", tempPassword);
-            context.setVariable("urlLogin", apiHost);
+            context.setVariable("urlLogin", appHosts.web());
 
             String htmlBody = templateEngine.process("emails/cadastro-usuario", context);
 

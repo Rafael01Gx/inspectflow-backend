@@ -20,9 +20,9 @@ services:
       - "--ping=true"
       - "--ping.entrypoint=web"
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - traefik-certificates:/letsencrypt
@@ -44,15 +44,15 @@ services:
     container_name: inspectflow-web
     restart: unless-stopped
     environment:
-      - API_URL=http://rflgx.com.br/api
-      - API_IA_URL=http://rflgx.com.br/cortex
-      - WS_URL=ws://rflgx.com.br/api/ws
+      - API_URL=/inspectflow-api
+      - API_IA_URL=/inspectflow-api/ia
+      - WS_URL=ws:/inspectflow-api/ws
       - PORT=4000
     networks:
       - inspectflow-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`rflgx.com.br`)"
+      - "traefik.http.routers.frontend.rule=Host(`inspectflow.rflgx.com.br`)"
       - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.routers.frontend.priority=1"
       - "traefik.http.services.frontend.loadbalancer.server.port=4000"
@@ -78,7 +78,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`rflgx.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
       - "traefik.http.routers.api.entrypoints=web"
-      - "traefik.http.services.api.loadbalancer.server.port=8080"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
       - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.routers.api.middlewares=api-stripprefix"
       - "traefik.http.services.api.loadbalancer.sticky.cookie=true"
@@ -140,7 +140,7 @@ services:
     container_name: inspectflow-redis-insight
     restart: unless-stopped
     ports:
-      - "5540:5540"
+      - "127.0.0.1:5540:5540"
     networks:
       - inspectflow-network
     depends_on:
@@ -155,7 +155,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "5050:80"
+      - "127.0.0.1:5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
@@ -174,7 +174,7 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     ports:
-      - "8081:8081"
+      - "127.0.0.1:8081:8081"
     networks:
       - inspectflow-network
     depends_on:
@@ -185,8 +185,8 @@ services:
     container_name: minio
     restart: unless-stopped
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
     environment:
       MINIO_ROOT_USER: admin
       MINIO_ROOT_PASSWORD: admin123
@@ -195,6 +195,18 @@ services:
     networks:
       - inspectflow-network
     command: server /data --console-address ":9001"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - inspectflow-network
+    depends_on:
+      - traefik
 
 volumes:
   postgres_data:

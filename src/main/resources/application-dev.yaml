@@ -9,6 +9,9 @@ app:
     jwt:
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:false}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:None}
+  host:
+    api: "http://localhost:8080"
+    web: "https://inspectflow.rflgx.com.br"
 
 springdoc:
   api-docs:

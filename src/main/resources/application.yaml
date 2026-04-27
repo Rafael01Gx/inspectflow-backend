@@ -84,7 +84,7 @@ app:
 
   host:
     api: "http://localhost:8080"
-    web: "http://localhost:4200"
+    web: "https://inspectflow.rflgx.com.br"
 
 
 springdoc:

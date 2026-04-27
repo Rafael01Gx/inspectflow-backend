@@ -78,7 +78,7 @@ app:
   bucket:
     minio:
       bucketName: ${MINIO_BUCKET_NAME:inspectflow}
-      endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+      endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
       access-key: ${MINIO_ACCESS_KEY:admin}
       secret-key: ${MINIO_SECRET_KEY:admin123}
       public-url: ${MINIO_PUBLIC_URL:https://minio.rflgx.com.br}

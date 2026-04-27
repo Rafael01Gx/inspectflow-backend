@@ -1,32 +1,43 @@
 package br.com.inspectflow.infrastructure.persistence.bucket;
 
 import br.com.inspectflow.application.http.handlers.BusinessException;
+import br.com.inspectflow.application.http.handlers.StorageException;
 import br.com.inspectflow.domain.bucket.dto.UploadRequest;
 import br.com.inspectflow.domain.bucket.repository.BucketRepository;
 import br.com.inspectflow.domain.equipment.enums.AttachmentType;
 import br.com.inspectflow.infrastructure.config.properties.MinioProperties;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.http.Method;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class BucketAdapterImpl implements BucketRepository {
 
+
     private final MinioClient minioClient;
+
+
+    private final MinioClient minioPublicClient;
+
     private final MinioProperties minioProperties;
+
+
+    BucketAdapterImpl(@Qualifier("internalMinioClient") MinioClient minioClient,
+                      @Qualifier("publicMinioClient") MinioClient minioPublicClient,
+                      MinioProperties minioProperties){
+        this.minioClient = minioClient;
+        this.minioPublicClient = minioPublicClient;
+        this.minioProperties = minioProperties;
+    }
+
 
     @Override
     public UploadRequest uploadDocFile(String equipmentCode, AttachmentType attType, MultipartFile file){
@@ -49,7 +60,7 @@ public class BucketAdapterImpl implements BucketRepository {
     public String getPresignedUrl(String objectKey) {
         if (objectKey == null) return null;
         try {
-            return minioClient.getPresignedObjectUrl(
+            return minioPublicClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(minioProperties.bucketName())
@@ -72,24 +83,9 @@ public class BucketAdapterImpl implements BucketRepository {
                             .object(getObjectFile(fileUrl))
                             .build()
             );
-        } catch (ErrorResponseException e) {
-            throw new RuntimeException(e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException(e);
-        } catch (InternalException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidResponseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
-        } catch (XmlParserException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("Erro ao obter arquivo do MinIO", e);
+            throw new StorageException("Erro ao obter arquivo do MinIO", e);
         }
     }
 
@@ -102,24 +98,9 @@ public class BucketAdapterImpl implements BucketRepository {
                             .object(getObjectFile(fileUrl))
                             .build()
             );
-        } catch (ErrorResponseException e) {
-            throw new RuntimeException(e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException(e);
-        } catch (InternalException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidResponseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
-        } catch (XmlParserException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("Erro ao tentar remover arquivo do MinIO", e);
+            throw new StorageException("Erro ao tentar remover arquivo do MinIO", e);
         }
     }
 
@@ -134,24 +115,9 @@ public class BucketAdapterImpl implements BucketRepository {
                             .contentType(file.getContentType())
                             .build()
             );
-        } catch (ErrorResponseException e) {
-            throw new RuntimeException(e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException(e);
-        } catch (InternalException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidResponseException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
-        } catch (XmlParserException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("Erro durante a tentativa de upload para MinIO", e);
+            throw new StorageException("Erro durante a tentativa de upload para MinIO", e);
         }
     }
 

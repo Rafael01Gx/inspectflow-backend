@@ -72,15 +72,15 @@ app:
 
   data:
     mongodb:
-      uri: mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin
+      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin }
       database: inspectflow
 
   bucket:
     minio:
-      bucketName: inspectflow
-      endpoint: http://localhost:9000
-      access-key: admin
-      secret-key: admin123
+      bucketName: ${MINIO_BUCKET_NAME:inspectflow}
+      endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+      access-key: ${MINIO_ACCESS_KEY:admin}
+      secret-key: ${MINIO_SECRET_KEY:admin123}
 
   host:
     api: "http://localhost:8080"

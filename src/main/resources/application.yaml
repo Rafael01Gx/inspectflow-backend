@@ -86,7 +86,7 @@ app:
 
   host:
     api: ${APP_HOST_WEB:http://localhost:8080}
-    web: ${APP_HOST_WEB:http://inspectflow.rflgx.com.br}
+    web: ${APP_HOST_WEB:https://inspectflow.rflgx.com.br}
 
 
 springdoc:

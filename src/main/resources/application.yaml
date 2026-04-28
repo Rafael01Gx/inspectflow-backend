@@ -57,7 +57,8 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-
+server:
+  port: 3000
 app:
   security:
     jwt:
@@ -81,7 +82,7 @@ app:
       endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
       access-key: ${MINIO_ACCESS_KEY:admin}
       secret-key: ${MINIO_SECRET_KEY:admin123}
-      public-url: ${MINIO_PUBLIC_URL:https://minio.rflgx.com.br}
+      public-url: ${MINIO_PUBLIC_URL:http://minio.rflgx.com.br}
 
   host:
     api: "http://localhost:8080"

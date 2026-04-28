@@ -83,7 +83,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4000",appHosts.web(), "https://web.rflgx.com.br"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4000","http://localhost:4200",appHosts.web(), "https://**.rflgx.com.br"));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST","PATCH","PUT", "DELETE", "OPTIONS"));
 

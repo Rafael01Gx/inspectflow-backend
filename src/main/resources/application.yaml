@@ -85,8 +85,8 @@ app:
       public-url: ${MINIO_PUBLIC_URL:http://minio.rflgx.com.br}
 
   host:
-    api: "http://localhost:8080"
-    web: "https://inspectflow.rflgx.com.br"
+    api: ${APP_HOST_WEB:http://localhost:8080}
+    web: ${APP_HOST_WEB:http://inspectflow.rflgx.com.br}
 
 
 springdoc:

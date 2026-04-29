@@ -20,13 +20,16 @@ public class AdminUserSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
+        final String email = "rafaeljunio.jsm@outlook.com";
+        final String password = "admin123";
+
         if (userRepository.findAll().isEmpty()) {
             log.info("Nenhum usuário encontrado na base de dados. Iniciando criação do administrador padrão...");
 
             User admin = User.builder()
-                    .name("Administrador InspectFlow")
-                    .email("admin@inspectflow.com")
-                    .password(passwordEncoder.encode("admin123"))
+                    .name("Rafael Moraes")
+                    .email(email)
+                    .password(passwordEncoder.encode(password))
                     .role(Role.ADMINISTRADOR)
                     .active(true)
                     .mustChangePassword(true)
@@ -36,8 +39,8 @@ public class AdminUserSeeder implements CommandLineRunner {
 
             log.info("##########################################################");
             log.info("USUÁRIO ADMINISTRADOR INICIAL CRIADO:");
-            log.info("Email: admin@inspectflow.com");
-            log.info("Senha: admin123");
+            log.info(email);
+            log.info(password);
             log.info("##########################################################");
         } else {
             log.debug("A base de dados já contém usuários. Pulando seeder de administrador.");

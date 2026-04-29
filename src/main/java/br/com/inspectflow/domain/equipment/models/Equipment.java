@@ -91,12 +91,16 @@ public class Equipment {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency){
+    private String propertyCode;
+
+    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency,String propertyCode){
         if (name != null) this.name = name;
         if (status != null) this.status = status;
         if (type != null) this.type = type;
         if (location != null) this.location = location;
         if (inspectionFrequency != null) this.inspectionFrequency = inspectionFrequency;
+        if (propertyCode != null) this.propertyCode = propertyCode;
+
     }
 
     public void addComponent(EquipmentComponent component) {

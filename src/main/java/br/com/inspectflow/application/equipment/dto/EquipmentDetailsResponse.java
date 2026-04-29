@@ -26,8 +26,8 @@ public record EquipmentDetailsResponse(
         Set<EquipmentComponent> components,
         Set<EquipmentAttachmentResponse> attachments,
         Map<PartCategory, String> consignmentCodes,
-
-        String imageUrl
+        String imageUrl,
+        String propertyCode
 ) {
     public static EquipmentDetailsResponse from(Equipment equipment) {
         return new EquipmentDetailsResponse(
@@ -45,7 +45,8 @@ public record EquipmentDetailsResponse(
                         .map(EquipmentAttachmentResponse::from)
                         .collect(Collectors.toSet()),
                 equipment.getConsignmentCodes(),
-                equipment.getImageUrl()
+                equipment.getImageUrl(),
+                equipment.getPropertyCode()
         );
     }
 }

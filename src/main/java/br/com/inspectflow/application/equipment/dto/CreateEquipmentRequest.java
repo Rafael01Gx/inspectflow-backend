@@ -42,6 +42,8 @@ public record CreateEquipmentRequest(
         InspectionFrequency inspectionFrequency,
 
         @Valid
-        Set<CreateEquipmentComponentRequest> components
+        Set<CreateEquipmentComponentRequest> components,
+
+        String propertyCode
 ) {
 }

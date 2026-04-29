@@ -27,6 +27,7 @@ public class EquipmentMapper {
                 .location(dto.location())
                 .consignmentCodes(dto.consignmentCodes())
                 .inspectionFrequency(dto.inspectionFrequency())
+                .propertyCode(dto.propertyCode())
                 .build();
 
         if (dto.components() != null) {
@@ -38,7 +39,7 @@ public class EquipmentMapper {
     }
 
     public static Equipment fromUpdateDto(Equipment equipment, UpdateEquipmentRequest dto) {
-        equipment.update(dto.name(), dto.status(), dto.type(), dto.location(),dto.inspectionFrequency());
+        equipment.update(dto.name(), dto.status(), dto.type(), dto.location(),dto.inspectionFrequency(),dto.propertyCode());
 
         if (dto.components() != null) {
             Map<UUID, UpdateEquipmentComponentRequest> dtoComponentsMap = dto.components().stream()

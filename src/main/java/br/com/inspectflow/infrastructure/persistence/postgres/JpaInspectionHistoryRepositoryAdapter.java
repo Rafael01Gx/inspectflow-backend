@@ -1,7 +1,8 @@
-package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
+package br.com.inspectflow.infrastructure.persistence.postgres;
 
 import br.com.inspectflow.domain.inspection.models.InspectionHistory;
 import br.com.inspectflow.domain.inspection.repositories.InspectionHistoryRepository;
+import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresInspectionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

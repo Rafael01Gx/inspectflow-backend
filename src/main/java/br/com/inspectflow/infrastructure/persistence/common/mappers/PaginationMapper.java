@@ -12,27 +12,44 @@ public class PaginationMapper {
         if (request == null) {
             return Pageable.unpaged();
         }
-        
-        Sort sort = Sort.unsorted();
-        if (request.sortField() != null && !request.sortField().isEmpty()) {
-            Sort.Direction direction = Sort.Direction.ASC;
-            if ("DESC".equalsIgnoreCase(request.sortDirection())) {
-                direction = Sort.Direction.DESC;
-            }
-            sort = Sort.by(direction, request.sortField());
+
+        Sort sort;
+
+        if (request.sort() == null || request.sort().isEmpty()) {
+            sort = Sort.by(Sort.Direction.DESC, "id");
+        } else {
+            sort = Sort.by(
+                    request.sort().stream()
+                            .map(s -> {
+                                Sort.Direction direction;
+
+                                try {
+                                    direction = Sort.Direction.valueOf(s.direction().toUpperCase());
+                                } catch (Exception e) {
+                                    direction = Sort.Direction.DESC;
+                                }
+
+                                return new Sort.Order(direction, s.field());
+                            })
+                            .toList()
+            );
         }
-        
-        return org.springframework.data.domain.PageRequest.of(request.page(), request.size(), sort);
+
+        return org.springframework.data.domain.PageRequest.of(
+                request.page(),
+                request.size(),
+                sort
+        );
     }
 
     public static <T> PagedResponse<T> toPagedResponse(Page<T> page) {
         return new PagedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
         );
     }
 }

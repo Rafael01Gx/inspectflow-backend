@@ -32,6 +32,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    locations: classpath:db/migration/prod
 
   data:
     redis:
@@ -73,7 +74,7 @@ app:
 
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin }
+      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin}
       database: inspectflow
 
   bucket:

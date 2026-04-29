@@ -1,9 +1,9 @@
 package br.com.inspectflow.adapters.in.web.checklist.controller;
 
+import br.com.inspectflow.adapters.in.mappers.PageableRequestMapper;
 import br.com.inspectflow.application.checklist.ports.in.FindAllCheckListUseCase;
 import br.com.inspectflow.application.checklist.ports.in.FindChecklistByIdUseCase;
 import br.com.inspectflow.domain.checklist.models.Checklist;
-import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +22,7 @@ public class CheckListController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<Checklist>> getAll(@PageableDefault Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC");
-        return ResponseEntity.ok(findAllCheckList.execute(pageRequest));
+        return ResponseEntity.ok(findAllCheckList.execute(PageableRequestMapper.fromRequest(pageable)));
     }
 
     @GetMapping("/{id}")

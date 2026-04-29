@@ -1,8 +1,9 @@
-package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
+package br.com.inspectflow.infrastructure.persistence.postgres;
 
 import br.com.inspectflow.domain.equipment.enums.AttachmentType;
 import br.com.inspectflow.domain.equipment.models.EquipmentAttachment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentAttachmentRepository;
+import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresEquipmentAttachmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

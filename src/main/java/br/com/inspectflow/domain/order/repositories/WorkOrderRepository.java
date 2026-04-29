@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.order.repositories;
 
+import br.com.inspectflow.application.order.dto.SearchOrderFilterRequest;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.order.models.WorkOrder;
@@ -12,6 +13,7 @@ public interface WorkOrderRepository {
     WorkOrder save(WorkOrder workOrder);
     Optional<WorkOrder> findById(UUID id);
     List<WorkOrder> findAll();
+    PagedResponse<WorkOrder> search(SearchOrderFilterRequest search, PageRequest pageRequest);
     List<WorkOrder> findAllByEquipmentCode(UUID equipmentCode);
     PagedResponse<WorkOrder> findAll(PageRequest pageRequest);
     void deleteById(UUID id);

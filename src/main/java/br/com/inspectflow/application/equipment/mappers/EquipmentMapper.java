@@ -27,7 +27,7 @@ public class EquipmentMapper {
                 .location(dto.location())
                 .consignmentCodes(dto.consignmentCodes())
                 .inspectionFrequency(dto.inspectionFrequency())
-                .propertyCode(dto.propertyCode())
+                .propertyCode(dto.propertyCode().toUpperCase())
                 .build();
 
         if (dto.components() != null) {

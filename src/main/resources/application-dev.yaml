@@ -1,3 +1,7 @@
+spring:
+  flyway:
+    locations: classpath:db/migration/dev
+
 logging:
   level:
     org:
@@ -9,6 +13,15 @@ app:
     jwt:
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:false}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:None}
+
+  bucket:
+    minio:
+      bucketName: inspectflow
+      endpoint: http://localhost:9000
+      access-key: admin
+      secret-key: admin123
+      public-url: http://localhost:9000
+
   host:
     api: "http://localhost:8080"
     web: "http://localhost:4200"
@@ -19,3 +32,4 @@ springdoc:
 
 scalar:
   enabled: true
+

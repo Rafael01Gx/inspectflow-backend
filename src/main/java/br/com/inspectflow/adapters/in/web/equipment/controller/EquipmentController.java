@@ -1,9 +1,8 @@
 package br.com.inspectflow.adapters.in.web.equipment.controller;
 
+import br.com.inspectflow.adapters.in.mappers.PageableRequestMapper;
 import br.com.inspectflow.application.equipment.dto.*;
 import br.com.inspectflow.application.equipment.ports.in.*;
-import br.com.inspectflow.application.equipment.services.*;
-import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class EquipmentController {
     @GetMapping
     public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok(
-                findAllEquipmentService.execute(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),null, "DESC"))
+                findAllEquipmentService.execute(PageableRequestMapper.fromRequest(pageable))
         );
     }
 

@@ -1,10 +1,11 @@
-package br.com.inspectflow.infrastructure.persistence.mongo.repositories;
+package br.com.inspectflow.infrastructure.persistence.mongo;
 
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.checklist.repositories.CheckListRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;
+import br.com.inspectflow.infrastructure.persistence.mongo.repositories.MongoCheckListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

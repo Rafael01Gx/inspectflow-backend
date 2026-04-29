@@ -99,7 +99,7 @@ public class Equipment {
         if (type != null) this.type = type;
         if (location != null) this.location = location;
         if (inspectionFrequency != null) this.inspectionFrequency = inspectionFrequency;
-        if (propertyCode != null) this.propertyCode = propertyCode;
+        if (propertyCode != null) this.propertyCode = propertyCode.toUpperCase();
 
     }
 

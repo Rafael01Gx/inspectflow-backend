@@ -1,7 +1,8 @@
 package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.order.dto.OrderResponse;
-import br.com.inspectflow.application.order.ports.in.FindAllWorkOrderUseCase;
+import br.com.inspectflow.application.order.dto.SearchOrderFilterRequest;
+import br.com.inspectflow.application.order.ports.in.SearchWorkOrderUseCase;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
@@ -10,15 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FindAllWorkOrderService implements FindAllWorkOrderUseCase {
+public class SearchWorkOrderService implements SearchWorkOrderUseCase {
     private final WorkOrderRepository repository;
 
     @Override
-    public PagedResponse<OrderResponse> execute(PageRequest pageRequest) {
-        var page = repository.findAll(pageRequest);
+    public PagedResponse<OrderResponse> execute(SearchOrderFilterRequest filter, PageRequest pageRequest) {
+        var page = repository.search(filter, pageRequest);
 
-        page.content().forEach(order -> IO.println(order.getOrderPriority().toString()));
-        return new PagedResponse<OrderResponse>(
+        return new PagedResponse<>(
                 page.content().stream().map(OrderResponse::from).toList(),
                 page.pageNumber(),
                 page.pageSize(),

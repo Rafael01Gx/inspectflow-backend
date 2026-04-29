@@ -1,7 +1,8 @@
-package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
+package br.com.inspectflow.infrastructure.persistence.postgres;
 
 import br.com.inspectflow.domain.user.models.PasswordResetToken;
 import br.com.inspectflow.domain.user.repositories.PasswordResetTokenRepository;
+import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresPasswordResetTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

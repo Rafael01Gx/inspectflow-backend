@@ -1,10 +1,11 @@
-package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
+package br.com.inspectflow.infrastructure.persistence.postgres;
 
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;
+import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresStockItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -8,10 +8,7 @@ import br.com.inspectflow.application.user.dto.UpdateUserRequest;
 import br.com.inspectflow.application.user.dto.UpdateUserRoleRequest;
 import br.com.inspectflow.application.user.dto.UpdateUserStatusRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
-import br.com.inspectflow.application.user.ports.in.FindAllUsersUseCase;
-import br.com.inspectflow.application.user.ports.in.UpdateUserRoleUseCase;
-import br.com.inspectflow.application.user.ports.in.UpdateUserStatusUseCase;
-import br.com.inspectflow.application.user.ports.in.UpdateUserUseCase;
+import br.com.inspectflow.application.user.ports.in.*;
 import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,6 +32,7 @@ public class UserController {
 
     private final FindAllUsersUseCase findAllUsers;
     private final UpdateUserUseCase updateUser;
+    private final SearchByNameUseCase searchByName;
     private final UpdateUserRoleUseCase updateUserRole;
     private final UpdateUserStatusUseCase updateUserStatus;
     private final RegisterUseCase register;
@@ -47,6 +46,12 @@ public class UserController {
     @PreAuthorize("hasRole('GESTOR')")
     public ResponseEntity<PagedResponse<UserResponse>> all(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok(findAllUsers.execute(PageableRequestMapper.fromRequest(pageable)));
+    }
+
+    @PreAuthorize("hasRole('LIDER')")
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponse>> search(@RequestParam String name) {
+        return ResponseEntity.ok(searchByName.execute(name));
     }
 
     @PatchMapping("/{id}/edit")

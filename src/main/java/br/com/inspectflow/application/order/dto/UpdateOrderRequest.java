@@ -1,19 +1,18 @@
 package br.com.inspectflow.application.order.dto;
 
+import br.com.inspectflow.domain.order.enums.OrderPriority;
 import br.com.inspectflow.domain.order.models.MaintenancePart;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateOrderRequest(
-        @NotBlank
-        String id,
+        @NotNull
+        UUID id,
 
         @Size(min = 5, max = 100)
         String title,
@@ -21,17 +20,12 @@ public record UpdateOrderRequest(
         @Size(min = 5, max = 100)
         String description,
 
-        String orderStatus,
+        OrderPriority orderPriority,
 
-        String orderPriority,
-
-        @Future
+        @FutureOrPresent
         LocalDate dueDate,
 
-        Set<MaintenancePart> parts,
-
-        @Size(min = 10)
-        String performedWork,
+        List<MaintenancePart> parts,
 
         @FutureOrPresent
         LocalDate completionDate

@@ -78,6 +78,11 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
+    public List<StockItem> findAllById(List<Long> stockIds) {
+        return repository.findAllById(stockIds);
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }

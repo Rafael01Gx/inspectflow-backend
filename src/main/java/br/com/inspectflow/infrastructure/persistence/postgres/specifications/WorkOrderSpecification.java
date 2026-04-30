@@ -45,7 +45,6 @@ public class WorkOrderSpecification {
                         "%" + filter.assignee().toLowerCase() + "%"
                 ));
             }
-
             // data de conclusão
             if (filter.completionDate() != null) {
                 predicates.add(cb.equal(

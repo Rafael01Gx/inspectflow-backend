@@ -1,7 +1,10 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
 import br.com.inspectflow.domain.order.models.WorkOrder;
+import br.com.inspectflow.domain.user.models.User;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +45,5 @@ public interface PostgresWorkOrderRepository extends JpaRepository<WorkOrder, UU
             """, nativeQuery = true)
     Double calculateAverageRepairTimeInHours();
 
+    Page<WorkOrder> findAllByAssignee(User assignee, Pageable pageable);
 }

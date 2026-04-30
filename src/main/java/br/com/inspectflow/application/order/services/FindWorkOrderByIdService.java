@@ -16,7 +16,6 @@ public class FindWorkOrderByIdService implements FindWorkOrderByIdUseCase {
 
     @Override
     public OrderResponse execute(UUID id) {
-
         return repository.findById(id).map(OrderResponse::from).orElseThrow(WorkerOrderNotFoundException::new);
     }
 }

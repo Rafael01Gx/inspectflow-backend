@@ -4,13 +4,13 @@ import br.com.inspectflow.application.http.handlers.EquipmentComponentNotFoundEx
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.order.dto.CreateOrderRequest;
 import br.com.inspectflow.application.order.dto.OrderResponse;
+import br.com.inspectflow.application.order.helpers.SetInfoStockMessage;
 import br.com.inspectflow.application.order.mappers.WorkOrderMapper;
 import br.com.inspectflow.application.order.ports.in.CreateWorkOrderUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
-import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,8 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
     private final WorkOrderRepository repository;
     private final EquipmentRepository equipmentRepository;
     private final UserRepository userRepository;
-    private final StockItemRepository stockItemRepository;
+    private final SetInfoStockMessage setInfoStockMessage;
+
 
 
     @Override
@@ -41,7 +42,7 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
 
         order.setAssignee(user);
 
-        setInfoMessage(order);
+        setInfoStockMessage.execute(order);
 
         repository.save(order);
 
@@ -49,23 +50,6 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
     }
 
 
-    private void setInfoMessage(WorkOrder order) {
-        if (order.getEquipmentName().isEmpty()) return;
 
-        for (var part : order.getParts()) {
-            if (part.isFromStock()) {
-                var stockItem = stockItemRepository.getReferenceById(part.stockId());
-                if (stockItem.getQuantity() < part.quantity()) {
-                    order.addSystemInfo("A quantidade disponível em estoque do item "
-                            + part.name().toUpperCase() + " (" + stockItem.getQuantity() + " em estoque)"
-                            + " é menor que a quantidade (" + part.quantity() + ") necessária(s) para a manutenção." );
-                }
-            } else {
-                order.addSystemInfo("Um ou mais itens necessários para a manutenção não estão cadastrados no estoque!");
-            }
-
-
-        }
-    }
 
 }

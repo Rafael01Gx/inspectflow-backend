@@ -26,7 +26,9 @@ public class OrderController {
     private final CreateWorkOrderUseCase createWorkOrder;
     private final FindAllWorkOrderUseCase findAllWorkOrder;
     private final FindWorkOrderByIdUseCase findWorkOrderById;
+    private final FindAllByAssigneeUseCase findAllWorkOrderByUser;
     private final SearchWorkOrderUseCase searchWorkOrder;
+    private final SetAssigneeWorkOrderUseCase setAssignee;
     private final FindAllWorkOrderByEquipmentCodeUseCase findAllWorkOrderByEquipmentCode;
     private final CompleteWorkOrderUseCase completeWorkOrder;
     private final UpdateWorkOrderUseCase updateWorkOrder;
@@ -38,10 +40,16 @@ public class OrderController {
         return ResponseEntity.ok(findAllWorkOrder.execute(PageableRequestMapper.fromRequest(page)));
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(findWorkOrderById.execute(id));
 
+    }
+
+    @GetMapping("/my-orders")
+    public ResponseEntity<PagedResponse<OrderResponse>> searchMyOrders( Pageable pageable, Authentication authUser) {
+        return ResponseEntity.ok(findAllWorkOrderByUser.execute(authUser,PageableRequestMapper.fromRequest(pageable)));
     }
 
     @PreAuthorize("hasRole('SUPERVISOR')")
@@ -61,21 +69,29 @@ public class OrderController {
         return ResponseEntity.ok(createWorkOrder.execute(dto,authUser));
     }
 
+    @PreAuthorize("hasRole('LIDER')")
+    @PostMapping("{id}/set-assignee/{assigneeId}")
+    public ResponseEntity<Void> setAssignee(@PathVariable UUID id, @PathVariable UUID assigneeId) {
+        setAssignee.execute(id,assigneeId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{id}/complete")
     public ResponseEntity<OrderResponse> completeOrder(@PathVariable UUID id,@RequestBody @Valid CompleteOrderRequest dto, Authentication authUser) {
         return ResponseEntity.ok(completeWorkOrder.execute(id,dto,authUser));
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelOrder(@PathVariable UUID id,@RequestBody @Valid CancelOrderRequest dto, Authentication authUser) {
+    public ResponseEntity<Void> cancelOrder(@PathVariable UUID id,@RequestBody @Valid CancelOrderRequest dto, Authentication authUser) {
         cancelWorkOrder.execute(id,dto,authUser);
         return ResponseEntity.ok().build();
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderResponse> updateOrder(@PathVariable UUID id,@RequestBody @Valid UpdateOrderRequest dto) {
-        return ResponseEntity.ok(updateWorkOrder.execute(id,dto));
+    public ResponseEntity<OrderResponse> updateOrder(@PathVariable UUID id,@RequestBody @Valid UpdateOrderRequest dto, Authentication authUser) {
+        return ResponseEntity.ok(updateWorkOrder.execute(id,dto, authUser));
     }
+
 
 }

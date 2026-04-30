@@ -62,4 +62,14 @@ public class JpaUserRepositoryAdapter implements UserRepository {
     public User getReferenceById(UUID id) {
         return repository.getReferenceById(id);
     }
+
+    @Override
+    public User getReferenceByEmail(String email) {
+        return repository.getReferenceByEmail(email);
+    }
+
+    @Override
+    public List<User> searchByName(String name) {
+        return repository.findTop5ByNameStartingWithIgnoreCaseOrderByNameAsc(name);
+    }
 }

@@ -83,6 +83,19 @@ public class WorkOrder {
         }
     }
 
+    public void update(String title, String description, OrderPriority orderPriority, LocalDate dueDate, List<MaintenancePart> parts, LocalDate completionDate, User user) {
+        var updateMessage = "Ordem de serviço atualizada/modificada por: " + user.getName() + " - " + user.getRole();
+        if (title != null) this.title = title;
+        if (description != null) this.description = description;
+        if (orderPriority != null) this.orderPriority = orderPriority;
+        if (dueDate != null) this.dueDate = dueDate;
+        if (parts != null) {
+            this.removeAllParts();
+            this.addAllParts(parts);
+        }
+        this.addSystemInfo(updateMessage);
+    }
+
     public void addPart(MaintenancePart part) {
         if (part == null) return;
         this.parts.add(part);
@@ -92,7 +105,7 @@ public class WorkOrder {
         this.parts.remove(part);
     }
 
-    public void removeAllParts(){
+    public void removeAllParts() {
         this.parts.clear();
     }
 
@@ -108,8 +121,10 @@ public class WorkOrder {
     }
 
 
-    public void addSystemInfo(String info){
-        this.systemInfo.add(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " - " + info);
+    public void addSystemInfo(String info) {
+        var infoMessage = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " - " + info;
+        if (this.systemInfo.contains(infoMessage)) return;
+        this.systemInfo.add(infoMessage);
     }
 
     public void addAllParts(List<MaintenancePart> parts) {

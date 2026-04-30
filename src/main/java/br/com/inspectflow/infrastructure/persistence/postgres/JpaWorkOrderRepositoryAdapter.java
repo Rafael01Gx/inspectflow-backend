@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.infrastructure.persistence.common.mappers.PaginationMapper;
 import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresWorkOrderRepository;
 import br.com.inspectflow.infrastructure.persistence.postgres.specifications.WorkOrderSpecification;
@@ -81,5 +82,12 @@ public class JpaWorkOrderRepositoryAdapter implements WorkOrderRepository {
     @Override
     public Double calculateAverageRepairTimeInHours() {
         return repository.calculateAverageRepairTimeInHours();
+    }
+
+    @Override
+    public PagedResponse<WorkOrder> findAllByAssignee(User assignee, PageRequest pageRequest) {
+        var page = repository.findAllByAssignee(assignee, PaginationMapper.toPageable(pageRequest));
+
+        return PaginationMapper.toPagedResponse(page);
     }
 }

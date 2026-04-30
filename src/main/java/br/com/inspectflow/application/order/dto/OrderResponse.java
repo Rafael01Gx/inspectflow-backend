@@ -37,7 +37,7 @@ public record OrderResponse(
                 order.getOrderStatus(),
                 order.getOrderPriority(),
                 order.getDueDate(),
-                order.getAssignee().getName(),
+                 order.getAssignee().getName() + " - " + order.getAssignee().getRole().name(),
                 order.getParts(),
                 order.getSystemInfo(),
                 order.getPerformedWork(),

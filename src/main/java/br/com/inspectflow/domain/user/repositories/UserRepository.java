@@ -17,4 +17,8 @@ public interface UserRepository {
     void deleteById(UUID id);
 
     User getReferenceById(UUID id);
+
+    User getReferenceByEmail(String email);
+
+    List<User> searchByName(String name);
 }

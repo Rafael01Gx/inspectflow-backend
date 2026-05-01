@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.stock.models.StockItem;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -92,6 +93,10 @@ public class Equipment {
     private String imageUrl;
 
     private String propertyCode;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency,String propertyCode){
         if (name != null) this.name = name;

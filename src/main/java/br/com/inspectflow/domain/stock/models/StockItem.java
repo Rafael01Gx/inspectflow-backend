@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -56,6 +58,10 @@ public class StockItem {
     @Setter
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     public void addEquipament(Equipment equipment) {

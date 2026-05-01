@@ -63,7 +63,7 @@ server:
 app:
   security:
     jwt:
-      issuer: http://localhost:8080
+      issuer: https://inspectflow.rflgx.com.br
       expiration: ${JWT_EXPIRATION:86400000}  # 24 hours
       cookie-name: ${JWT_COOKIE_NAME:auth-token}
       cookie-secure: ${COOKIE_SECURE:false}

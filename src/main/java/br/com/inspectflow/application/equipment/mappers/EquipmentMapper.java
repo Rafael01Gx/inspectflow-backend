@@ -2,23 +2,21 @@ package br.com.inspectflow.application.equipment.mappers;
 
 import br.com.inspectflow.application.Inspection.dto.CreateInspectionItemRequest;
 import br.com.inspectflow.application.Inspection.dto.UpdateInspectionItemRequest;
-import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
-import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
 import br.com.inspectflow.application.equipment.dto.CreateEquipmentComponentRequest;
+import br.com.inspectflow.application.equipment.dto.CreateEquipmentRequest;
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentComponentRequest;
-import br.com.inspectflow.domain.inspection.models.InspectionItem;
+import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
+import br.com.inspectflow.domain.inspection.models.InspectionItem;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EquipmentMapper {
 
     public static Equipment fromCreateDto(CreateEquipmentRequest dto) {
+
         Equipment equipment = Equipment.builder()
                 .name(dto.name())
                 .code(dto.code().toUpperCase())
@@ -27,7 +25,12 @@ public class EquipmentMapper {
                 .location(dto.location())
                 .consignmentCodes(dto.consignmentCodes())
                 .inspectionFrequency(dto.inspectionFrequency())
-                .propertyCode(dto.propertyCode().toUpperCase())
+                .propertyCode(
+                        Optional.ofNullable(dto.propertyCode())
+                                .filter(s -> !s.isBlank())
+                                .map(String::toUpperCase)
+                                .orElse(null)
+                )
                 .build();
 
         if (dto.components() != null) {

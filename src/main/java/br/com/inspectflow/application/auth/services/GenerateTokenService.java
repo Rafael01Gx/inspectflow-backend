@@ -1,5 +1,6 @@
-package br.com.inspectflow.application.auth;
+package br.com.inspectflow.application.auth.services;
 
+import br.com.inspectflow.application.auth.ports.in.GenerateTokenUseCase;
 import br.com.inspectflow.infrastructure.config.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,12 +16,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TokenService {
+public class GenerateTokenService implements GenerateTokenUseCase {
 
     private final JwtEncoder jwtEncoder;
     private final JwtProperties jwtProperties;
 
-    public String generateToken(Authentication authentication) {
+    @Override
+    public String execute(Authentication authentication) {
 
         Instant now = Instant.now();
 

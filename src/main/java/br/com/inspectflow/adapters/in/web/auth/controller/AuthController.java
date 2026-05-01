@@ -1,9 +1,10 @@
 package br.com.inspectflow.adapters.in.web.auth.controller;
 
-import br.com.inspectflow.application.auth.CookieService;
 import br.com.inspectflow.application.auth.dto.AuthResponse;
 import br.com.inspectflow.application.auth.dto.LoginRequest;
 import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
+import br.com.inspectflow.application.auth.ports.in.ClearSessionCookieUseCase;
+import br.com.inspectflow.application.auth.ports.in.CreateSessionCookieUseCase;
 import br.com.inspectflow.application.user.dto.EmailRequest;
 import br.com.inspectflow.application.user.dto.ResetPasswordRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
@@ -24,7 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticateUseCase authenticate;
-    private final CookieService cookieService;
+    private final CreateSessionCookieUseCase createSessionCookie;
+    private final ClearSessionCookieUseCase clearSessionCookie;
     private final FindUserByEmailUseCase findUserByEmailService;
     private final RecoveryPasswordUseCase recoveryPassword;
     private final ResetUserPasswordUseCase resetUserPassword;
@@ -40,7 +42,7 @@ public class AuthController {
                 request.password()
         );
 
-        Cookie cookie = cookieService.createSessionCookie(authResult.token());
+        Cookie cookie = createSessionCookie.execute(authResult.token());
         response.addCookie(cookie);
         return ResponseEntity.ok(authResult.user());
     }
@@ -49,7 +51,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
 
-        Cookie cookie = cookieService.clearSessionCookie();
+        Cookie cookie = clearSessionCookie.execute();
         response.addCookie(cookie);
 
         return ResponseEntity.noContent().build();

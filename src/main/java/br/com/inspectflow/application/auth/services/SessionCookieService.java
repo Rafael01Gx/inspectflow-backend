@@ -1,5 +1,7 @@
-package br.com.inspectflow.application.auth;
+package br.com.inspectflow.application.auth.services;
 
+import br.com.inspectflow.application.auth.ports.in.ClearSessionCookieUseCase;
+import br.com.inspectflow.application.auth.ports.in.CreateSessionCookieUseCase;
 import br.com.inspectflow.infrastructure.config.properties.JwtProperties;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
@@ -7,11 +9,12 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class CookieService {
+public class SessionCookieService implements CreateSessionCookieUseCase, ClearSessionCookieUseCase {
 
     private final JwtProperties properties;
 
-    public Cookie createSessionCookie(String token) {
+    @Override
+    public Cookie execute(String token) {
         var cookie = new Cookie(properties.cookieName(), token);
 
         cookie.setHttpOnly(true);
@@ -24,7 +27,8 @@ public class CookieService {
         return cookie;
     }
 
-    public Cookie clearSessionCookie() {
+    @Override
+    public Cookie execute() {
 
         Cookie cookie = new Cookie(properties.cookieName(), "");
 

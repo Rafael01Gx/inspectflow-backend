@@ -2,13 +2,13 @@ package br.com.inspectflow.application.auth.services;
 
 import br.com.inspectflow.application.auth.dto.AuthResponse;
 import br.com.inspectflow.application.auth.dto.RegisterRequest;
+import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
+import br.com.inspectflow.application.auth.ports.in.GenerateTokenUseCase;
+import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
+import br.com.inspectflow.application.auth.ports.out.IdentityProviderPort;
 import br.com.inspectflow.application.email.ports.in.FirstAccessMailUseCase;
 import br.com.inspectflow.application.user.dto.CreateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
-import br.com.inspectflow.application.auth.TokenService;
-import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
-import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
-import br.com.inspectflow.application.auth.ports.out.IdentityProviderPort;
 import br.com.inspectflow.application.user.ports.in.CreateUserUseCase;
 import br.com.inspectflow.application.user.ports.in.FindUserByEmailUseCase;
 import br.com.inspectflow.domain.user.enums.Role;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class AuthService implements AuthenticateUseCase, RegisterUseCase {
 
     private final IdentityProviderPort identityProvider;
-    private final TokenService tokenService;
+    private final GenerateTokenUseCase generateTokenService;
     private final CreateUserUseCase createUserUseCase;
     private final FindUserByEmailUseCase findUserByEmailUseCase;
     private final FirstAccessMailUseCase firstAccessMail;
@@ -32,7 +32,7 @@ public class AuthService implements AuthenticateUseCase, RegisterUseCase {
 
     public AuthResponse authenticate(String email, String password) {
         Authentication authentication = identityProvider.authenticate(email, password);
-        String token = tokenService.generateToken(authentication);
+        String token = generateTokenService.execute(authentication);
 
         UserResponse userResponse = findUserByEmailUseCase.execute(email);
         return new AuthResponse(token, userResponse);

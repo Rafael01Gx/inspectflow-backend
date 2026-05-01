@@ -83,7 +83,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList(appHosts.web().replace("https", "http"), appHosts.api().replace("http", "https")));
+        configuration.setAllowedOrigins(Arrays.asList(appHosts.web(),"http://inspectflow.rflgx.com.br","http://localhost:4000"));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST","PATCH","PUT", "DELETE", "OPTIONS"));
 

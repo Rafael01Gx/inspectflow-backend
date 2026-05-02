@@ -1,5 +1,6 @@
 package br.com.inspectflow.application.order.services;
 
+import br.com.inspectflow.application.notification.services.NotificationService;
 import br.com.inspectflow.application.order.ports.in.CreateSystemWorkOrderUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.order.enums.OrderPriority;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCase {
 
     private final WorkOrderRepository repository;
+    private final NotificationService notificationService;
 
 
     @Override

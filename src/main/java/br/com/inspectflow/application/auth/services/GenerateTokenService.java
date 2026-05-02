@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.auth.services;
 
 import br.com.inspectflow.application.auth.ports.in.GenerateTokenUseCase;
+import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.infrastructure.config.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,7 +24,7 @@ public class GenerateTokenService implements GenerateTokenUseCase {
 
     @Override
     public String execute(Authentication authentication) {
-
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         Instant now = Instant.now();
 
         var authorities = authentication.getAuthorities()
@@ -37,6 +38,7 @@ public class GenerateTokenService implements GenerateTokenUseCase {
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("roles", authorities)
+                .claim("userId", securityUser.getId().toString())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

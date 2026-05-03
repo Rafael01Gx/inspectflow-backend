@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -41,6 +43,7 @@ public class Notification {
     private String message;
 
     @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String metadata;
 
     @Column(nullable = false)
@@ -50,7 +53,7 @@ public class Notification {
     private Instant readAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
     @Column(name = "expires_at")
     private Instant expiresAt;
@@ -58,6 +61,7 @@ public class Notification {
     @PrePersist
     void prePersist() {
         this.expiresAt = Instant.now().plus(7, ChronoUnit.DAYS);
+        this.createdAt = Instant.now();
     }
 
     public void markAsRead() {

@@ -1,1 +1,0 @@
-ALTER TABLE equipments ADD COLUMN inspection_frequency INT NOT NULL DEFAULT 7;

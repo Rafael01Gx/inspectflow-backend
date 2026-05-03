@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS idx_user_name ON users (lower(name), name);

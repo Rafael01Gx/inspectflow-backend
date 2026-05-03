@@ -7,5 +7,4 @@ import java.util.UUID;
 public interface SendNotificationUseCase {
     void sendToUser(SendNotificationDto command);
     void sendToGroup(UUID groupId, SendNotificationDto command);
-    void broadcast(SendNotificationDto command);
 }

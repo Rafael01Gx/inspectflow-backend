@@ -12,4 +12,6 @@ public interface PostgresNotificationGroupMemberRepository extends JpaRepository
     List<NotificationGroupMember> findByIdGroupId(UUID groupId);
     List<NotificationGroupMember> findByIdGroupIdIn(Set<UUID> groupIds);
     void deleteByIdGroupIdAndIdUserId(UUID groupId, UUID userId);
+    void deleteByIdUserId(UUID userId);
+
 }

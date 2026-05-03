@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface QueryNotificationUseCase {
     List<NotificationDto> getUnread(UUID userId);
-    List<NotificationDto> getAll(UUID userId, int page, int size);
+    List<NotificationDto> getAll(UUID userId);
     long countUnread(UUID userId);
     void markAsRead(UUID notificationId, UUID userId);
     void markAllAsRead(UUID userId);

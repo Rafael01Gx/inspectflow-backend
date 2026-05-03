@@ -22,6 +22,10 @@ public class NotificationGroupMember {
     private Instant addedAt = Instant.now();
 
     @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     @EqualsAndHashCode(callSuper = false)
     public static class NotificationGroupMemberId implements Serializable {
 
@@ -31,8 +35,6 @@ public class NotificationGroupMember {
         @Column(name = "user_id")
         private UUID userId;
 
-        public NotificationGroupMemberId(UUID groupId, UUID userId) {
-        }
     }
 
     public UUID getGroupId() { return id.groupId; }

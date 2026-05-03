@@ -1,4 +1,4 @@
-package br.com.inspectflow.infrastructure.config.scheduling;
+package br.com.inspectflow.infrastructure.scheduling;
 
 import br.com.inspectflow.infrastructure.notification.sse.SseEmitterRegistry;
 import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresNotificationRepository;
@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Configuration
 @EnableScheduling
@@ -30,9 +31,15 @@ public class SchedulingConfig {
         }
     }
 
-    @Scheduled(cron = "0 2 * * * *")
+    @Scheduled(cron = "0 0 2 * * *")
     @Transactional
     public void deleteExpiredNotifications() {
         notificationRepository.deleteByExpiresAtBefore(Instant.now());
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    @Transactional
+    public void deleteExpiredReadNotifications() {
+        notificationRepository.deleteReadBefore(Instant.now().minus(1, ChronoUnit.DAYS));
     }
 }

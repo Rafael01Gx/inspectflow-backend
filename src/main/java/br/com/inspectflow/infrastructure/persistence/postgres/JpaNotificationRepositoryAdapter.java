@@ -4,7 +4,6 @@ import br.com.inspectflow.domain.notification.models.Notification;
 import br.com.inspectflow.domain.notification.repositories.NotificationRepository;
 import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresNotificationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,8 +34,8 @@ public class JpaNotificationRepositoryAdapter implements NotificationRepository 
     }
 
     @Override
-    public List<Notification> findByRecipient(UUID recipientId, int page, int size) {
-        return repository.findByRecipientIdOrderByCreatedAtDesc(recipientId, PageRequest.of(page, size)).getContent();
+    public List<Notification> findByRecipient(UUID recipientId) {
+        return repository.findByRecipientIdOrderByCreatedAtDesc(recipientId);
     }
 
     @Override

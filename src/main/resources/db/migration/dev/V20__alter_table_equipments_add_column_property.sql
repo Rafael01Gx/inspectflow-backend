@@ -1,1 +1,0 @@
-ALTER TABLE equipments ADD COLUMN property_code VARCHAR(100);

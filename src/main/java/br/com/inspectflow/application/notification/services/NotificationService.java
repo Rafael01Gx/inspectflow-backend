@@ -64,11 +64,6 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
     }
 
     @Override
-    public void broadcast(SendNotificationDto dto) {
-        publisher.publishHeartbeat(); // reuse publisher — substituir por lógica de broadcast
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<NotificationDto> getUnread(UUID userId) {
         return repository.findUnreadByRecipient(userId)
@@ -79,8 +74,8 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
 
     @Override
     @Transactional(readOnly = true)
-    public List<NotificationDto> getAll(UUID userId, int page, int size) {
-        return repository.findByRecipient(userId, page, size)
+    public List<NotificationDto> getAll(UUID userId) {
+        return repository.findByRecipient(userId)
                 .stream()
                 .map(NotificationDto::from)
                 .toList();

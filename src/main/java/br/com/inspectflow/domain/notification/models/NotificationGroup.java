@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.notification.models;
 
+import br.com.inspectflow.domain.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,10 @@ public class NotificationGroup {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "linked_role", length = 50)
+    private Role linkedRole;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();

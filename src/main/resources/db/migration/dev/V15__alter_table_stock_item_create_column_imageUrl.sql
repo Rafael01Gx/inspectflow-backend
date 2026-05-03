@@ -1,1 +1,0 @@
-ALTER TABLE stock_items ADD COLUMN image_url VARCHAR(255);

@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.user.services;
 
 import br.com.inspectflow.application.http.handlers.DuplicationFoundException;
+import br.com.inspectflow.application.notification.services.NotificationGroupMemberService;
 import br.com.inspectflow.application.user.dto.CreateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.user.ports.in.CreateUserUseCase;
@@ -17,6 +18,7 @@ public class CreateUserService implements CreateUserUseCase {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationGroupMemberService memberService;
 
     @Override
     @Transactional
@@ -34,6 +36,7 @@ public class CreateUserService implements CreateUserUseCase {
                 .build();
 
         User savedUser = userRepository.save(user);
+        memberService.addMemberByRole(savedUser.getId(),savedUser.getRole());
         return new UserResponse(savedUser.getId(), savedUser.getName(),savedUser.getEmail(), savedUser.getRole(), savedUser.isActive(),user.isMustChangePassword());
     }
 }

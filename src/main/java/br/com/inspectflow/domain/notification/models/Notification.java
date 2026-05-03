@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Entity
@@ -53,6 +54,11 @@ public class Notification {
 
     @Column(name = "expires_at")
     private Instant expiresAt;
+
+    @PrePersist
+    void prePersist() {
+        this.expiresAt = Instant.now().plus(7, ChronoUnit.DAYS);
+    }
 
     public void markAsRead() {
         if (!this.read) {

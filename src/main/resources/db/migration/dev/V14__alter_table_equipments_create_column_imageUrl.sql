@@ -1,1 +1,0 @@
-ALTER TABLE equipments ADD COLUMN image_url VARCHAR(255);

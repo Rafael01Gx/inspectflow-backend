@@ -1,8 +1,6 @@
 package br.com.inspectflow.infrastructure.persistence.postgres.repositories;
 
 import br.com.inspectflow.domain.notification.models.Notification;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +14,7 @@ public interface PostgresNotificationRepository extends JpaRepository<Notificati
 
     List<Notification> findByRecipientIdAndReadFalseOrderByCreatedAtDesc(UUID recipientId);
 
-    Page<Notification> findByRecipientIdOrderByCreatedAtDesc(UUID recipientId, Pageable pageable);
+    List<Notification> findByRecipientIdOrderByCreatedAtDesc(UUID recipientId);
 
     long countByRecipientIdAndReadFalse(UUID recipientId);
 
@@ -26,4 +24,7 @@ public interface PostgresNotificationRepository extends JpaRepository<Notificati
     void markAllAsReadByRecipientId(@Param("recipientId") UUID recipientId);
 
     void deleteByExpiresAtBefore(Instant instant);
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.read = true AND n.readAt < :threshold")
+    void deleteReadBefore(@Param("threshold") Instant threshold);
 }

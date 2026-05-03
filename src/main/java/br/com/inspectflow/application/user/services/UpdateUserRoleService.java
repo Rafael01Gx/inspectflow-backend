@@ -2,6 +2,8 @@ package br.com.inspectflow.application.user.services;
 
 import br.com.inspectflow.application.http.handlers.BusinessException;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
+import br.com.inspectflow.application.notification.dto.UserRoleChangedEventDto;
+import br.com.inspectflow.application.notification.services.NotificationGroupMemberService;
 import br.com.inspectflow.application.user.dto.UpdateUserRoleRequest;
 import br.com.inspectflow.application.user.ports.in.UpdateUserRoleUseCase;
 import br.com.inspectflow.domain.user.models.User;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class UpdateUserRoleService implements UpdateUserRoleUseCase {
 
     private final UserRepository userRepository;
+    private final NotificationGroupMemberService memberService;
 
     @Override
     @Transactional
@@ -30,7 +33,9 @@ public class UpdateUserRoleService implements UpdateUserRoleUseCase {
 
         User user = userRepository.findById(userId).orElseThrow();
 
+
         if (!user.getRole().equals(dto.role())) {
+            memberService.onUserRoleChanged( new UserRoleChangedEventDto(userId, user.getRole(), dto.role()));
             user.setRole(dto.role());
         }
 

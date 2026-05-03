@@ -13,7 +13,7 @@ public interface NotificationRepository {
 
     Optional<Notification> findById(UUID id);
     List<Notification> findUnreadByRecipient(UUID recipientId);
-    List<Notification> findByRecipient(UUID recipientId, int page, int size);
+    List<Notification> findByRecipient(UUID recipientId);
     long countUnreadByRecipient(UUID recipientId);
     void markAllAsReadByRecipient(UUID recipientId);
 

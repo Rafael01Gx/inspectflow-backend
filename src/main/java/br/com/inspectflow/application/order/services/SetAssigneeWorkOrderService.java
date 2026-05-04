@@ -3,6 +3,7 @@ package br.com.inspectflow.application.order.services;
 import br.com.inspectflow.application.http.handlers.BusinessException;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
+import br.com.inspectflow.application.notification.templates.SetWorkOrderAssigneeNotification;
 import br.com.inspectflow.application.order.ports.in.SetAssigneeWorkOrderUseCase;
 import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.models.WorkOrder;
@@ -21,6 +22,7 @@ public class SetAssigneeWorkOrderService implements SetAssigneeWorkOrderUseCase 
 
     private final WorkOrderRepository repository;
     private final UserRepository userRepository;
+    private final SetWorkOrderAssigneeNotification notification;
 
     @Override
     @Transactional
@@ -32,9 +34,13 @@ public class SetAssigneeWorkOrderService implements SetAssigneeWorkOrderUseCase 
             throw new BusinessException("A ordem de serviço não possui status valído para alteração de responsável!");
         }
 
-        workOrder.setAssignee(assignee);
+        if (!(workOrder.getAssignee().getId().equals(assigneeId))) {
+            workOrder.setAssignee(assignee);
 
+            repository.save(workOrder);
 
-        repository.save(workOrder);
+            notification.execute(workOrder);
+        }
+
     }
 }

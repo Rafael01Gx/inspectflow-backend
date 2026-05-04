@@ -17,8 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class SseEmitterRegistry {
 
-
-    // Timeout de 3 minutos
     private static final long EMITTER_TIMEOUT_MS = 180_000L;
 
     private final Map<UUID, CopyOnWriteArrayList<SseEmitter>> userEmitters = new ConcurrentHashMap<>();
@@ -54,7 +52,7 @@ public class SseEmitterRegistry {
                         .id(UUID.randomUUID().toString())
                         .name("notification")
                         .data(payload, MediaType.APPLICATION_JSON));
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 log.debug("SSE morto detectado para userId={}, removendo", userId);
                 dead.add(emitter);
             }
@@ -68,7 +66,8 @@ public class SseEmitterRegistry {
             for (SseEmitter emitter : emitters) {
                 try {
                     emitter.send(SseEmitter.event().name("heartbeat").data("ping"));
-                } catch (IOException e) {
+                } catch (IOException | IllegalStateException e) {
+                    // Conexão fechada pelo cliente — remove silenciosamente
                     dead.add(emitter);
                 }
             }

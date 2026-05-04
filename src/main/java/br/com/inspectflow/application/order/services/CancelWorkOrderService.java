@@ -3,6 +3,7 @@ package br.com.inspectflow.application.order.services;
 import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
+import br.com.inspectflow.application.notification.templates.CancelOrderNotification;
 import br.com.inspectflow.application.order.dto.CancelOrderRequest;
 import br.com.inspectflow.application.order.ports.in.CancelWorkOrderUseCase;
 import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
@@ -23,9 +24,12 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
     private final UserRepository userRepository;
     private final IdConsistencyValidator<UUID> idConsistencyValidator;
     private final WorkOrderUpdatePermissionValidator permissionValidator;
+    private final CancelOrderNotification notification;
 
     @Override
     public void execute(UUID id, CancelOrderRequest dto, Authentication authUser) {
+
+
         idConsistencyValidator.execute(id,dto.id());
 
         WorkOrder workOrder = repository.findById(id).orElseThrow(WorkerOrderNotFoundException::new);
@@ -36,9 +40,12 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
 
         workOrder.addSystemInfo("Ordem de serviço cancelada por: " + user.getName());
         workOrder.addSystemInfo("Justificativa: " + dto.justification());
+        workOrder.setPerformedWork("Ordem de serviço cancelada por: " + user.getName() + " - Justificativa: " + dto.justification() );
 
         workOrder.cancelOrder();
 
         repository.save(workOrder);
+
+        notification.execute(workOrder);
     }
 }

@@ -5,9 +5,11 @@ import br.com.inspectflow.application.notification.dto.SendNotificationDto;
 import br.com.inspectflow.application.notification.ports.in.QueryNotificationUseCase;
 import br.com.inspectflow.application.notification.ports.in.SendNotificationUseCase;
 import br.com.inspectflow.application.notification.ports.out.NotificationPublisherPort;
+import br.com.inspectflow.domain.notification.models.NotificationGroupMember;
 import br.com.inspectflow.domain.notification.repositories.UserGroupRepository;
 import br.com.inspectflow.domain.notification.models.Notification;
 import br.com.inspectflow.domain.notification.repositories.NotificationRepository;
+import br.com.inspectflow.domain.user.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -44,13 +46,13 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
 
     @Override
     @Async("notificationExecutor")
-    public void sendToGroup(UUID groupId, SendNotificationDto dto) {
-        Set<UUID> memberIds = groupRepository.getMemberIds(groupId);
+    public void sendToGroup(Set<Role> roles, SendNotificationDto dto) {
+        Set<NotificationGroupMember> members = groupRepository.getMemberIdsWithRoles(roles);
 
-        memberIds.forEach(userId -> {
+        members.forEach(m -> {
             Notification notification = Notification.builder()
-                    .recipientId(userId)
-                    .groupId(groupId)
+                    .recipientId(m.getUserId())
+                    .groupId(m.getGroupId())
                     .type(dto.type())
                     .title(dto.title())
                     .message(dto.message())
@@ -59,7 +61,8 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
                     .build();
 
             Notification saved = repository.save(notification);
-            publisher.publishToUser(userId, NotificationDto.from(saved));
+
+            publisher.publishToUser(m.getUserId(), NotificationDto.from(saved));
         });
     }
 

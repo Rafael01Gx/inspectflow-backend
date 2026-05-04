@@ -3,7 +3,7 @@ name: Build and Push InspectFlow API
 on:
   push:
     branches:
-      - main
+      - development
 
 jobs:
   build-and-push:
@@ -28,6 +28,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/inspectflow-api:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/inspectflow-api:development
           cache-from: type=gha
           cache-to: type=gha,mode=max

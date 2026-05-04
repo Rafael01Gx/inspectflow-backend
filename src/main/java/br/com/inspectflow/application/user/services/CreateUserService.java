@@ -36,7 +36,9 @@ public class CreateUserService implements CreateUserUseCase {
                 .build();
 
         User savedUser = userRepository.save(user);
+
         memberService.addMemberByRole(savedUser.getId(),savedUser.getRole());
+
         return new UserResponse(savedUser.getId(), savedUser.getName(),savedUser.getEmail(), savedUser.getRole(), savedUser.isActive(),user.isMustChangePassword());
     }
 }

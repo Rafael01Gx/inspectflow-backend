@@ -17,19 +17,20 @@ services:
       - "--providers.docker.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.traefik.address=:8080"
       - "--ping=true"
-      - "--ping.entrypoint=web"
+      - "--ping.entrypoint=traefik"
     ports:
-      - "127.0.0.1:80:80"
-      - "127.0.0.1:443:443"
-      - "127.0.0.1:8080:8080"
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - traefik-certificates:/letsencrypt
     networks:
       - inspectflow-network
     healthcheck:
-      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      test: ["CMD", "traefik", "healthcheck", "--ping", "--ping.entrypoint=traefik"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -60,7 +61,7 @@ services:
       - "traefik.http.routers.frontend.middlewares=frontend-compress"
 
   inspectflow-api:
-    image: xrafaelgx/inspectflow-api:latest
+    image: xrafaelgx/inspectflow-api:development
     container_name: inspectflow-api
     restart: always
     env_file:
@@ -95,7 +96,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ../docker/postgres/init:/docker-entrypoint-initdb.d
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
     networks:
       - inspectflow-network
     healthcheck:
@@ -125,7 +126,7 @@ services:
 
   redis:
     image: redis:8.4.2-alpine3.22
-    container_name: inspectflow-redis-1
+    container_name: inspectflow-redis
     restart: unless-stopped
     networks:
       - inspectflow-network
@@ -162,6 +163,11 @@ services:
       - inspectflow-network
     depends_on:
       - postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`inspectflow-psql.rflgx.com.br`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
 
   mongo-express:
     image: mongo-express:latest
@@ -184,9 +190,6 @@ services:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
     container_name: minio
     restart: unless-stopped
-    ports:
-      - "9000:9000"
-      - "9001:9001"
     environment:
       MINIO_ROOT_USER: admin
       MINIO_ROOT_PASSWORD: admin123
@@ -199,32 +202,16 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=inspectflow-network"
-
-      # API S3 (porta 9000)
       - "traefik.http.routers.minio.rule=Host(`minio.rflgx.com.br`)"
       - "traefik.http.routers.minio.entrypoints=web"
       - "traefik.http.routers.minio.priority=100"
-      - "traefik.http.routers.minio.service=minio-svc"          # ← associa ao service
+      - "traefik.http.routers.minio.service=minio-svc"
       - "traefik.http.services.minio-svc.loadbalancer.server.port=9000"
-
-      # Console (porta 9001)
       - "traefik.http.routers.minio-console.rule=Host(`minio-console.rflgx.com.br`)"
       - "traefik.http.routers.minio-console.entrypoints=web"
       - "traefik.http.routers.minio-console.priority=100"
-      - "traefik.http.routers.minio-console.service=minio-console-svc"   # ← associa ao service
+      - "traefik.http.routers.minio-console.service=minio-console-svc"
       - "traefik.http.services.minio-console-svc.loadbalancer.server.port=9001"
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared-tunnel
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    networks:
-      - inspectflow-network
-    depends_on:
-      - traefik
 
 volumes:
   postgres_data:

@@ -83,13 +83,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(List.of(
+        configuration.setAllowedOrigins(List.of(
                 appHosts.web(),
-                "http://localhost:*",
-                "http://127.0.0.1:*",
+                "http://inspectflow.rflgx.com.br",
+                "http://localhost",
+                "http://127.0.0.1",
                 "capacitor://localhost",
-                "ionic://localhost",
-                "http://inspectflow.rflgx.com.br"
+                "ionic://localhost"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -99,6 +99,11 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(List.of("*"));
 
         configuration.setAllowCredentials(true);
+
+        configuration.setExposedHeaders(List.of(
+                "Authorization",
+                "Content-Disposition"
+        ));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

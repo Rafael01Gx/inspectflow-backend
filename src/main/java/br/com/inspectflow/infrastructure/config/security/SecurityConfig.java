@@ -20,7 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,19 +41,19 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(request -> {
-                            request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                            request.requestMatchers(
-                                            HttpMethod.GET,
-                                            "/equipments/**",
-                                            "/inspections/equipment/**",
-                                            "/orders/search/equipment/**",
-                                            "/attachments/**")
-                                    .permitAll();
-                            request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
-                            request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
-                            request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
-                            request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                            request.anyRequest().authenticated();
+                    request.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    request.requestMatchers(
+                            HttpMethod.GET,
+                            "/equipments/**",
+                            "/inspections/equipment/**",
+                            "/orders/search/equipment/**",
+                            "/attachments/**")
+                            .permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
+                    request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    request.anyRequest().authenticated();
                         }
                 )
 
@@ -83,29 +83,16 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
-                appHosts.web(),
-                "http://inspectflow.rflgx.com.br",
-                "http://localhost",
-                "http://127.0.0.1",
-                "capacitor://localhost",
-                "ionic://localhost"
-        ));
+        configuration.setAllowedOrigins(Arrays.asList(appHosts.web(),"http://inspectflow.rflgx.com.br","http://localhost:4000"));
 
-        configuration.setAllowedMethods(List.of(
-                "GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"
-        ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST","PATCH","PUT", "DELETE", "OPTIONS"));
 
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
         configuration.setAllowCredentials(true);
 
-        configuration.setExposedHeaders(List.of(
-                "Authorization",
-                "Content-Disposition"
-        ));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
 
         return source;

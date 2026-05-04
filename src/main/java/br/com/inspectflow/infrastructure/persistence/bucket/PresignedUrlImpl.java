@@ -30,7 +30,7 @@ public class PresignedUrlImpl implements PresignedUrlUseCase {
                             .object(objectKey)
                             .expiry(2, TimeUnit.HOURS)
                             .build()
-            );
+            ).replace("http://", "https://");
         } catch (Exception e) {
             log.error("Error generating presigned URL", e);
             return null;

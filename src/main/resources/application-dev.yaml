@@ -2,11 +2,16 @@ spring:
   flyway:
     locations: classpath:db/migration/dev
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
+    io.opentelemetry.exporter: DEBUG
+    net.ttddyy.observation: DEBUG
+
 
 app:
   security:

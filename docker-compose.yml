@@ -118,6 +118,17 @@ services:
       - inspectflow-network
     command: server /data --console-address ":9001"
 
+  otel-collector:
+    image: otel/opentelemetry-collector
+    container_name: inspectflow-otel-collector
+    restart: unless-stopped
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://localhost:4318
+    networks:
+      - inspectflow-network
+    ports:
+      - "4318:4318"
+
 
 volumes:
   postgres_data:

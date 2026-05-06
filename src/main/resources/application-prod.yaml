@@ -1,0 +1,28 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+management:
+  server:
+    address: 127.0.0.1
+
+  tracing:
+    sampling:
+      probability: 0.1                  # 10%
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN
+    io.opentelemetry.exporter: WARN
+
+datasource:
+  micrometer:
+    includes:
+      - connection-id
+      - query
+      - row-count

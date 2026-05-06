@@ -2,6 +2,7 @@ package br.com.inspectflow.infrastructure.persistence.bucket;
 
 import br.com.inspectflow.infrastructure.config.properties.MinioProperties;
 import br.com.inspectflow.infrastructure.persistence.bucket.repositories.PresignedUrlUseCase;
+import br.com.inspectflow.infrastructure.utils.MinioObserveUtil;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.http.Method;
@@ -18,22 +19,25 @@ public class PresignedUrlImpl implements PresignedUrlUseCase {
 
     private final MinioClient publicMinioClient;
     private final MinioProperties minioProperties;
+    private final MinioObserveUtil minioObserveUtil;
 
     @Override
     public String execute(String objectKey) {
         if (objectKey == null) return null;
-        try {
-            return publicMinioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(minioProperties.bucketName())
-                            .object(objectKey)
-                            .expiry(2, TimeUnit.HOURS)
-                            .build()
-            ).replace("http://", "https://");
-        } catch (Exception e) {
-            log.error("Error generating presigned URL", e);
-            return null;
-        }
+        return minioObserveUtil.observe("presigned-url", minioProperties.bucketName(), objectKey, () -> {
+            try {
+                return publicMinioClient.getPresignedObjectUrl(
+                        GetPresignedObjectUrlArgs.builder()
+                                .method(Method.GET)
+                                .bucket(minioProperties.bucketName())
+                                .object(objectKey)
+                                .expiry(2, TimeUnit.HOURS)
+                                .build()
+                ).replace("http://", "https://");
+            } catch (Exception e) {
+                log.error("Error generating presigned URL", e);
+                return null;
+            }
+        });
     }
 }

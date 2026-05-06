@@ -368,6 +368,17 @@ public class GlobalExceptionHandler {
         log.debug("SSE client disconnected: {}", ex.getMessage());
     }
 
+    @ExceptionHandler(MinioOperationException.class)
+    public ResponseEntity<ErrorResponse> handleMinioOperationException(MinioOperationException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("MinioOperationException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
     private Map<String, String> errorMap(BindException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->

@@ -5,6 +5,7 @@ import br.com.inspectflow.application.equipment.ports.in.SearchEquipmentUseCase;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class SearchEquipmentService implements SearchEquipmentUseCase {
     private final EquipmentRepository equipmentRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<EquipmentResponse> execute(String q) {
         return equipmentRepository.findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(q, q).stream().map(EquipmentResponse::from).toList();
     }

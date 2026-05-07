@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.inspection.models.Inspection;
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ public class FindInspectionByIdService implements FindInspectionByIdUseCase {
     private final InspectionRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public Inspection execute(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Inspection not found"));
     }

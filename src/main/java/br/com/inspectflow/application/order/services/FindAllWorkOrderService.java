@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class FindAllWorkOrderService implements FindAllWorkOrderUseCase {
     private final WorkOrderRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public PagedResponse<OrderResponse> execute(PageRequest pageRequest) {
         var page = repository.findAll(pageRequest);
 

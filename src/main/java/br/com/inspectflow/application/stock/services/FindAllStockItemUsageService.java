@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.stock.models.StockItemUsage;
 import br.com.inspectflow.domain.stock.repositories.StockItemUsageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class FindAllStockItemUsageService implements FindAllStockItemUsageUseCas
     private final StockItemUsageRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public PagedResponse<StockItemUsageResponse> execute(Long id,PageRequest pageRequest) {
 
         PagedResponse<StockItemUsage> page = repository.findAllByStockItemId(id,pageRequest);

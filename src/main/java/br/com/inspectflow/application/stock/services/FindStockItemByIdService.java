@@ -7,9 +7,11 @@ import br.com.inspectflow.application.stock.ports.in.FindStockItemByIdUseCase;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FindStockItemByIdService implements FindStockItemByIdUseCase {
     private final StockItemRepository repository;
     private final CreatePresignedUrlUseCase presignedUrl;

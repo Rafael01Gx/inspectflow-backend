@@ -7,11 +7,13 @@ import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FindAllStockItemsService implements FindAllStockItemsUseCase {
 
     private final StockItemRepository repository;

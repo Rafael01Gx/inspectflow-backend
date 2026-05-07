@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,8 @@ public class FindAllWorkOrderByEquipmentCodeService implements FindAllWorkOrderB
     private final WorkOrderRepository repository;
 
     @Override
-    @Cacheable(value = "workOrders", key = "'equipmentCode'")
+    @Cacheable(value = "workOrders", key = "#equipmentCode")
+    @Transactional(readOnly = true)
     public List<OrderResponse> execute(UUID equipmentCode) {
         return repository.findAllByEquipmentCode(equipmentCode).stream().map(OrderResponse::from).toList();
     }

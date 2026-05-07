@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +22,7 @@ public class WorkOrderStatusMonthlyCountService implements WorkOrderStatusMonthl
 
     @Override
     @Cacheable(value = "dashboardWorkOrders", key = "'monthlyStatusCounts'")
+    @Transactional(readOnly = true)
     public List<WorkOrderStatusMonthlyCountDto> execute() {
         List<Object[]> results = workOrderRepository.countWorkOrdersByStatusMonthly();
 

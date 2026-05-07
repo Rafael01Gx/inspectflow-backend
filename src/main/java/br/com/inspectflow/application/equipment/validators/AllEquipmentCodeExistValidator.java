@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class AllEquipmentCodeExistValidator {
     private final EquipmentRepository repository;
 
 
+    @Transactional(readOnly = true)
     public void execute(List<String> code) {
         if (code == null || code.isEmpty()) return;
 

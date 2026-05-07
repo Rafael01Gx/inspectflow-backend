@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.user.repositories.PasswordResetTokenRepository;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class RecoveryPasswordService implements RecoveryPasswordUseCase {
 
 
     @Override
+    @Transactional
     public void execute(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user == null) {

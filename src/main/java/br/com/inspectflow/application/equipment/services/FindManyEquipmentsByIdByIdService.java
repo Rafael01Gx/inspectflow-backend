@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class FindManyEquipmentsByIdByIdService implements FindManyEquipmentsById
     private final AllEquipmentIdsExistValidator validator;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Equipment> execute(List<UUID> ids) {
         if(ids != null && !ids.isEmpty()){
             validator.execute(ids);

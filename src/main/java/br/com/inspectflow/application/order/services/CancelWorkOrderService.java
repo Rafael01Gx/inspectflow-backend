@@ -12,8 +12,11 @@ import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -27,20 +30,25 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
     private final CancelOrderNotification notification;
 
     @Override
+    @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
     public void execute(UUID id, CancelOrderRequest dto, Authentication authUser) {
 
 
-        idConsistencyValidator.execute(id,dto.id());
+        idConsistencyValidator.execute(id, dto.id());
 
         WorkOrder workOrder = repository.findById(id).orElseThrow(WorkerOrderNotFoundException::new);
 
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);
 
-        permissionValidator.execute(workOrder,user);
+        permissionValidator.execute(workOrder, user);
 
         workOrder.addSystemInfo("Ordem de serviço cancelada por: " + user.getName());
         workOrder.addSystemInfo("Justificativa: " + dto.justification());
-        workOrder.setPerformedWork("Ordem de serviço cancelada por: " + user.getName() + " - Justificativa: " + dto.justification() );
+        workOrder.setPerformedWork("Ordem de serviço cancelada por: " + user.getName() + " - Justificativa: " + dto.justification());
 
         workOrder.cancelOrder();
 

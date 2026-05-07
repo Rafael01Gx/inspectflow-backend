@@ -7,6 +7,7 @@ import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class FindByEquipmentCodeService implements FindByEquipmentCodeUseCase {
     private final CreatePresignedUrlUseCase presignedUrl;
 
     @Override
+    @Transactional(readOnly = true)
     public EquipmentDetailsResponse execute(String code) {
         var equipment = equipmentRepository.findByCode(code).orElseThrow(EquipmentNotFoundException::new);
 

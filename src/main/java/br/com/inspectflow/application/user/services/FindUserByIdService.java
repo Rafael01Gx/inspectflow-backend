@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class FindUserByIdService implements FindUserByIdUseCase {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public UserResponse execute(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);

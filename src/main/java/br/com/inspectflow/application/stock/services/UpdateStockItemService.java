@@ -14,6 +14,7 @@ import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,7 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
 
     @Override
     @Transactional
+    @CacheEvict(value = "dashboardStockItems", key = "'lowQuantity'")
     public StockItemResponse execute(Long id, UpdateStockItemRequest dto, MultipartFile file) {
         idConsistencyValidator.execute(id,dto.id());
 

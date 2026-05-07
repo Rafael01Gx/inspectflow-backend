@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -22,6 +23,7 @@ public class InspectionSummaryService implements InspectionSummaryUseCase {
 
     @Override
     @Cacheable(value = "dashboardInspections", key = "'summary'")
+    @Transactional(readOnly = true)
     public InspectionSummaryDto execute() {
         long totalInspections = inspectionRepository.count();
         List<Inspection> allInspections = inspectionRepository.findAll();

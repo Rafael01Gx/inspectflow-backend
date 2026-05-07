@@ -6,6 +6,7 @@ import br.com.inspectflow.application.order.ports.in.FindWorkOrderByIdUseCase;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ public class FindWorkOrderByIdService implements FindWorkOrderByIdUseCase {
     private final WorkOrderRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public OrderResponse execute(UUID id) {
         return repository.findById(id).map(OrderResponse::from).orElseThrow(WorkerOrderNotFoundException::new);
     }

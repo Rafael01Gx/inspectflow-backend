@@ -16,6 +16,8 @@ import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,10 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
     public OrderResponse execute(CreateOrderRequest dto, Authentication authUser) {
 
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);

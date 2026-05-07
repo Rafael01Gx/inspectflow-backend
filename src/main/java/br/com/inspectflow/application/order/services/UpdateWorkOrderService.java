@@ -14,6 +14,8 @@ import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,10 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
     public OrderResponse execute(UUID id, UpdateOrderRequest dto, Authentication authUser) {
 
         idConsistencyValidator.execute(id, dto.id());

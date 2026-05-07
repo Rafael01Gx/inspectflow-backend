@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class FindAllEquipmentService implements FindAllEquipmentUseCase {
 
 
     @Override
+    @Transactional(readOnly = true)
     public PagedResponse<EquipmentResponse> execute(PageRequest pageable) {
         var page = repository.findAll(pageable);
         return new PagedResponse<>(

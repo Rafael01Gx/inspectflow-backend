@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class FindManyEquipmentsByCodeService implements FindManyEquipmentsByCode
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<Equipment> execute(List<String> codes) {
         if(codes != null && !codes.isEmpty()){
             validator.execute(codes);

@@ -10,6 +10,8 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,10 @@ public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCas
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
     public void execute(User user, Equipment equipment, List<String> descriptions) {
 
         String description = descriptions.stream()

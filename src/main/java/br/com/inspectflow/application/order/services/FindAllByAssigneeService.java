@@ -10,6 +10,7 @@ import br.com.inspectflow.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class FindAllByAssigneeService implements FindAllByAssigneeUseCase {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public PagedResponse<OrderResponse> execute(Authentication authUser, PageRequest pageRequest) {
         User user = userRepository.getReferenceByEmail(authUser.getName());
         var page = repository.findAllByAssignee(user, pageRequest);

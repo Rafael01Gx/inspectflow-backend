@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class KpiSummaryService implements KpiSummaryUseCase {
 
     @Override
     @Cacheable(value = "dashboardKpis", key = "'summary'")
+    @Transactional(readOnly = true)
     public KpiSummaryDto execute() {
         Double mttrInHours = workOrderRepository.calculateAverageRepairTimeInHours();
         if (mttrInHours == null) {

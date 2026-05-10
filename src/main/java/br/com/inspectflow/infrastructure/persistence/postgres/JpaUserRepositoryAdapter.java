@@ -1,5 +1,6 @@
 package br.com.inspectflow.infrastructure.persistence.postgres;
 
+import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.List;
 
@@ -44,6 +46,11 @@ public class JpaUserRepositoryAdapter implements UserRepository {
     @Override
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<String> findEmailByRoleIn(Set<Role> roles) {
+        return repository.findEmailByRoleIn(roles);
     }
 
     @Override

@@ -20,14 +20,19 @@ public enum Role {
     ELETRICISTA {
         @Override
         public boolean canHandle(PartCategory category) {
-
             return category == PartCategory.ELECTRIC;
         }
     },
     MECANICO {
         @Override
         public boolean canHandle(PartCategory category) {
-            return category != PartCategory.ELECTRIC;
+            return category != PartCategory.ELECTRIC && category != PartCategory.MEASUREMENT;
+        }
+    },
+    INSTRUMENTISTA {
+        @Override
+        public boolean canHandle(PartCategory category) {
+            return category == PartCategory.MEASUREMENT;
         }
     };
 

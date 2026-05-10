@@ -26,7 +26,8 @@ public class InspectionMapper {
                         switch (user.getRole()){
                             case ELETRICISTA -> InspectionCategory.ELETRICA;
                             case MECANICO -> InspectionCategory.MECANICA;
-                            default -> InspectionCategory.AFERICAO;
+                            case INSTRUMENTISTA -> InspectionCategory.AFERICAO;
+                            default -> InspectionCategory.INSPECAO;
                         }
                 )
                 .date(LocalDateTime.now())

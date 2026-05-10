@@ -32,11 +32,14 @@ public class EquipmentMapper {
                                 .orElse(null)
                 )
                 .build();
+
+        EquipmentHealthSheet healthSheet = new EquipmentHealthSheet();
+        healthSheet.setEquipment(equipment);
+
         if (dto.inspectionFrequency() != null){
-            EquipmentHealthSheet healthSheet = new EquipmentHealthSheet();
             healthSheet.updateInspectionFrequency(dto.inspectionFrequency());
-            equipment.setHealthSheet(healthSheet);
         }
+
 
         if (dto.components() != null) {
             dto.components().forEach(compDto -> {

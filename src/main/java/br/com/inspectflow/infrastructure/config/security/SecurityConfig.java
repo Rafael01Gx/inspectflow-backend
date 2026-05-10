@@ -111,9 +111,13 @@ public class SecurityConfig {
 
                 .role(Role.LIDER.name()).implies(Role.ELETRICISTA.name())
                 .role(Role.LIDER.name()).implies(Role.MECANICO.name())
+                .role(Role.LIDER.name()).implies(Role.INSTRUMENTISTA.name())
+
 
                 .role(Role.SUPERVISOR.name()).implies(Role.ELETRICISTA.name())
                 .role(Role.SUPERVISOR.name()).implies(Role.MECANICO.name())
+                .role(Role.SUPERVISOR.name()).implies(Role.INSTRUMENTISTA.name())
+
 
                 .build();
     }

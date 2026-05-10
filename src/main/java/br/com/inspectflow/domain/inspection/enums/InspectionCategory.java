@@ -7,6 +7,6 @@ public enum InspectionCategory {
     MECANICA,
     AFERICAO,
     ELETRICA,
-
+    INSPECAO
 
 }

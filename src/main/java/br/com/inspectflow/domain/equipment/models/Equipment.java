@@ -100,7 +100,13 @@ public class Equipment {
         if (status != null) this.status = status;
         if (type != null) this.type = type;
         if (location != null) this.location = location;
-        if (inspectionFrequency != null) this.healthSheet.updateInspectionFrequency(inspectionFrequency);
+        if (inspectionFrequency != null) {
+            if(this.healthSheet == null){
+                this.healthSheet = new EquipmentHealthSheet();
+                this.healthSheet.setEquipment(this);
+            }
+            this.healthSheet.updateInspectionFrequency(inspectionFrequency);
+        }
         if (propertyCode != null) this.propertyCode = propertyCode.toUpperCase();
 
     }

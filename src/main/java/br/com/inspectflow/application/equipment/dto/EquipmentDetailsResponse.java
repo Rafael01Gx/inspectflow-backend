@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,7 +22,8 @@ public record EquipmentDetailsResponse(
         Set<EquipmentAttachmentResponse> attachments,
         Map<PartCategory, String> consignmentCodes,
         String imageUrl,
-        String propertyCode
+        String propertyCode,
+        EquipmentHealthSheetResponse healthSheet
 ) {
     public static EquipmentDetailsResponse from(Equipment equipment) {
         return new EquipmentDetailsResponse(
@@ -37,7 +39,8 @@ public record EquipmentDetailsResponse(
                         .collect(Collectors.toSet()),
                 equipment.getConsignmentCodes(),
                 equipment.getImageUrl(),
-                equipment.getPropertyCode()
+                equipment.getPropertyCode(),
+                Optional.ofNullable(equipment.getHealthSheet()).map(EquipmentHealthSheetResponse::from).orElse(null)
         );
     }
 }

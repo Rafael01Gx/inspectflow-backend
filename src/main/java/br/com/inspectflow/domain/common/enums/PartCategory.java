@@ -8,6 +8,8 @@ public enum PartCategory {
     ELECTRIC("ELÉTRICA"),
     PNEUMATIC("PNEUMÁTICA"),
     HYDRAULIC("HIDRÁULICA"),
+
+    MEASUREMENT("MEDIDICAO"),
     OTHER("OUTRAS");
 
     private final String value;

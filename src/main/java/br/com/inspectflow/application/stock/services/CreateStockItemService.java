@@ -11,6 +11,7 @@ import br.com.inspectflow.application.stock.validators.ValidateStockItemDoesNotE
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "stock.create",
+            contextualName = "cria item de estoque")
     public StockItemResponse execute(CreateStockItemRequest dto, MultipartFile file) {
         validate.execute(dto);
         StockItem stockItem = StockItemMapper.toStockItem(dto);

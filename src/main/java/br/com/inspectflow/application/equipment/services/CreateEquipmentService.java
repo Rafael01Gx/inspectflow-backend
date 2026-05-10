@@ -10,6 +10,7 @@ import br.com.inspectflow.application.equipment.validators.AttachmentFileIsValid
 import br.com.inspectflow.application.equipment.validators.UniqueEquipmentCodeValidation;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ public class CreateEquipmentService implements CreateEquipmentUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "equipment.create",
+            contextualName = "Cria novo equipamento")
     public EquipmentResponse execute(CreateEquipmentRequest dto, MultipartFile file) {
 
         validation.execute(dto.code());

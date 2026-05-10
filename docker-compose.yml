@@ -1,23 +1,32 @@
 services:
 
+  # ============================================================================
+  # INFRAESTRUTURA DA APLICAÇÃO
+  # ============================================================================
+
   postgres:
     image: postgres:18-alpine
     container_name: inspectflow-postgres
     restart: unless-stopped
+
     environment:
       POSTGRES_DB: inspectflow
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres/init:/docker-entrypoint-initdb.d
+
     networks:
       - inspectflow-network
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inspectflow"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,126 +35,355 @@ services:
     image: mongo:8
     container_name: inspectflow-mongodb
     restart: unless-stopped
+
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin_pass
       MONGO_INITDB_DATABASE: inspectflow
+
     ports:
       - "27017:27017"
+
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
+
     networks:
       - inspectflow-network
+
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/inspectflow --quiet
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/inspectflow --quiet"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:8.4.2-alpine3.22
-    container_name: inspectflow-redis-1
+    container_name: inspectflow-redis
     restart: unless-stopped
+
     ports:
       - "6379:6379"
+
     networks:
       - inspectflow-network
+
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  redis-insight:
-    image: redis/redisinsight:3.2
-    container_name: inspectflow-redis-insight
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    container_name: inspectflow-minio
     restart: unless-stopped
+
+    command: server /data --console-address ":9001"
+
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+
     ports:
-      - "5540:5540"
+      - "9000:9000"
+      - "9001:9001"
+
+    volumes:
+      - minio_data:/data
+
     networks:
       - inspectflow-network
-    depends_on:
-      - redis
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # FERRAMENTAS ADMINISTRATIVAS
+  # ============================================================================
 
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: inspectflow-pgadmin
     restart: unless-stopped
+
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@inspectflow.com
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+
     ports:
       - "5050:80"
+
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+
     networks:
       - inspectflow-network
+
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   mongo-express:
     image: mongo-express:latest
     container_name: inspectflow-mongo-express
     restart: unless-stopped
+
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin_pass
       ME_CONFIG_MONGODB_URL: mongodb://admin:admin_pass@inspectflow-mongodb:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
+
     ports:
       - "8081:8081"
-    networks:
-      - inspectflow-network
-    depends_on:
-      - mongodb
 
-  minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
-    container_name: minio
-    restart: unless-stopped
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin123
-    volumes:
-      - minio_data:/data
     networks:
       - inspectflow-network
-    command: server /data --console-address ":9001"
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  redis-insight:
+    image: redis/redisinsight:3.2
+    container_name: inspectflow-redis-insight
+    restart: unless-stopped
+
+    ports:
+      - "5540:5540"
+
+    networks:
+      - inspectflow-network
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ============================================================================
+  # OBSERVABILIDADE — JAEGER
+  # ============================================================================
+
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    container_name: inspectflow-jaeger
+    restart: unless-stopped
+
+    environment:
+      SPAN_STORAGE_TYPE: memory
+      MEMORY_MAX_TRACES: 10000
+      COLLECTOR_OTLP_ENABLED: "true"
+
+    ports:
+      - "16686:16686"
+
+    networks:
+      - inspectflow-network
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ============================================================================
+  # OBSERVABILIDADE — OPEN TELEMETRY COLLECTOR
+  # ============================================================================
 
   otel-collector:
-    image: otel/opentelemetry-collector
+    image: otel/opentelemetry-collector-contrib:latest
     container_name: inspectflow-otel-collector
     restart: unless-stopped
-    environment:
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://localhost:4318
+    command:
+      - "--config=/etc/otelcol/config.yml"
+
+    volumes:
+      - ./observability/otel-collector/config.yml:/etc/otelcol/config.yml:ro
+
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+
+    depends_on:
+      jaeger:
+        condition: service_started
+      loki:
+        condition: service_healthy
+
     networks:
       - inspectflow-network
-    ports:
-      - "4318:4318"
 
+  # ============================================================================
+  # OBSERVABILIDADE — LOKI
+  # ============================================================================
+
+  loki:
+    image: grafana/loki:latest
+    container_name: inspectflow-loki
+    restart: unless-stopped
+
+    user: "10001:10001"
+
+    command: -config.file=/etc/loki/loki.yml
+
+    ports:
+      - "3100:3100"
+
+    volumes:
+      - ./observability/loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki_data:/loki
+
+    networks:
+      - inspectflow-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+
+  # ============================================================================
+  # OBSERVABILIDADE — PROMTAIL
+  # ============================================================================
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: inspectflow-promtail
+    restart: unless-stopped
+
+    command: -config.file=/etc/promtail/promtail.yml
+
+    volumes:
+      - ./observability/promtail/promtail-config.yml:/etc/promtail/promtail.yml:ro
+      - ./logs:/logs:ro
+
+    depends_on:
+      loki:
+        condition: service_healthy
+
+    networks:
+      - inspectflow-network
+
+  # ============================================================================
+  # OBSERVABILIDADE — PROMETHEUS
+  # ============================================================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: inspectflow-prometheus
+    restart: unless-stopped
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=3d"
+      - "--web.enable-lifecycle"
+
+    ports:
+      - "9090:9090"
+
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    networks:
+      - inspectflow-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/-/healthy || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ============================================================================
+  # OBSERVABILIDADE — GRAFANA
+  # ============================================================================
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: inspectflow-grafana
+    restart: unless-stopped
+
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_FEATURE_TOGGLES_ENABLE: traceqlEditor
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+
+    ports:
+      - "3010:3000"
+
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+
+    depends_on:
+      loki:
+        condition: service_healthy
+
+      prometheus:
+        condition: service_healthy
+
+      jaeger:
+        condition: service_started
+
+      otel-collector:
+        condition: service_started
+
+    networks:
+      - inspectflow-network
+
+# ==============================================================================
+# VOLUMES
+# ==============================================================================
 
 volumes:
   postgres_data:
     driver: local
     name: inspectflow_postgres_data
+
   mongodb_data:
     driver: local
     name: inspectflow_mongodb_data
+
   mongodb_config:
     driver: local
     name: inspectflow_mongodb_config
+
   pgadmin_data:
     driver: local
     name: inspectflow_pgadmin_data
+
   minio_data:
     driver: local
     name: inspectflow_minio_data
+
+  prometheus_data:
+    driver: local
+    name: inspectflow_prometheus_data
+
+  loki_data:
+    driver: local
+    name: inspectflow_loki_data
+
+  grafana_data:
+    driver: local
+    name: inspectflow_grafana_data
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
 
 networks:
   inspectflow-network:

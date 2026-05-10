@@ -6,6 +6,7 @@ import br.com.inspectflow.application.stock.dto.DeductStockRequest;
 import br.com.inspectflow.application.stock.ports.in.DeductStockItemUseCase;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class DeductStockItemService implements DeductStockItemUseCase {
     @Override
     @Transactional
     @CacheEvict(value = "dashboardStockItems", key = "'lowQuantity'")
+    @Observed(name = "stock.deduct",
+            contextualName = "reduz item no estoque")
     public void execute(Long id, DeductStockRequest dto) {
         idValidator.execute(id, dto.id());
 

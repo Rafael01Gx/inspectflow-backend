@@ -1,0 +1,90 @@
+################################################################################
+# OpenTelemetry Collector — InspectFlow Desenvolvimento
+################################################################################
+#
+# FLUXO:
+#   Aplicacao (IDE) → otel-collector :4318 (HTTP) ou :4317 (gRPC)
+#                          ↓
+#                    processors: batch
+#                          ↓
+#              ┌───────────┴───────────┐
+#           Jaeger :4317            Loki :3100
+#         (traces via OTLP)      (logs via loki exporter)
+#
+# POR QUE OTLP E NAO "jaeger" EXPORTER:
+#   O exporter "jaeger" usava o protocolo gRPC nativo do Jaeger (porta 14250)
+#   que foi DEPRECADO. O Jaeger moderno recebe traces via OTLP (porta 4317).
+#   Use sempre otlp/jaeger — nunca o exporter "jaeger" legado.
+#
+################################################################################
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317   # recebe da aplicacao via gRPC
+      http:
+        endpoint: 0.0.0.0:4318   # recebe da aplicacao via HTTP ← application.yml aponta aqui
+
+processors:
+  batch:
+    timeout:    5s
+    send_batch_size: 1024
+
+  # Adiciona resource attributes se ausentes
+  resource:
+    attributes:
+#      - key:    service.name
+#        value:  inspectflow
+#        action: insert           # insert = só adiciona se não existir
+#      - key:    deployment.environment
+#        value:  local
+#        action: insert
+
+      - key: application
+        value: inspectflow
+        action: insert
+      - key: environment
+        value: local
+        action: insert
+
+exporters:
+
+  # -------------------------------------------------------------------------
+  # Jaeger — via OTLP gRPC (protocolo correto para versoes modernas)
+  # Porta 4317 = OTLP gRPC receiver do Jaeger
+  # -------------------------------------------------------------------------
+  otlp_grpc/jaeger:
+    endpoint: inspectflow-jaeger:4317
+    tls:
+      insecure: true
+
+    # Mudou de otlphttp/loki para otlp_http/loki
+  otlp_http/loki:
+    endpoint: http://inspectflow-loki:3100/otlp
+    tls:
+      insecure: true
+
+
+  # -------------------------------------------------------------------------
+  # Debug — exibe traces no log do otel-collector (util para troubleshooting)
+  # Mude para "normal" ou remova em producao
+  # -------------------------------------------------------------------------
+  debug:
+    verbosity: normal            # "detailed" é muito verboso, "normal" é suficiente
+
+service:
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors: [ resource, batch ]
+      exporters: [ otlp_grpc/jaeger, debug ] # Atualize aqui
+    logs:
+      receivers: [ otlp ]
+      processors: [ resource, batch ]
+      exporters: [ otlp_http/loki ] # Atualize aqui
+
+  # Metricas internas do proprio collector (opcional)
+  telemetry:
+    logs:
+      level: warn                # reduz verbosidade do proprio collector

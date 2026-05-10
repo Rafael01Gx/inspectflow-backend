@@ -49,6 +49,7 @@ public class SecurityConfig {
                             "/orders/search/equipment/**",
                             "/attachments/**")
                             .permitAll();
+                    request.requestMatchers("/actuator/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();

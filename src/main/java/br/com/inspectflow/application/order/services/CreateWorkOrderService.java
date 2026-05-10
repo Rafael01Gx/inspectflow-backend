@@ -15,6 +15,7 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
@@ -38,6 +39,8 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
             @CacheEvict(value = "dashboardKpis", key = "'summary'")
     })
+    @Observed(name = "order.create",
+            contextualName = "cria uma ordem de serviço")
     public OrderResponse execute(CreateOrderRequest dto, Authentication authUser) {
 
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);

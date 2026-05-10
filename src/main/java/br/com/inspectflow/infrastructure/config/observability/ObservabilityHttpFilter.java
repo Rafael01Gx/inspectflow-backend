@@ -1,4 +1,4 @@
-package br.com.inspectflow.infrastructure.http;
+package br.com.inspectflow.infrastructure.config.observability;
 
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.servlet.FilterChain;

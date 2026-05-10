@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
         JwtProperties.class,
         MongoDBProperties.class,
         MinioProperties.class,
-        AppHostProperties.class
+        AppHostProperties.class,
+        SpringApplicationProperties.class
 })
 public class EnablePropertiesConfig {
 }

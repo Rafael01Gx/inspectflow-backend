@@ -7,6 +7,7 @@ import br.com.inspectflow.application.http.handlers.EquipmentComponentNotFoundEx
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.models.EquipmentAttachment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,8 @@ public class DeleteEquipmentAttachmentService implements DeleteEquipmentAttachme
 
     @Override
     @Transactional
+    @Observed(name = "equipment.remove-attachment",
+            contextualName = "Remove anexo de um equipamento")
     public void execute(UUID equipmentId, UUID attachmentId) {
       Equipment equipment =  equipmentRepository.findById(equipmentId).orElseThrow(EquipmentComponentNotFoundExceprion::new);
 

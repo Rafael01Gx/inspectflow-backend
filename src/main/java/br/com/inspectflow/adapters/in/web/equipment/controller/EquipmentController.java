@@ -31,7 +31,7 @@ public class EquipmentController {
     private final DeleteEquipmentAttachmentUseCase deleteEquipmentAttachmentService;
 
     @GetMapping
-    public ResponseEntity<PagedResponse<EquipmentResponse>> getAll(@PageableDefault Pageable pageable) {
+    public ResponseEntity<PagedResponse<EquipmentSummaryResponse>> getAll(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok(
                 findAllEquipmentService.execute(PageableRequestMapper.fromRequest(pageable))
         );

@@ -13,6 +13,7 @@ import br.com.inspectflow.domain.bucket.dto.UploadRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.models.EquipmentAttachment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class UploadEquipmentAttachment implements UploadEquipmentAttachmentUseCa
 
     @Override
     @Transactional
+    @Observed(name = "equipment.attachment-upload",
+            contextualName = "Adiciona anexos de um equipamento")
     public EquipmentDetailsResponse execute(UUID id, EquipmentAttachmentRequest dto) {
         idConsistencyValidator.execute(id, dto.equipmentId());
         fileValidator.execute(dto);

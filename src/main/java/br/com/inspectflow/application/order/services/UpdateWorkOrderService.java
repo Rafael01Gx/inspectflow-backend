@@ -12,6 +12,7 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,6 +38,8 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
             @CacheEvict(value = "dashboardKpis", key = "'summary'")
     })
+    @Observed(name = "order.update",
+            contextualName = "atualiza ordem")
     public OrderResponse execute(UUID id, UpdateOrderRequest dto, Authentication authUser) {
 
         idConsistencyValidator.execute(id, dto.id());

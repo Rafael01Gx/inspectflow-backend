@@ -6,6 +6,7 @@ import br.com.inspectflow.domain.user.models.PasswordResetToken;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.PasswordResetTokenRepository;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,8 @@ public class RecoveryPasswordService implements RecoveryPasswordUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.recovery",
+            contextualName = "solicita recuperação de credenciais")
     public void execute(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user == null) {

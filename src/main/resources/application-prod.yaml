@@ -6,10 +6,13 @@ spring:
 management:
   server:
     address: 127.0.0.1
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://127.0.0.1:4318/v1/traces}
 
   tracing:
     sampling:
-      probability: 0.1                  # 10%
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.1}                 # 10%
   endpoint:
     health:
       show-details: when-authorized
@@ -17,12 +20,13 @@ management:
 logging:
   level:
     org.hibernate.SQL: WARN
-    org.hibernate.type.descriptor.sql: WARN
+    org.hibernate.orm.jdbc.bind: WARN
     io.opentelemetry.exporter: WARN
+    io.opentelemetry: WARN
 
 datasource:
   micrometer:
     includes:
       - connection-id
-      - query
+      - query      # sem query-parameters
       - row-count

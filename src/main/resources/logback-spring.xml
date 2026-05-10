@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- =============================================================== -->
+    <!-- PROPERTIES -->
+    <!-- =============================================================== -->
+
+    <springProperty name="APP_NAME"
+                    source="spring.application.name"
+                    defaultValue="inspectflow"/>
+
+    <springProperty name="LOG_PATH"
+                    source="logging.file.path"
+                    defaultValue="logs"/>
+
+    <springProperty name="ACTIVE_PROFILE"
+                    source="spring.profiles.active"
+                    defaultValue="dev"/>
+
+    <!-- =============================================================== -->
+    <!-- COMMON LOGGERS -->
+    <!-- =============================================================== -->
+
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.mongodb.driver" level="WARN"/>
+    <logger name="io.micrometer" level="WARN"/>
+    <logger name="io.opentelemetry.exporter" level="WARN"/>
+
+    <!-- =============================================================== -->
+    <!-- DEV -->
+    <!-- =============================================================== -->
+
+    <springProfile name="dev">
+
+        <!-- CONSOLE -->
+
+        <appender name="CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+
+            <encoder>
+                <pattern>
+                    %d{yyyy-MM-dd HH:mm:ss.SSS}
+                    %highlight(%-5level)
+                    [${APP_NAME},%X{traceId:-},%X{spanId:-}]
+                    %cyan(%logger{36})
+                    [%thread]
+                    - %msg%n%throwable
+                </pattern>
+
+                <charset>UTF-8</charset>
+
+            </encoder>
+
+        </appender>
+
+        <!-- JSON FILE -->
+
+        <appender name="JSON_FILE"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <file>${LOG_PATH}/${APP_NAME}.log</file>
+
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+                <fileNamePattern>
+                    ${LOG_PATH}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log.gz
+                </fileNamePattern>
+
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
+
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+
+                <customFields>
+                    {"application":"${APP_NAME}","profile":"dev"}
+                </customFields>
+
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+
+                <throwableConverter
+                        class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+
+                    <maxLength>4096</maxLength>
+                    <shortenedClassNameLength>20</shortenedClassNameLength>
+                    <rootCauseFirst>true</rootCauseFirst>
+
+                </throwableConverter>
+
+            </encoder>
+
+        </appender>
+
+        <!-- ASYNC FILE -->
+
+        <appender name="ASYNC_JSON_FILE"
+                  class="ch.qos.logback.classic.AsyncAppender">
+
+            <appender-ref ref="JSON_FILE"/>
+
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>false</neverBlock>
+
+        </appender>
+
+        <!-- ROOT -->
+
+        <root level="INFO">
+
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_JSON_FILE"/>
+
+        </root>
+
+    </springProfile>
+
+    <!-- =============================================================== -->
+    <!-- PROD -->
+    <!-- =============================================================== -->
+
+    <springProfile name="prod">
+
+        <!-- JSON CONSOLE -->
+
+        <appender name="JSON_CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+
+                <customFields>
+                    {"application":"${APP_NAME}","profile":"prod"}
+                </customFields>
+
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+
+                <throwableConverter
+                        class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+
+                    <maxLength>4096</maxLength>
+                    <shortenedClassNameLength>20</shortenedClassNameLength>
+                    <rootCauseFirst>true</rootCauseFirst>
+
+                </throwableConverter>
+
+            </encoder>
+
+        </appender>
+
+        <!-- ASYNC -->
+
+        <appender name="ASYNC_JSON_CONSOLE"
+                  class="ch.qos.logback.classic.AsyncAppender">
+
+            <appender-ref ref="JSON_CONSOLE"/>
+
+            <queueSize>8192</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>true</neverBlock>
+
+        </appender>
+
+        <!-- ROOT -->
+
+        <root level="INFO">
+
+            <appender-ref ref="ASYNC_JSON_CONSOLE"/>
+
+        </root>
+
+    </springProfile>
+
+    <!-- =============================================================== -->
+    <!-- TEST -->
+    <!-- =============================================================== -->
+
+    <springProfile name="test">
+
+        <appender name="TEST_CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+
+            <encoder>
+
+                <pattern>
+                    %d{HH:mm:ss.SSS} %-5level %logger - %msg%n
+                </pattern>
+
+            </encoder>
+
+        </appender>
+
+        <root level="WARN">
+
+            <appender-ref ref="TEST_CONSOLE"/>
+
+        </root>
+
+    </springProfile>
+
+</configuration>

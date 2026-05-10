@@ -17,6 +17,7 @@ import br.com.inspectflow.domain.inspection.repositories.InspectionHistoryReposi
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,8 @@ public class CreateInspectionService implements CreateInspectionUseCase {
     @Override
     @Transactional
     @CacheEvict(value = "dashboardInspections", key = "'summary'")
+    @Observed(name = "inspection.create",
+            contextualName = "cria nova inspeção")
     public Inspection execute(InspectionRequest dto, Authentication auth) {
 
         Equipment equipment = equipmentRepository.findById(dto.equipmentId()).orElseThrow(EquipmentNotFoundException::new);

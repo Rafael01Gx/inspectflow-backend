@@ -1,0 +1,254 @@
+{
+  "title": "InspectFlow — Observabilidade",
+  "uid": "inspectflow-main",
+  "tags": ["inspectflow", "spring-boot", "observabilidade"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+
+  "templating": {
+    "list": [
+      {
+        "name":        "environment",
+        "type":        "query",
+        "datasource":  { "type": "prometheus", "uid": "prometheus" },
+        "query":       "label_values(jvm_memory_used_bytes{application=\"inspectflow\"}, environment)",
+        "label":       "Ambiente",
+        "includeAll":  false,
+        "current":     { "text": "local", "value": "local" }
+      }
+    ]
+  },
+
+  "panels": [
+
+    {
+      "id": 1,
+      "title": "🟢 Status da Aplicação",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{
+        "expr": "up{job=\"inspectflow\", environment=\"$environment\"}",
+        "legendFormat": "Status"
+      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "mappings": [
+          { "type": "value", "options": { "0": { "text": "DOWN",    "color": "red"   } } },
+          { "type": "value", "options": { "1": { "text": "RUNNING", "color": "green" } } }
+        ]
+      }
+    },
+
+    {
+      "id": 2,
+      "title": "📈 Taxa de Requisições HTTP (req/s)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 10, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"inspectflow\", environment=\"$environment\"}[1m])) by (uri, method)",
+          "legendFormat": "{{method}} {{uri}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+
+    {
+      "id": 3,
+      "title": "⏱ Latência HTTP p95 (ms)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 10, "x": 14, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"inspectflow\", environment=\"$environment\"}[5m])) by (le, uri)) * 1000",
+          "legendFormat": "p95 {{uri}}"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{application=\"inspectflow\", environment=\"$environment\"}[5m])) by (le, uri)) * 1000",
+          "legendFormat": "p99 {{uri}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      }
+    },
+
+    {
+      "id": 4,
+      "title": "❌ Taxa de Erros HTTP (5xx)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"inspectflow\", environment=\"$environment\", status=~\"5..\"}[5m])) by (uri, status)",
+          "legendFormat": "{{status}} {{uri}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "fixedColor": "red", "mode": "fixed" }
+        }
+      }
+    },
+
+    {
+      "id": 5,
+      "title": "☕ JVM — Memória Heap",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{application=\"inspectflow\", environment=\"$environment\", area=\"heap\"}",
+          "legendFormat": "Heap Usado"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{application=\"inspectflow\", environment=\"$environment\", area=\"heap\"}",
+          "legendFormat": "Heap Máximo"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+
+    {
+      "id": 6,
+      "title": "🔗 HikariCP — Pool PostgreSQL",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "hikaricp_connections_active{application=\"inspectflow\", environment=\"$environment\"}",
+          "legendFormat": "Conexões Ativas"
+        },
+        {
+          "expr": "hikaricp_connections_idle{application=\"inspectflow\", environment=\"$environment\"}",
+          "legendFormat": "Conexões Ociosas"
+        },
+        {
+          "expr": "hikaricp_connections_pending{application=\"inspectflow\", environment=\"$environment\"}",
+          "legendFormat": "Aguardando Conexão"
+        }
+      ]
+    },
+
+    {
+      "id": 7,
+      "title": "📋 Inspeções Criadas (negócio)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(increase(inspection_created_total{application=\"inspectflow\", environment=\"$environment\"}[1h]))",
+          "legendFormat": "Última hora"
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "area"
+      }
+    },
+
+    {
+      "id": 8,
+      "title": "📊 Mudanças de Status de Inspeção",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 6, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(inspection_status_change_total{application=\"inspectflow\", environment=\"$environment\"}) by (status)",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+
+    {
+      "id": 9,
+      "title": "🗄 Latência Queries PostgreSQL p95",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 10, "x": 14, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(jdbc_query_duration_seconds_bucket{application=\"inspectflow\", environment=\"$environment\"}[5m])) by (le)) * 1000",
+          "legendFormat": "JDBC p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ms" }
+      }
+    },
+
+    {
+      "id": 10,
+      "title": "📄 Logs — Volume por Nível",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({application=\"inspectflow\", environment=\"$environment\"} | json | level=\"ERROR\" [1m]))",
+          "legendFormat": "ERROR"
+        },
+        {
+          "expr": "sum(count_over_time({application=\"inspectflow\", environment=\"$environment\"} | json | level=\"WARN\" [1m]))",
+          "legendFormat": "WARN"
+        },
+        {
+          "expr": "sum(count_over_time({application=\"inspectflow\", environment=\"$environment\"} | json | level=\"INFO\" [1m]))",
+          "legendFormat": "INFO"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "ERROR" }, "properties": [{ "id": "color", "value": { "fixedColor": "red",    "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "WARN"  }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "INFO"  }, "properties": [{ "id": "color", "value": { "fixedColor": "green",  "mode": "fixed" } }] }
+        ]
+      }
+    },
+
+    {
+      "id": 11,
+      "title": "🔍 Logs — Erros Recentes",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "expr": "{application=\"inspectflow\", environment=\"$environment\", level=\"ERROR\"} | json",
+          "legendFormat": ""
+        }
+      ],
+      "options": {
+        "dedupStrategy":  "none",
+        "showLabels":     false,
+        "showTime":       true,
+        "sortOrder":      "Descending",
+        "wrapLogMessage": true
+      }
+    }
+
+  ]
+}

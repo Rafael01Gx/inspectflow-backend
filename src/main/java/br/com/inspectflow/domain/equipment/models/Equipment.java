@@ -5,7 +5,6 @@ import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import br.com.inspectflow.domain.stock.models.StockItem;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -52,7 +51,6 @@ public class Equipment {
 
     @Builder.Default
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Set<EquipmentComponent> components = new HashSet<>();
 
     @Builder.Default
@@ -62,7 +60,6 @@ public class Equipment {
             joinColumns = @JoinColumn(name = "equipment_id"),
             inverseJoinColumns = @JoinColumn(name = "stock_item_id")
     )
-    @JsonManagedReference
     private Set<StockItem> partsInStock = new HashSet<>();
 
     @Setter

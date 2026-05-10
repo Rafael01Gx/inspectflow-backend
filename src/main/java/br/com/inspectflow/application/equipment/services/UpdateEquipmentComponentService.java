@@ -5,6 +5,7 @@ import br.com.inspectflow.application.equipment.ports.in.UpdateEquipmentComponen
 import br.com.inspectflow.application.http.handlers.EquipmentComponentNotFoundExceprion;
 import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentComponentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ public class UpdateEquipmentComponentService implements UpdateEquipmentComponent
 
     @Override
     @Transactional
+    @Observed(name = "equipment.update-components",
+            contextualName = "Atualiza componentes de um equipamento")
     public EquipmentComponent execute(UUID id, UpdateEquipmentComponentRequest dto) {
         var component = repository.findById(id).orElseThrow(EquipmentComponentNotFoundExceprion::new);
 

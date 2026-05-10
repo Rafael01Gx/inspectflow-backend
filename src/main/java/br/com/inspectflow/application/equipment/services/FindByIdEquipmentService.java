@@ -5,6 +5,7 @@ import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
 import br.com.inspectflow.application.equipment.ports.in.FindByIdEquipmentUseCase;
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,8 @@ public class FindByIdEquipmentService implements FindByIdEquipmentUseCase {
 
     @Override
     @Transactional(readOnly = true)
+    @Observed(name = "equipment.find-id",
+            contextualName = "Busca equipamento por id")
     public EquipmentDetailsResponse execute(UUID id) {
         var equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
 

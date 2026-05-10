@@ -5,6 +5,7 @@ import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.ports.in.FindUserByEmailUseCase;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ public class FindUserByEmailService implements FindUserByEmailUseCase {
 
     @Override
     @Transactional(readOnly = true)
+    @Observed(name = "user.find-email",
+            contextualName = "busca usuário por email")
     public UserResponse execute(String email) {
 
         User user = userRepository.findByEmail(email)

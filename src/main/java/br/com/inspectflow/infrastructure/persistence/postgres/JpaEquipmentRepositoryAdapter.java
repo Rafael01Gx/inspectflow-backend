@@ -1,5 +1,6 @@
 package br.com.inspectflow.infrastructure.persistence.postgres;
 
+import br.com.inspectflow.application.equipment.dto.EquipmentSummaryResponse;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.equipment.models.Equipment;
@@ -32,15 +33,24 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     }
 
     @Override
-    public List<Equipment> findAll() {
-        return repository.findAll();
+    public List<EquipmentSummaryResponse> findAll() {
+        return repository.findAll().stream().map(EquipmentSummaryResponse::from).toList();
     }
 
     @Override
-    public PagedResponse<Equipment> findAll(PageRequest pageRequest) {
+    public PagedResponse<EquipmentSummaryResponse> findAll(PageRequest pageRequest) {
         Pageable pageable = PaginationMapper.toPageable(pageRequest);
         Page<Equipment> page = repository.findAll(pageable);
-        return PaginationMapper.toPagedResponse(page);
+        return new PagedResponse<>(
+                page.getContent().stream()
+                        .map(EquipmentSummaryResponse::from)
+                        .toList(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 
     @Override

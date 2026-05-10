@@ -5,6 +5,7 @@ import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.ports.in.FindUserByIdUseCase;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ public class FindUserByIdService implements FindUserByIdUseCase {
 
     @Override
     @Transactional(readOnly = true)
+    @Observed(name = "user.find-id",
+            contextualName = "busca usuário por id")
     public UserResponse execute(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);

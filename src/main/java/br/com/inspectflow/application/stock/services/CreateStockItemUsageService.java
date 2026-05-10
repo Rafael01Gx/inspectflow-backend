@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.models.StockItemUsage;
 import br.com.inspectflow.domain.stock.repositories.StockItemUsageRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ public class CreateStockItemUsageService implements CreateStockItemUsageUseCase 
 
     @Override
     @Transactional
+    @Observed(name = "stock.history-create",
+            contextualName = "adiciona uso do stockItem ao histórico")
     public StockItemUsage execute(WorkOrder workOrder, StockItem stockItem, Integer quantityUsed) {
 
         StockItemUsage usage = StockItemUsage.builder()

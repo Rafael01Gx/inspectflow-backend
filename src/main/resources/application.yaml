@@ -1,13 +1,15 @@
 spring:
   application:
     name: inspectflow
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
   threads:
     virtual:
       enabled: true
 
   profiles:
-    active: ${SPRING_PROFILE:dev}
+    active: ${SPRING_PROFILE_ACTIVE:dev}
 
   servlet:
     multipart:
@@ -20,7 +22,7 @@ spring:
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 30
       minimum-idle: 5
       connection-timeout: 30000
 
@@ -61,13 +63,10 @@ spring:
         max-size: 16
         queue-capacity: 100
         keep-alive: 60s
-
-
     scheduling:
       thread-name-prefix: inspectflow-scheduler-
       pool:
         size: 4
-
 
   mail:
     host: smtp.gmail.com
@@ -87,24 +86,30 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+
+# ==============================================================================
+# SERVER
+# ==============================================================================
 server:
   port: 3000
+  compression:
+    enabled: true
+  shutdown: graceful
+
+# ==============================================================================
+# APPLICATION
+# ==============================================================================
 app:
   security:
     jwt:
       issuer: https://inspectflow.rflgx.com.br
-      expiration: ${JWT_EXPIRATION:86400000}  # 24 hours
+      expiration: ${JWT_EXPIRATION:86400000}
       cookie-name: ${JWT_COOKIE_NAME:auth-token}
       cookie-secure: ${COOKIE_SECURE:false}
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}
       private-key-path: "classpath:keys/private.pem"
       public-key-path: "classpath:keys/public.pem"
-
-  data:
-    mongodb:
-      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin}
-      database: inspectflow
 
   bucket:
     minio:
@@ -115,9 +120,12 @@ app:
       public-url: ${MINIO_PUBLIC_URL:http://minio.rflgx.com.br}
 
   host:
-    api: ${APP_HOST_WEB:http://localhost:8080}
+    api: ${APP_HOST_API:http://localhost:8080}
     web: ${APP_HOST_WEB:https://inspectflow.rflgx.com.br}
 
+# ==============================================================================
+# SPRINGDOC
+# ==============================================================================
 springdoc:
   api-docs:
     enabled: false
@@ -125,10 +133,13 @@ springdoc:
 scalar:
   enabled: false
 
-
+# ==============================================================================
+# MANAGEMENT / OBSERVABILIDADE
+# ==============================================================================
 management:
   server:
     port: 8090
+
   endpoints:
     web:
       exposure:
@@ -137,7 +148,7 @@ management:
           - info
           - metrics
           - prometheus
-          - httptrace
+          - httpexchanges
           - loggers
           - env
           - threaddump
@@ -181,25 +192,23 @@ management:
         jdbc.query: 0.5, 0.95, 0.99
       slo:
         http.server.requests: 50ms, 100ms, 200ms, 500ms, 1s
-
     enable:
-      jvm: true                         # Memória, GC, threads
-      process: true                     # CPU, uptime
-      system: true                      # Disk, load
-      tomcat: true                      # Threads, conexões do Tomcat
-      logback: true                     # Contagem de logs por nível
-      hikari: true                      # Pool de conexões PostgreSQL
-      mongo: true                       # Métricas do driver MongoDB
-      redis: true                       # Métricas do Lettuce/Redis
-      executor: true                    # Thread pools (@Async)
+      jvm: true
+      process: true
+      system: true
+      tomcat: true
+      logback: true
+      hikari: true
+      mongo: true
+      redis: true
+      executor: true
 
   tracing:
+    enabled: true
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
-
     propagation:
       type: W3C
-
     baggage:
       remote-fields:
         - userId
@@ -207,31 +216,35 @@ management:
 
   otlp:
     tracing:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
-
+      endpoint: http://127.0.0.1:4318/v1/traces
       compression: gzip
       timeout: 10s
-      headers:
+    metrics:
+      export:
+        enabled: false
 
+# ==============================================================================
+# DATASOURCE MICROMETER — PostgreSQL/JDBC
+# ==============================================================================
 datasource:
   micrometer:
     enabled: true
-
     includes:
-      - connection-id    # ID da conexão para correlacionar com pool
-      - query            # SQL executado (cuidado com dados sensíveis em prod)
-      - query-parameters # Parâmetros da query (DESABILITAR em produção!)
-      - row-count        # Número de linhas retornadas
-      - result-set       # Dados do ResultSet
-      - statement        # Statement info
-
+      - connection-id
+      - query
+      - query-parameters
+      - row-count
+      - result-set
+      - statement
     observation:
       enabled: true
 
+# ==============================================================================
+# LOGGING
+# ==============================================================================
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [${spring.application.name},%X{traceId:-},%X{spanId:-}] %cyan(%logger{36}) - %msg%n"
-
   level:
     root: INFO
     io.micrometer: INFO
@@ -240,7 +253,6 @@ logging:
     net.ttddyy.observation: INFO
     com.google.protobuf: ERROR
     br.com.inspectflow: INFO
-
-    # Hibernate SQL (desenvolvimento)
-    org.hibernate.SQL: DEBUG            # Mostra SQL gerado
-    org.hibernate.type.descriptor.sql: TRACE  # Mostra valores dos parâmetros
+    io.opentelemetry.sdk: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE

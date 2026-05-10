@@ -9,6 +9,7 @@ import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
@@ -33,6 +34,8 @@ public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCas
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
             @CacheEvict(value = "dashboardKpis", key = "'summary'")
     })
+    @Observed(name = "order.create-auto",
+            contextualName = "cria uma ordem de serviço automática")
     public void execute(User user, Equipment equipment, List<String> descriptions) {
 
         String description = descriptions.stream()

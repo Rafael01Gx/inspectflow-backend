@@ -2,11 +2,12 @@ package br.com.inspectflow.application.email.services;
 
 import br.com.inspectflow.application.email.ports.in.FirstAccessMailUseCase;
 import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
+import br.com.inspectflow.infrastructure.config.properties.SpringApplicationProperties;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -23,14 +24,15 @@ public class FirstAccessMailService implements FirstAccessMailUseCase {
     private final SpringTemplateEngine templateEngine;
     private final AppHostProperties appHosts;
 
-    @Value("${spring.mail.from:contato@inspectflow.com.br}")
-    private String emailFrom;
+    private final SpringApplicationProperties springApplicationProperties;
 
 
 
 
     @Override
     @Async
+    @Observed(name = "mail.first-access",
+    contextualName = "Enviar e-mail de primeiro acesso")
     public void execute(String to, String nome, String tempPassword) {
         try {
             Context context = new Context();
@@ -44,7 +46,7 @@ public class FirstAccessMailService implements FirstAccessMailUseCase {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            helper.setFrom(emailFrom);
+            helper.setFrom(springApplicationProperties.mail().from());
             helper.setTo(to);
             helper.setSubject("Bem-vindo ao InspectFlow - Seus Dados de Acesso");
             helper.setText(htmlBody, true);

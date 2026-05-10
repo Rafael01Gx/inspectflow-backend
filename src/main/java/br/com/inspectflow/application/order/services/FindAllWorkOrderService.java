@@ -5,6 +5,7 @@ import br.com.inspectflow.application.order.ports.in.FindAllWorkOrderUseCase;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ public class FindAllWorkOrderService implements FindAllWorkOrderUseCase {
 
     @Override
     @Transactional(readOnly = true)
+    @Observed(name = "order.list",
+            contextualName = "lista ordens")
     public PagedResponse<OrderResponse> execute(PageRequest pageRequest) {
         var page = repository.findAll(pageRequest);
 

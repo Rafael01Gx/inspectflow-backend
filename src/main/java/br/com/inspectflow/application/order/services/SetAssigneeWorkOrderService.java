@@ -10,6 +10,7 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,8 @@ public class SetAssigneeWorkOrderService implements SetAssigneeWorkOrderUseCase 
 
     @Override
     @Transactional
+    @Observed(name = "order.update-assignee",
+            contextualName = "atualiza responsável da ordem")
     public void execute(UUID id, UUID assigneeId) {
         User assignee = userRepository.findById(assigneeId).orElseThrow(UserNotFoundException::new);
         WorkOrder workOrder = repository.findById(id).orElseThrow(WorkerOrderNotFoundException::new);

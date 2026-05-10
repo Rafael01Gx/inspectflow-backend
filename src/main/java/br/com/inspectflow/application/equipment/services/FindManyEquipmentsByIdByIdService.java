@@ -4,6 +4,7 @@ import br.com.inspectflow.application.equipment.ports.in.FindManyEquipmentsByIdU
 import br.com.inspectflow.application.equipment.validators.AllEquipmentIdsExistValidator;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ public class FindManyEquipmentsByIdByIdService implements FindManyEquipmentsById
 
     @Override
     @Transactional(readOnly = true)
+    @Observed(name = "equipment.list-many-id",
+            contextualName = "Lista equipamentos por id")
     public List<Equipment> execute(List<UUID> ids) {
         if(ids != null && !ids.isEmpty()){
             validator.execute(ids);

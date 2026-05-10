@@ -4,6 +4,7 @@ import br.com.inspectflow.application.dashboard.dto.KpiSummaryDto;
 import br.com.inspectflow.application.dashboard.ports.in.KpiSummaryUseCase;
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class KpiSummaryService implements KpiSummaryUseCase {
     @Override
     @Cacheable(value = "dashboardKpis", key = "'summary'")
     @Transactional(readOnly = true)
+    @Observed(name = "dashboard.kpi",
+    contextualName = "gera KPIs")
     public KpiSummaryDto execute() {
         Double mttrInHours = workOrderRepository.calculateAverageRepairTimeInHours();
         if (mttrInHours == null) {

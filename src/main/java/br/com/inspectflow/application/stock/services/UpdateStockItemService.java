@@ -12,6 +12,7 @@ import br.com.inspectflow.application.stock.ports.in.UpdateStockItemUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,6 +39,8 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
     @Override
     @Transactional
     @CacheEvict(value = "dashboardStockItems", key = "'lowQuantity'")
+    @Observed(name = "stock.update",
+            contextualName = "atualiza item de estoque")
     public StockItemResponse execute(Long id, UpdateStockItemRequest dto, MultipartFile file) {
         idConsistencyValidator.execute(id,dto.id());
 

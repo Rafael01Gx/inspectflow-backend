@@ -10,6 +10,7 @@ import br.com.inspectflow.domain.notification.repositories.UserGroupRepository;
 import br.com.inspectflow.domain.notification.models.Notification;
 import br.com.inspectflow.domain.notification.repositories.NotificationRepository;
 import br.com.inspectflow.domain.user.enums.Role;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
     @Override
     @Transactional
     @Async("notificationExecutor")
+    @Observed(name = "notification.to-user",
+            contextualName = "envia notificação para um usuário")
     public void sendToUser(SendNotificationDto dto) {
         Notification notification =  Notification.builder()
                 .recipientId(dto.recipientId())
@@ -46,6 +49,8 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
 
     @Override
     @Async("notificationExecutor")
+    @Observed(name = "notification.to-group",
+            contextualName = "envia notificação para um grupo de usuários")
     public void sendToGroup(Set<Role> roles, SendNotificationDto dto) {
         Set<NotificationGroupMember> members = groupRepository.getMemberIdsWithRoles(roles);
 
@@ -91,6 +96,7 @@ public class NotificationService implements SendNotificationUseCase, QueryNotifi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void markAsRead(UUID notificationId, UUID userId) {
         repository.findById(notificationId)
                 .filter(n -> n.belongsTo(userId))

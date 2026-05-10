@@ -1,8 +1,9 @@
-package br.com.inspectflow.application.stock.services;
+package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.order.dto.OrderResponse;
 import br.com.inspectflow.application.stock.ports.in.FindAllWorkOrderByEquipmentCodeUseCase;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class FindAllWorkOrderByEquipmentCodeService implements FindAllWorkOrderB
     @Override
     @Cacheable(value = "workOrders", key = "#equipmentCode")
     @Transactional(readOnly = true)
+    @Observed(name = "order.list-equipment",
+            contextualName = "lista ordens por equipamento")
     public List<OrderResponse> execute(UUID equipmentCode) {
         return repository.findAllByEquipmentCode(equipmentCode).stream().map(OrderResponse::from).toList();
     }

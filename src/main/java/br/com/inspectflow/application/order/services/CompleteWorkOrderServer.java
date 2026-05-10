@@ -14,6 +14,7 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,6 +41,8 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
             @CacheEvict(value = "dashboardKpis", key = "'summary'")
     })
+    @Observed(name = "order.complete",
+            contextualName = "completa uma ordem de serviço")
     public OrderResponse execute(UUID id, CompleteOrderRequest dto, Authentication authUser) {
         WorkOrder order = repository.findById(id).orElseThrow(WorkerOrderNotFoundException::new);
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);

@@ -7,6 +7,7 @@ import br.com.inspectflow.application.user.ports.in.UpdateUserStatusUseCase;
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,8 @@ public class UpdateUserStatusService implements UpdateUserStatusUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.update-status",
+            contextualName = "ativa/desativa usuário")
     public void execute(UUID userId, Authentication authUser , UpdateUserStatusRequest dto) {
 
         User userAuth = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);

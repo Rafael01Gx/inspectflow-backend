@@ -7,6 +7,7 @@ import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.user.ports.in.CreateUserUseCase;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class CreateUserService implements CreateUserUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.create",
+    contextualName = "criar novo usuário")
     public UserResponse execute(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new DuplicationFoundException("Email já cadastrado!");

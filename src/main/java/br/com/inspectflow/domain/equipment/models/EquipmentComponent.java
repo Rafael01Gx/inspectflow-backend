@@ -2,8 +2,6 @@ package br.com.inspectflow.domain.equipment.models;
 
 import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.inspection.models.InspectionItem;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,13 +36,11 @@ public class EquipmentComponent {
     @Builder.Default
     @Column(nullable = false)
     @OneToMany(mappedBy = "equipmentComponent", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Set<InspectionItem> inspectionItem = new HashSet<>();
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_id")
-    @JsonBackReference
     private Equipment equipment;
 
 

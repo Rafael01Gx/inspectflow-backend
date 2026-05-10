@@ -4,6 +4,7 @@ import br.com.inspectflow.application.dashboard.dto.WorkOrderStatusCountDto;
 import br.com.inspectflow.application.dashboard.ports.in.WorkOrderStatusCountUseCase;
 import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class WorkOrderStatusCountService implements WorkOrderStatusCountUseCase 
     @Override
     @Cacheable(value = "dashboardWorkOrders", key = "'statusCounts'")
     @Transactional(readOnly = true)
+    @Observed(name = "dashboard.order-status-count",
+    contextualName = "contagem de ordens por status")
     public List<WorkOrderStatusCountDto> execute() {
         return workOrderRepository.countWorkOrdersByStatus().stream()
                 .map(result -> {

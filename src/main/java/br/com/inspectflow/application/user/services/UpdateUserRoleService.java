@@ -8,6 +8,7 @@ import br.com.inspectflow.application.user.dto.UpdateUserRoleRequest;
 import br.com.inspectflow.application.user.ports.in.UpdateUserRoleUseCase;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,8 @@ public class UpdateUserRoleService implements UpdateUserRoleUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.update-role",
+            contextualName = "atualiza permissões de usuário")
     public void execute(UUID userId, Authentication authUser , UpdateUserRoleRequest dto) {
         User userDetails = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);
 

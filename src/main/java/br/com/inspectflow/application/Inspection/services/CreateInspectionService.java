@@ -56,7 +56,7 @@ public class CreateInspectionService implements CreateInspectionUseCase {
         inspection.setStatus(statusResult.status());
         inspectionRepository.save(inspection);
 
-        equipment.updateInspection();
+        equipment.updateInspection(inspection.getInspectionCategory());
 
         InspectionHistory historico = InspectionHistory.builder()
                 .inspectionId(inspection.getId())

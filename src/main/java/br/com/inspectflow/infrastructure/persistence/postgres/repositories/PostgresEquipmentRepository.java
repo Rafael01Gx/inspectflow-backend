@@ -18,7 +18,8 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
             "components.inspectionItem",
             "partsInStock",
             "attachments",
-            "consignmentCodes"
+            "consignmentCodes",
+            "healthSheet"
     })
     Optional<Equipment> findByCode(String code);
 
@@ -36,7 +37,8 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
             "components.inspectionItem",
             "partsInStock",
             "attachments",
-            "consignmentCodes"
+            "consignmentCodes",
+            "healthSheet"
     })
     Optional<Equipment> findById(UUID id);
 

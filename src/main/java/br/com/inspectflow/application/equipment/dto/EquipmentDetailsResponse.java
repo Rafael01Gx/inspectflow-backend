@@ -3,10 +3,8 @@ package br.com.inspectflow.application.equipment.dto;
 import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
-import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -19,9 +17,6 @@ public record EquipmentDetailsResponse(
         EquipmentStatus status,
         EquipmentType type,
         String location,
-        InspectionFrequency inspectionFrequency,
-        LocalDateTime lastInspection,
-        LocalDateTime nextInspection,
         Set<EquipmentComponentResponse> components,
         Set<EquipmentAttachmentResponse> attachments,
         Map<PartCategory, String> consignmentCodes,
@@ -36,9 +31,6 @@ public record EquipmentDetailsResponse(
                 equipment.getStatus(),
                 equipment.getType(),
                 equipment.getLocation(),
-                equipment.getInspectionFrequency(),
-                equipment.getLastInspection(),
-                equipment.getNextInspection(),
                 equipment.getComponents().stream().map(EquipmentComponentResponse::from).collect(Collectors.toSet()),
                 equipment.getAttachments().stream()
                         .map(EquipmentAttachmentResponse::from)

@@ -8,6 +8,7 @@ import br.com.inspectflow.application.equipment.dto.UpdateEquipmentComponentRequ
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
+import br.com.inspectflow.domain.equipment.models.EquipmentHealthSheet;
 import br.com.inspectflow.domain.inspection.models.InspectionItem;
 
 import java.util.*;
@@ -24,7 +25,6 @@ public class EquipmentMapper {
                 .type(dto.type())
                 .location(dto.location())
                 .consignmentCodes(dto.consignmentCodes())
-                .inspectionFrequency(dto.inspectionFrequency())
                 .propertyCode(
                         Optional.ofNullable(dto.propertyCode())
                                 .filter(s -> !s.isBlank())
@@ -32,6 +32,11 @@ public class EquipmentMapper {
                                 .orElse(null)
                 )
                 .build();
+        if (dto.inspectionFrequency() != null){
+            EquipmentHealthSheet healthSheet = new EquipmentHealthSheet();
+            healthSheet.updateInspectionFrequency(dto.inspectionFrequency());
+            equipment.setHealthSheet(healthSheet);
+        }
 
         if (dto.components() != null) {
             dto.components().forEach(compDto -> {

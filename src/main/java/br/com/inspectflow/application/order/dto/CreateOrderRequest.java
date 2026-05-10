@@ -17,7 +17,7 @@ public record CreateOrderRequest(
         String title,
 
         @NotBlank(message = "A descrição é obrigatória")
-        @Size(min = 5, max = 100, message = "A descrição deve ter entre 5 e 100 caracteres")
+        @Size(min = 5, message = "A descrição deve ter no mínimo 5 caracteres")
         String description,
 
         @NotBlank(message = "O nome do equipamento é obrigatório")

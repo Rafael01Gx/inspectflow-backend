@@ -27,7 +27,12 @@ public class SseEmitterRegistry {
         userEmitters.computeIfAbsent(userId, k -> new CopyOnWriteArrayList<>()).add(emitter);
         log.debug("SSE registrado para userId={}, total conexões={}", userId, connectedCount());
 
-        Runnable cleanup = () -> removeEmitter(userId, emitter);
+        Runnable cleanup = () -> {removeEmitter(userId, emitter);
+            try {
+                emitter.complete();
+            } catch (Exception e) {
+            }
+        };
         emitter.onCompletion(cleanup);
         emitter.onTimeout(cleanup);
         emitter.onError(e -> {

@@ -21,14 +21,17 @@ public interface PostgresStockItemRepository extends JpaRepository<StockItem, Lo
 
 
     @Query(value = """
-            SELECT *
-            FROM stock_items s
-            WHERE immutable_unaccent(lower(s.name)) % immutable_unaccent(lower(:name))
-            ORDER BY similarity(
-                immutable_unaccent(lower(s.name)), 
-                immutable_unaccent(lower(:name))
-            ) DESC
-            LIMIT 5
-            """, nativeQuery = true)
+        SELECT *
+        FROM stock_items s
+        WHERE similarity(
+            immutable_unaccent(lower(s.name)), 
+            immutable_unaccent(lower(:name))
+        ) > 0.1
+        ORDER BY similarity(
+            immutable_unaccent(lower(s.name)), 
+            immutable_unaccent(lower(:name))
+        ) DESC
+        LIMIT 5
+        """, nativeQuery = true)
     List<StockItem> searchSmart(@Param("name") String name);
 }

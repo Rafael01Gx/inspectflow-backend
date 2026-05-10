@@ -5,7 +5,6 @@ import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
 import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -23,7 +22,7 @@ public record EquipmentDetailsResponse(
         InspectionFrequency inspectionFrequency,
         LocalDateTime lastInspection,
         LocalDateTime nextInspection,
-        Set<EquipmentComponent> components,
+        Set<EquipmentComponentResponse> components,
         Set<EquipmentAttachmentResponse> attachments,
         Map<PartCategory, String> consignmentCodes,
         String imageUrl,
@@ -40,7 +39,7 @@ public record EquipmentDetailsResponse(
                 equipment.getInspectionFrequency(),
                 equipment.getLastInspection(),
                 equipment.getNextInspection(),
-                equipment.getComponents(),
+                equipment.getComponents().stream().map(EquipmentComponentResponse::from).collect(Collectors.toSet()),
                 equipment.getAttachments().stream()
                         .map(EquipmentAttachmentResponse::from)
                         .collect(Collectors.toSet()),

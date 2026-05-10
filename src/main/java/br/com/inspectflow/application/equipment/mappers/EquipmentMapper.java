@@ -58,7 +58,7 @@ public class EquipmentMapper {
 
 
             dto.components().forEach(compDto -> {
-                if (compDto.id() == null) {
+                if (compDto.id() == null || !dtoComponentsMap.containsKey(compDto.id())) {
 
                     buildComponentInEquipment(equipment, new CreateEquipmentComponentRequest(
                             compDto.name(),

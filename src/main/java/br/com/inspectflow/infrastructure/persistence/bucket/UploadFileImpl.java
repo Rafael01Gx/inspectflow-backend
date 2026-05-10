@@ -28,7 +28,7 @@ public class UploadFileImpl implements UploadFileUseCase {
                        PutObjectArgs.builder()
                                .bucket(minioProperties.bucketName())
                                .object(objectKey)
-                               .stream(file.getInputStream(), file.getSize(), -1)
+                               .stream(file.getInputStream(), file.getSize(), -1L)
                                .contentType(file.getContentType())
                                .build()
                );

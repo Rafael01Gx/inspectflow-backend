@@ -3,7 +3,9 @@ spring:
     locations: classpath:db/migration/dev
   devtools:
     restart:
-      additional-exclude: "logs/**"
+      enabled: false
+    livereload:
+      enabled: true
 management:
   tracing:
     sampling:

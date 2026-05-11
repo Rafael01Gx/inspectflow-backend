@@ -61,9 +61,10 @@ public class EquipmentHealthSheet {
 
     public void updateInspectionFrequency(Map<InspectionCategory,InspectionFrequency> frequency) {
         if (frequency == null) return;
-        if (frequency.containsKey(InspectionCategory.MECANICA)) this.mechanicalInspectionFrequency = frequency.get(InspectionCategory.MECANICA);
-        if (frequency.containsKey(InspectionCategory.ELETRICA)) this.electricalInspectionFrequency = frequency.get(InspectionCategory.ELETRICA);
-        if (frequency.containsKey(InspectionCategory.AFERICAO)) this.calibrationInspectionFrequency = frequency.get(InspectionCategory.AFERICAO);
+        this.mechanicalInspectionFrequency = frequency.get(InspectionCategory.MECANICA);
+        this.electricalInspectionFrequency = frequency.get(InspectionCategory.ELETRICA);
+        this.calibrationInspectionFrequency = frequency.get(InspectionCategory.AFERICAO);
+
     }
 
 }

@@ -159,6 +159,10 @@ public class Equipment {
     }
 
     public void updateInspection(InspectionCategory category){
+        if (this.healthSheet == null) {
+            this.healthSheet = new EquipmentHealthSheet();
+            this.healthSheet.setEquipment(this);
+        }
         this.healthSheet.updateInspectionDate(category);
     }
 

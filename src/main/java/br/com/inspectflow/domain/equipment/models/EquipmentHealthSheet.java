@@ -44,14 +44,23 @@ public class EquipmentHealthSheet {
         var dateNow = LocalDateTime.now();
         switch (category) {
             case MECANICA -> {
+                if (this.mechanicalInspectionFrequency == null) {
+                    this.mechanicalInspectionFrequency = InspectionFrequency.MENSAL;
+                }
                 this.lastMechanicalInspection = dateNow;
                 this.nextMechanicalInspection  = dateNow.plusDays(this.mechanicalInspectionFrequency.getDias());
             }
             case ELETRICA -> {
+                if (this.electricalInspectionFrequency == null) {
+                    this.electricalInspectionFrequency = InspectionFrequency.MENSAL;
+                }
                 this.lastElectricalInspection = dateNow;
                 this.nextElectricalInspection  = dateNow.plusDays(this.electricalInspectionFrequency.getDias());
             }
             case AFERICAO -> {
+                if (this.calibrationInspectionFrequency == null) {
+                    this.calibrationInspectionFrequency = InspectionFrequency.MENSAL;
+                }
                 this.lastCalibration = dateNow;
                 this.nextCalibration  = dateNow.plusDays(this.calibrationInspectionFrequency.getDias());
             }

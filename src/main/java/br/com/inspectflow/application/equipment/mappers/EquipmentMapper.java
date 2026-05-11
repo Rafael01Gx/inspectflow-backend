@@ -119,7 +119,7 @@ public class EquipmentMapper {
             } else {
                 // ATUALIZAR ITEM EXISTENTE
                 component.getInspectionItem().stream()
-                        .filter(i -> i.getId().equals(itemDto.id()))
+                        .filter(i -> Objects.equals(i.getId(), itemDto.id()))
                         .findFirst()
                         .ifPresent(existingItem -> {
                             existingItem.update(

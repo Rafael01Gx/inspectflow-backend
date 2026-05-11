@@ -217,7 +217,7 @@ management:
 
   otlp:
     tracing:
-      endpoint: http://127.0.0.1:4318/v1/traces
+      endpoint: http://inspectflow-otel-collector:4318/v1/traces
       compression: gzip
       timeout: 10s
     metrics:

@@ -88,17 +88,11 @@ services:
       redis:
         condition: service_healthy
       jaeger:
-        condition: service_healthy
+        condition: service_started
       otel-collector:
-        condition: service_healthy
+        condition: service_started
     networks:
       - inspectflow-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`inspectflow.rflgx.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))"
@@ -277,12 +271,7 @@ services:
       loki:
         condition: service_started
       jaeger:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
+        condition: service_started
 
   prometheus:
     image: prom/prometheus:latest
@@ -302,12 +291,7 @@ services:
       - inspectflow-network
     depends_on:
       inspectflow-api:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
+        condition: service_started
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prometheus.rule=Host(`prometheus.rflgx.com.br`)"
@@ -331,11 +315,6 @@ services:
       - jaeger_data:/badger
     networks:
       - inspectflow-network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:16686/"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jaeger.rule=Host(`jaeger.rflgx.com.br`)"
@@ -355,12 +334,6 @@ services:
       - loki_data:/loki
     networks:
       - inspectflow-network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
   promtail:
     image: grafana/promtail:latest
@@ -374,7 +347,7 @@ services:
       - inspectflow-network
     depends_on:
       loki:
-        condition: service_healthy
+        condition: service_started
 
   grafana:
     image: grafana/grafana:latest
@@ -401,18 +374,13 @@ services:
       - inspectflow-network
     depends_on:
       loki:
-        condition: service_healthy
+        condition: service_started
       prometheus:
-        condition: service_healthy
+        condition: service_started
       jaeger:
-        condition: service_healthy
+        condition: service_started
       otel-collector:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
+        condition: service_started
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.rflgx.com.br`)"

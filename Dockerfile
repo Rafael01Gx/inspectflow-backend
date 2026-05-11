@@ -3,7 +3,9 @@ FROM eclipse-temurin:25-jdk AS build
 WORKDIR /app
 
 # Instala o bash para execução do mvnw
-RUN apk add --no-cache bash
+RUN apt-get update && \
+    apt-get install -y bash && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copia os arquivos de configuração do Maven Wrapper para aproveitar o cache
 COPY .mvn/ .mvn/
@@ -23,7 +25,7 @@ WORKDIR /app
 
 # Dependências úteis e fuso horário
 RUN apt-get update && \
-    apt-get install -y curl tzdata && \
+    apt-get install -y --no-install-recommends tzdata curl && \
     rm -rf /var/lib/apt/lists/*
 ENV TZ=America/Sao_Paulo
 

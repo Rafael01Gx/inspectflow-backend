@@ -1,1 +1,0 @@
-ALTER TABLE work_orders ADD COLUMN stock_requisition VARCHAR(1000) DEFAULT NULL;

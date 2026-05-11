@@ -1,45 +1,27 @@
-################################################################################
-# PROMETHEUS — Configuração de Scraping — Desenvolvimento Local
-################################################################################
-#
-# DIFERENÇA CRÍTICA em relação ao ambiente de produção:
-#
-#   Em produção:  target = inspectflow-api:8090  (container na mesma rede)
-#   Em dev local: target = host.docker.internal:8090  (app rodando na IDE)
-#
-#   O `host.docker.internal` é o DNS especial do Docker que resolve para
-#   o IP do host (sua máquina), permitindo que o container do Prometheus
-#   acesse a aplicação rodando no IntelliJ/VSCode.
-#
-################################################################################
-
 global:
   scrape_interval:     15s
   evaluation_interval: 15s
   scrape_timeout:      10s
 
   external_labels:
-    monitor:     inspectflow-prometheus-dev
-    environment: local
+    monitor:     inspectflow-prometheus
+    environment: production
 
 scrape_configs:
 
   # ----------------------------------------------------------------------------
-  # InspectFlow — aplicação rodando na IDE (fora do Docker)
-  # Certifique-se que a aplicação está rodando com management.server.port=8090
+  # InspectFlow — container na mesma rede Docker
+  # A aplicação deve expor management.server.port=8090
   # ----------------------------------------------------------------------------
   - job_name: inspectflow
     metrics_path: /actuator/prometheus
     scrape_interval: 15s
     static_configs:
       - targets:
-          # host.docker.internal → resolve para o IP do host no Mac/Windows
-          # No Linux, pode ser necessário usar o IP da bridge: 172.17.0.1
-          # ou adicionar --add-host=host.docker.internal:host-gateway no compose
-          - host.docker.internal:8090
+          - inspectflow-api:8090
         labels:
           application: inspectflow
-          environment: local
+          environment: production
 
   # ----------------------------------------------------------------------------
   # Prometheus self-monitoring

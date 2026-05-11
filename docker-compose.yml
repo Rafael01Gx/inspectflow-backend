@@ -188,32 +188,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # ============================================================================
-  # OBSERVABILIDADE — OPEN TELEMETRY COLLECTOR
-  # ============================================================================
-
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    container_name: inspectflow-otel-collector
-    restart: unless-stopped
-    command:
-      - "--config=/etc/otelcol/config.yml"
-
-    volumes:
-      - ./observability/otel-collector/config.yml:/etc/otelcol/config.yml:ro
-
-    ports:
-      - "4317:4317" # OTLP gRPC
-      - "4318:4318" # OTLP HTTP
-
-    depends_on:
-      jaeger:
-        condition: service_started
-      loki:
-        condition: service_healthy
-
-    networks:
-      - inspectflow-network
+    # Sem healthcheck: imagem minimalista sem curl/wget/nc
 
   # ============================================================================
   # OBSERVABILIDADE — LOKI
@@ -238,13 +213,6 @@ services:
     networks:
       - inspectflow-network
 
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 40s
-
   # ============================================================================
   # OBSERVABILIDADE — PROMTAIL
   # ============================================================================
@@ -260,12 +228,40 @@ services:
       - ./observability/promtail/promtail-config.yml:/etc/promtail/promtail.yml:ro
       - ./logs:/logs:ro
 
+    networks:
+      - inspectflow-network
+
     depends_on:
       loki:
-        condition: service_healthy
+        condition: service_started
+
+  # ============================================================================
+  # OBSERVABILIDADE — OPEN TELEMETRY COLLECTOR
+  # ============================================================================
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: inspectflow-otel-collector
+    restart: unless-stopped
+
+    command:
+      - "--config=/etc/otelcol/config.yml"
+
+    volumes:
+      - ./observability/otel-collector/config.yml:/etc/otelcol/config.yml:ro
+
+    ports:
+      - "4317:4317"
+      - "4318:4318"
 
     networks:
       - inspectflow-network
+
+    depends_on:
+      loki:
+        condition: service_started
+      jaeger:
+        condition: service_started
 
   # ============================================================================
   # OBSERVABILIDADE — PROMETHEUS
@@ -295,12 +291,6 @@ services:
     networks:
       - inspectflow-network
 
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/-/healthy || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
 
   # ============================================================================
   # OBSERVABILIDADE — GRAFANA
@@ -328,21 +318,18 @@ services:
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
       - grafana_data:/var/lib/grafana
 
-    depends_on:
-      loki:
-        condition: service_healthy
-
-      prometheus:
-        condition: service_healthy
-
-      jaeger:
-        condition: service_started
-
-      otel-collector:
-        condition: service_started
-
     networks:
       - inspectflow-network
+
+    depends_on:
+      loki:
+        condition: service_started
+      prometheus:
+        condition: service_started
+      jaeger:
+        condition: service_started
+      otel-collector:
+        condition: service_started
 
 # ==============================================================================
 # VOLUMES

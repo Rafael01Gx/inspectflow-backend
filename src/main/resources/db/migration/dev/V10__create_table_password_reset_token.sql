@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS password_reset_token (
     user_id     UUID         NOT NULL,
     expiry_date BIGINT       NOT NULL,
 
-    CONSTRAINT uk_token              UNIQUE (token),
+    CONSTRAINT uk_token UNIQUE (token),
     CONSTRAINT fk_user_password_reset
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

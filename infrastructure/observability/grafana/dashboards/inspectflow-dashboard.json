@@ -237,7 +237,7 @@
       "datasource": { "type": "loki", "uid": "loki" },
       "targets": [
         {
-          "expr": "{application=\"inspectflow\", environment=\"$environment\", level=\"ERROR\"} | json",
+          "expr": "{application=\"inspectflow\", environment=\"$environment\"} | json | severity_text =~ \"(?i)ERROR|ERR\"",
           "legendFormat": ""
         }
       ],

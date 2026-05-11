@@ -22,7 +22,9 @@ FROM eclipse-temurin:25-jre-noble
 WORKDIR /app
 
 # Dependências úteis e fuso horário
-RUN apk add --no-cache curl tzdata
+RUN apt-get update && \
+    apt-get install -y curl tzdata && \
+    rm -rf /var/lib/apt/lists/*
 ENV TZ=America/Sao_Paulo
 
 # Copia o JAR do estágio de build

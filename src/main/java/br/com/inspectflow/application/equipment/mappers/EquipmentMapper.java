@@ -75,7 +75,7 @@ public class EquipmentMapper {
                     ));
                 } else {
                     equipment.getComponents().stream()
-                            .filter(c -> c.getId().equals(compDto.id()))
+                            .filter(c -> Objects.equals(c.getId(), compDto.id()))
                             .findFirst()
                             .ifPresent(existingComponent -> {
                                 existingComponent.update(compDto.name(), compDto.category());
@@ -119,7 +119,7 @@ public class EquipmentMapper {
             } else {
                 // ATUALIZAR ITEM EXISTENTE
                 component.getInspectionItem().stream()
-                        .filter(i -> i.getId().equals(itemDto.id()))
+                        .filter(i -> Objects.equals(i.getId(), itemDto.id()))
                         .findFirst()
                         .ifPresent(existingItem -> {
                             existingItem.update(

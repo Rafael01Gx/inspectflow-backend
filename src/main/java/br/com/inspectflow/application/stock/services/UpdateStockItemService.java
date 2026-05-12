@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
 
     private final StockItemRepository repository;
     private final IdConsistencyValidator<Long> idConsistencyValidator;
-    private final FindManyEquipmentsByCodeService FindManyEquipmentsByCodeService;
+    private final FindManyEquipmentsByCodeService findManyEquipmentsByCodeService;
     private final AttachmentFileIsValid fileValidator;
     private final UploadFileService uploadFileService;
     private final DeleteFileService deleteFileService;
@@ -60,21 +61,39 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
 
         item.update(dto);
 
-        if(dto.linkedEquipmentCodes() != null) {
-            List<Equipment> equipments = FindManyEquipmentsByCodeService.execute(dto.linkedEquipmentCodes());
-            equipments.forEach(equipment-> {
-                equipment.getPartsInStock().add(item);
-                item.getLinkedEquipments().add(equipment);
-            });
-        } else if (item.getLinkedEquipments() != null) {
-            Set<Equipment> equipments = item.getLinkedEquipments();
-            equipments.forEach(equipment-> {
-                equipment.getPartsInStock().clear();
-                item.getLinkedEquipments().remove(equipment);
-            });
-        }
-
         StockItem savedItem = repository.save(item);
+
+        diffLink(dto,savedItem);
+
+
         return StockItemResponse.from(savedItem);
+    }
+
+
+    private void diffLink(UpdateStockItemRequest dto,StockItem item){
+        if (dto.linkedEquipmentCodes() != null) {
+            List<Equipment> newEquipments = findManyEquipmentsByCodeService.execute(dto.linkedEquipmentCodes());
+            Set<Equipment> newEquipmentSet = new HashSet<>(newEquipments);
+            Set<Equipment> currentEquipments = new HashSet<>(item.getLinkedEquipments());
+
+            currentEquipments.forEach(equipment -> {
+                if (!newEquipmentSet.contains(equipment)) {
+                    equipment.getPartsInStock().remove(item);
+                    item.getLinkedEquipments().remove(equipment);
+                }
+            });
+
+            newEquipmentSet.forEach(equipment -> {
+                if (!item.getLinkedEquipments().contains(equipment)) {
+                    equipment.getPartsInStock().add(item);
+                    item.getLinkedEquipments().add(equipment);
+                }
+            });
+
+        } else {
+            Set<Equipment> equipments = new HashSet<>(item.getLinkedEquipments());
+            equipments.forEach(equipment -> equipment.getPartsInStock().remove(item));
+            item.getLinkedEquipments().clear();
+        }
     }
 }

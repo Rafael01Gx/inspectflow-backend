@@ -25,10 +25,10 @@ public class StockItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include
     private String name;
 
     @Column(nullable = false)
@@ -64,7 +64,7 @@ public class StockItem {
     private LocalDateTime createdAt;
 
 
-    public void addEquipament(Equipment equipment) {
+    public void addEquipment(Equipment equipment) {
         if (equipment == null) return;
         this.linkedEquipments.add(equipment);
         equipment.getPartsInStock().add(this);
@@ -92,13 +92,13 @@ public class StockItem {
     public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){
         this.update(dto);
         if (linkedEquipment != null) {
-            linkedEquipment.forEach(this::addEquipament);
+            linkedEquipment.forEach(this::addEquipment);
         }
     }
 
     public void addEquipments(List<Equipment> equipmentsToAdd) {
         if (equipmentsToAdd != null) {
-            equipmentsToAdd.forEach(this::addEquipament);
+            equipmentsToAdd.forEach(this::addEquipment);
         }
     }
 

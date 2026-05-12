@@ -30,6 +30,7 @@ public class SecurityConfig {
     private final CookieBearerTokenResolver tokenResolver;
     private final AppHostProperties appHosts;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -56,6 +57,14 @@ public class SecurityConfig {
                     request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     request.anyRequest().authenticated();
                         }
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendRedirect(appHosts.web()+"/login");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect(appHosts.web() + "/");
+                        })
                 )
 
                 .oauth2ResourceServer(oauth ->

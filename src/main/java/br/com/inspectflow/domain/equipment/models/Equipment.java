@@ -24,6 +24,7 @@ public class Equipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(nullable = false)
@@ -125,7 +126,7 @@ public class Equipment {
     public void addPart(StockItem part) {
         if (part == null) return;
         partsInStock.add(part);
-        part.addEquipament(this);
+        part.addEquipment(this);
     }
 
     public void removePart(StockItem part) {

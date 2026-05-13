@@ -4,7 +4,7 @@ import java.util.List;
 
 public record PersonalDashboardFullDto(
         PersonalSummaryDto summary,
-        List<PersonalActivityDto> activityTimeline,
+        PersonalActivityResponse activityTimeline,
         List<PersonalWorkOrderTimelineDto> workOrderTimeline,
         List<PersonalWorkOrderSummaryDto> pendingWorkOrders,
         List<PersonalWorkOrderSummaryDto> recentCompleted

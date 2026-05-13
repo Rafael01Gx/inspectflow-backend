@@ -33,7 +33,7 @@ public class PersonalDashboardController {
     }
 
     @GetMapping("/activity")
-    public ResponseEntity<List<PersonalActivityDto>> getActivity(
+    public ResponseEntity<PersonalActivityResponse> getActivity(
             @RequestParam(defaultValue = "day") String groupBy, Authentication authentication
     ) {
         UUID userId = ExtractUserId.fromAuthentication(authentication);

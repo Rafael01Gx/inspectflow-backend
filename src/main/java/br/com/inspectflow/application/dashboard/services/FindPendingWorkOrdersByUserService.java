@@ -19,7 +19,7 @@ public class FindPendingWorkOrdersByUserService implements FindPendingWorkOrders
     private final PersonalDashboardQueryRepository repository;
 
     @Override
-    @Cacheable(value = "personalPendingOrders", key = "#userId")
+    //@Cacheable(value = "personalPendingOrders", key = "#userId")
     @Transactional(readOnly = true)
     public List<PersonalWorkOrderSummaryDto> execute(UUID userId) {
         return repository.findPendingWorkOrders(userId);

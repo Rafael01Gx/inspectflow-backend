@@ -19,7 +19,7 @@ public class FindRecentCompletedWorkOrdersByUserService implements FindRecentCom
     private final PersonalDashboardQueryRepository repository;
 
     @Override
-    @Cacheable(value = "personalRecentCompleted", key = "#userId + '-' + #limit")
+    //@Cacheable(value = "personalRecentCompleted", key = "#userId + '-' + #limit")
     @Transactional(readOnly = true)
     public List<PersonalWorkOrderSummaryDto> execute(UUID userId, int limit) {
         return repository.findRecentCompletedWorkOrders(userId, limit);

@@ -22,7 +22,7 @@ public class WorkOrderStatusMonthlyCountService implements WorkOrderStatusMonthl
     private final WorkOrderRepository workOrderRepository;
 
     @Override
-    @Cacheable(value = "dashboardWorkOrders", key = "'monthlyStatusCounts'")
+    @Cacheable(value = "dashboardWorkOrderStatusCounts", key = "'monthlyStatusCounts'")
     @Transactional(readOnly = true)
     @Observed(name = "dashboard.order-status-mouthly.count",
     contextualName = "contagem mensal de ordens por status")

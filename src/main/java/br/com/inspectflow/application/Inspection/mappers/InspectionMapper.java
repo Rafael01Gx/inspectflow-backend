@@ -27,7 +27,8 @@ public class InspectionMapper {
                             case ELETRICISTA -> InspectionCategory.ELETRICA;
                             case MECANICO -> InspectionCategory.MECANICA;
                             case INSTRUMENTISTA -> InspectionCategory.AFERICAO;
-                            default -> InspectionCategory.INSPECAO;
+                            case ADMINISTRADOR -> InspectionCategory.INSPECAO;
+                            default -> throw new IllegalArgumentException("Categoria não suportada para atualização automática");
                         }
                 )
                 .date(LocalDateTime.now())

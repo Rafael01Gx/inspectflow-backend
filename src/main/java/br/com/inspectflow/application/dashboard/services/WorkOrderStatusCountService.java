@@ -19,7 +19,7 @@ public class WorkOrderStatusCountService implements WorkOrderStatusCountUseCase 
     private final WorkOrderRepository workOrderRepository;
 
     @Override
-    @Cacheable(value = "dashboardWorkOrders", key = "'statusCounts'")
+    @Cacheable(value = "dashboardWorkOrderMonthlyStatusCounts", key = "'statusCounts'")
     @Transactional(readOnly = true)
     @Observed(name = "dashboard.order-status-count",
     contextualName = "contagem de ordens por status")

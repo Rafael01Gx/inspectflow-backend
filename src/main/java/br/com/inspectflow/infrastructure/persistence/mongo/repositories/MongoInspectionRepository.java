@@ -10,15 +10,16 @@ import java.util.UUID;
 
 public interface MongoInspectionRepository extends MongoRepository<Inspection, UUID> {
 
-    long count();
+
     List<Inspection> findAll();
-    @Query("{ 'date' : { $gte: ?0, $lte: ?1 }, 'status' : { $nin: ['COMPLETED', 'CANCELLED'] } }")
-    long countByDateBetweenAndStatusNotIn(LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query(value = "{ 'date' : { $exists: true, $gte: ?0, $lte: ?1 }, 'status' : { $nin: ['COMPLETED', 'CANCELLED'] } }", count = true)
+    Long countByDateBetweenAndStatusNotIn(LocalDateTime startDate, LocalDateTime endDate);
 
 
-    @Query("{ 'status' : 'COMPLETED', 'date' : { $lte: ?0 } }")
-    long countCompletedAndOnTimeInspections(LocalDateTime now);
+    @Query(value = "{ 'status' : 'COMPLETED', 'date' : { $exists: true, $lte: ?0 } }", count = true)
+    Long countCompletedAndOnTimeInspections(LocalDateTime now);
 
-    @Query("{ 'date' : { $lte: ?0 } }")
-    long countAllInspectionsUpTo(LocalDateTime now);
+    @Query(value = "{ 'date' : { $exists: true, $lte: ?0 } }", count = true)
+    Long countAllInspectionsUpTo(LocalDateTime now);
 }

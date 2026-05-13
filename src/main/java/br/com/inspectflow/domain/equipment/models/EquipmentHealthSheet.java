@@ -43,27 +43,21 @@ public class EquipmentHealthSheet {
     public void updateInspectionDate(InspectionCategory category) {
         var dateNow = LocalDateTime.now();
         switch (category) {
-            case MECANICA -> {
-                if (this.mechanicalInspectionFrequency == null) {
-                    this.mechanicalInspectionFrequency = InspectionFrequency.MENSAL;
-                }
-                this.lastMechanicalInspection = dateNow;
-                this.nextMechanicalInspection  = dateNow.plusDays(this.mechanicalInspectionFrequency.getDias());
+            case MECANICA ->
+                updateMechanicalInspection(dateNow);
+
+            case ELETRICA ->
+                updateElectricalInspection(dateNow);
+
+            case AFERICAO ->
+               updateCalibrationInspection(dateNow);
+
+            case INSPECAO -> {
+                updateMechanicalInspection(dateNow);
+                updateElectricalInspection(dateNow);
+                updateCalibrationInspection(dateNow);
             }
-            case ELETRICA -> {
-                if (this.electricalInspectionFrequency == null) {
-                    this.electricalInspectionFrequency = InspectionFrequency.MENSAL;
-                }
-                this.lastElectricalInspection = dateNow;
-                this.nextElectricalInspection  = dateNow.plusDays(this.electricalInspectionFrequency.getDias());
-            }
-            case AFERICAO -> {
-                if (this.calibrationInspectionFrequency == null) {
-                    this.calibrationInspectionFrequency = InspectionFrequency.MENSAL;
-                }
-                this.lastCalibration = dateNow;
-                this.nextCalibration  = dateNow.plusDays(this.calibrationInspectionFrequency.getDias());
-            }
+
             default -> throw new IllegalArgumentException("Categoria não suportada para atualização automática");
         }
     }
@@ -76,4 +70,26 @@ public class EquipmentHealthSheet {
 
     }
 
+    private void updateMechanicalInspection(LocalDateTime dateNow){
+        if (this.mechanicalInspectionFrequency == null) {
+            this.mechanicalInspectionFrequency = InspectionFrequency.MENSAL;
+        }
+        this.lastMechanicalInspection = dateNow;
+        this.nextMechanicalInspection  = dateNow.plusDays(this.mechanicalInspectionFrequency.getDias());
+    }
+    private void updateElectricalInspection(LocalDateTime dateNow){
+        if (this.electricalInspectionFrequency == null) {
+            this.electricalInspectionFrequency = InspectionFrequency.MENSAL;
+        }
+        this.lastElectricalInspection = dateNow;
+        this.nextElectricalInspection  = dateNow.plusDays(this.electricalInspectionFrequency.getDias());
+    }
+
+    private void updateCalibrationInspection(LocalDateTime dateNow){
+        if (this.calibrationInspectionFrequency == null) {
+            this.calibrationInspectionFrequency = InspectionFrequency.MENSAL;
+        }
+        this.lastCalibration = dateNow;
+        this.nextCalibration  = dateNow.plusDays(this.calibrationInspectionFrequency.getDias());
+    }
 }

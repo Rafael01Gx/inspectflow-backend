@@ -18,7 +18,6 @@ import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -37,10 +36,14 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
-            @CacheEvict(value = "dashboardKpis", key = "'summary'")
-    })
+    @CacheEvict(value = {
+            "personalSummary",
+            "personalPendingOrders",
+            "personalRecentCompleted",
+            "personalWorkOrderTimeline",
+            "dashboardWorkOrderStatusCounts",
+            "plantHealthOpenOrders"
+    }, allEntries = true)
     @Observed(name = "order.complete",
             contextualName = "completa uma ordem de serviço")
     public OrderResponse execute(UUID id, CompleteOrderRequest dto, Authentication authUser) {

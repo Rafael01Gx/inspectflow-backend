@@ -38,7 +38,7 @@ public class PlantHealthQueryRepositoryImpl implements PlantHealthQueryRepositor
                 SELECT COUNT(DISTINCT wo.equipment_id)
                 FROM work_orders wo
                 WHERE wo.order_status NOT IN ('COMPLETED', 'CANCELLED')
-                  AND wo.order_priority = 'CRITICAL'
+                  AND wo.order_priority = 'HIGH'
                   AND wo.equipment_id IS NOT NULL
                 """;
         return ((Number) em.createNativeQuery(sql).getSingleResult()).longValue();
@@ -116,12 +116,12 @@ public class PlantHealthQueryRepositoryImpl implements PlantHealthQueryRepositor
                 (String) r[1],
                 (String) r[2],
                 ((Number) r[3]).longValue(),
-                r[4] != null ? ((java.sql.Timestamp) r[4]).toLocalDateTime() : null,
-                r[5] != null ? ((java.sql.Timestamp) r[5]).toLocalDateTime() : null,
-                r[6] != null ? ((java.sql.Timestamp) r[6]).toLocalDateTime() : null,
-                r[7] != null ? ((java.sql.Timestamp) r[7]).toLocalDateTime() : null,
-                r[8] != null ? ((java.sql.Timestamp) r[8]).toLocalDateTime() : null,
-                r[9] != null ? ((java.sql.Timestamp) r[9]).toLocalDateTime() : null
+                convertToLocalDateTime(r[4]),
+                convertToLocalDateTime(r[5]),
+                convertToLocalDateTime(r[6]),
+                convertToLocalDateTime(r[7]),
+                convertToLocalDateTime(r[8]),
+                convertToLocalDateTime(r[9])
         )).toList();
 
         long total = ((Number) em.createNativeQuery(countSql).getSingleResult()).longValue();
@@ -183,5 +183,15 @@ public class PlantHealthQueryRepositoryImpl implements PlantHealthQueryRepositor
                 ((Number) r[5]).intValue(),
                 (String) r[6]
         )).toList();
+    }
+
+
+    private java.time.LocalDateTime convertToLocalDateTime(Object value) {
+        return switch (value) {
+            case null -> null;
+            case java.time.LocalDateTime ldt -> ldt;
+            case java.sql.Timestamp ts -> ts.toLocalDateTime();
+            default -> null;
+        };
     }
 }

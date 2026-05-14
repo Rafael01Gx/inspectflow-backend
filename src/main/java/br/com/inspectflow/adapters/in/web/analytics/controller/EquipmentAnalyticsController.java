@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/dashboard/equipment-analytics")
-@PreAuthorize("hasRole('GESTOR')")
+@PreAuthorize("hasRole('SUPERVISOR')")
 @RequiredArgsConstructor
 public class EquipmentAnalyticsController {
 }

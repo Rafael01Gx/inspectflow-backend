@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -71,12 +70,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(Authentication authentication,HttpServletResponse response) {
-        if (authentication.getName() == null) {
-            Cookie cookie = clearSessionCookie.execute();
-            response.addCookie(cookie);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<UserResponse> me(Authentication authentication) {
         return ResponseEntity.ok(findUserByEmailService.execute(authentication.getName()));
     }
 }

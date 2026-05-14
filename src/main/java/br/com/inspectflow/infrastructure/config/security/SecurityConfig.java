@@ -2,6 +2,7 @@ package br.com.inspectflow.infrastructure.config.security;
 
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,10 +61,10 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendRedirect(appHosts.web()+"/login");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.sendRedirect(appHosts.web() + "/");
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                         })
                 )
 

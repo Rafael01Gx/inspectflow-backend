@@ -38,13 +38,20 @@ public class RedisConfig {
                 );
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = Map.ofEntries(
-
+                // ── Dashboard Analytics
                 Map.entry("dashboardKpis",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
                 Map.entry("dashboardEquipments",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
                 Map.entry("dashboardInspections",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
                 Map.entry("dashboardStockItems",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
                 Map.entry("dashboardWorkOrderMonthlyStatusCounts",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
                 Map.entry("dashboardWorkOrderStatusCounts",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
+
+
+                // ── PlantHealth Analytics
+                Map.entry("plantHealthCriticalStock",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
+                Map.entry("plantHealthOpenOrders",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
+                Map.entry("plantHealthOverview",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
+                Map.entry("plantHealthOverdue",              defaultConfig.entryTtl(Duration.ofMinutes(30))),
 
 
                 // ── Equipment Analytics

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/dashboard")
-@PreAuthorize("hasRole('GESTOR')")
+@PreAuthorize("hasRole('SUPERVISOR')")
 @RequiredArgsConstructor
 public class DashboardAnalyticsController {
 

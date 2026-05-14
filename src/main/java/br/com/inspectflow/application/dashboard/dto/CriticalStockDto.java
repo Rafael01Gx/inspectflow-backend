@@ -4,9 +4,9 @@ public record CriticalStockDto(
         Long stockItemId,
         String name,
         String partCategory,
-        int currentQuantity,
+        Integer currentQuantity,
         Integer minQuantity,
-        int deficit,
+        Integer deficit,
         String location
 ) {
 }

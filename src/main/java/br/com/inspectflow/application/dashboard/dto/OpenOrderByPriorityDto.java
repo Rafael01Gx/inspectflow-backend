@@ -3,7 +3,7 @@ package br.com.inspectflow.application.dashboard.dto;
 public record OpenOrderByPriorityDto(
         String equipmentName,
         String priority,
-        long total,
+        Long total,
         String earliestDueDate
 ) {
 }

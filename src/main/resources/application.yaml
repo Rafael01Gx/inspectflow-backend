@@ -106,6 +106,7 @@ app:
       issuer: https://inspectflow.rflgx.com.br
       expiration: ${JWT_EXPIRATION:86400000}
       cookie-name: ${JWT_COOKIE_NAME:auth-token}
+      cookie-age: ${COOKIE_AGE:86400}
       cookie-secure: ${COOKIE_SECURE:false}
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}

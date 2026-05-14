@@ -5,7 +5,6 @@ import br.com.inspectflow.application.dashboard.ports.in.FindWorkOrderTimelineBy
 import br.com.inspectflow.application.dashboard.ports.out.PersonalDashboardQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ public class FindWorkOrderTimelineByUserService implements FindWorkOrderTimeline
     private final PersonalDashboardQueryRepository repository;
 
     @Override
-    //@Cacheable(value = "personalWorkOrderTimeline", key = "#userId + '-' + #months")
     @Transactional(readOnly = true)
     public List<PersonalWorkOrderTimelineDto> execute(UUID userId, int months) {
         return repository.findWorkOrderTimeline(userId, months);

@@ -5,7 +5,7 @@ spring:
     restart:
       enabled: false
     livereload:
-      enabled: true
+      enabled: false
 management:
   tracing:
     sampling:

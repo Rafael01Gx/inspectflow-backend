@@ -4,6 +4,7 @@ import br.com.inspectflow.application.dashboard.dto.PersonalDashboardFullDto;
 import br.com.inspectflow.application.dashboard.ports.in.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class FullPersonalDashboardService implements FullPersonalDashboardUseCas
     private final PersonalSummaryUseCase personalSummary;
     private final PersonalActivityUseCase personalActivity;
 
+    @Cacheable(value = "dashboard.personal.full", key = "#userId.toString() + #months")
     @Override
     public PersonalDashboardFullDto execute(UUID userId, int months) {
         return new PersonalDashboardFullDto(

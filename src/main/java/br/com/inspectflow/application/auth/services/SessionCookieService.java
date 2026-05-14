@@ -20,7 +20,7 @@ public class SessionCookieService implements CreateSessionCookieUseCase, ClearSe
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setMaxAge(3600);
+        cookie.setMaxAge(properties.cookieAge());
 
         cookie.setAttribute("SameSite", "Strict");
 

@@ -24,7 +24,7 @@ public record OrderResponse(
         Set<MaintenancePart> parts,
         List<String> systemInfo,
         String performedWork,
-        LocalDate completionDate,
+        LocalDateTime completionDate,
         LocalDateTime createdAt
 ) {
     public static OrderResponse from(WorkOrder order) {

@@ -50,7 +50,7 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
 
         updatePermissionValidator.execute(order, user);
 
-        order.update(dto.title(), dto.description(), dto.orderPriority(), dto.dueDate(), dto.parts(), dto.completionDate(), user);
+        order.update(dto.title(), dto.description(), dto.orderPriority(), dto.dueDate(), dto.parts(), user);
 
         setInfoStockMessage.execute(order);
 

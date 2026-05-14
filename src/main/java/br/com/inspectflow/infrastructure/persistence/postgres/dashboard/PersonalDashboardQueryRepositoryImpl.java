@@ -49,7 +49,7 @@ public class PersonalDashboardQueryRepositoryImpl implements PersonalDashboardQu
 
         String complianceSql = """
                 SELECT
-                    COUNT(*) FILTER (WHERE status = 'APPROVED' AND date <= NOW())  AS on_time,
+                    COUNT(*) FILTER (WHERE date <= NOW())  AS on_time,
                     COUNT(*) FILTER (WHERE date <= NOW())                           AS total
                 FROM inspection_history
                 WHERE inspector_id = :userId
@@ -90,18 +90,18 @@ public class PersonalDashboardQueryRepositoryImpl implements PersonalDashboardQu
     public List<PersonalActivityDto> findActivityByPeriod(UUID userId, String groupBy) {
         String truncUnit = resolveGroupBy(groupBy);
         String sql = """
-                SELECT
-                    TO_CHAR(DATE_TRUNC('%s', ih.date), 'YYYY-MM-DD') AS period,
-                    COUNT(*)                                           AS inspections_done,
-                    COUNT(*) FILTER (WHERE ih.status = 'APPROVED')    AS approved,
-                    COUNT(*) FILTER (WHERE ih.status = 'REJECTED')    AS rejected,
-                    COUNT(*) FILTER (WHERE ih.status = 'PENDING')     AS pending
-                FROM inspection_history ih
-                WHERE ih.inspector_id = :userId
-                  AND ih.date >= NOW() - INTERVAL '90 days'
-                GROUP BY DATE_TRUNC('%s', ih.date)
-                ORDER BY DATE_TRUNC('%s', ih.date)
-                """.formatted(truncUnit, truncUnit, truncUnit);
+            SELECT
+                TO_CHAR(DATE_TRUNC('%s', ih.date), 'YYYY-MM-DD')                              AS period,
+                COUNT(*)                                                                        AS inspections_done,
+                COUNT(*) FILTER (WHERE ih.status = 'Conforme')                                 AS conforming,
+                COUNT(*) FILTER (WHERE ih.status = 'Conforme com observações')                 AS conforming_with_obs,
+                COUNT(*) FILTER (WHERE ih.status = 'Não conforme')                            AS non_conforming
+            FROM inspection_history ih
+            WHERE ih.inspector_id = :userId
+              AND ih.date >= NOW() - INTERVAL '90 days'
+            GROUP BY DATE_TRUNC('%s', ih.date)
+            ORDER BY DATE_TRUNC('%s', ih.date)
+            """.formatted(truncUnit, truncUnit, truncUnit);
 
         @SuppressWarnings("unchecked")
         List<Object[]> rows = em.createNativeQuery(sql)

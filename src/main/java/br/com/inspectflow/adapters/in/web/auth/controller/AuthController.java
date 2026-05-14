@@ -71,8 +71,10 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(Authentication authentication) {
+    public ResponseEntity<UserResponse> me(Authentication authentication,HttpServletResponse response) {
         if (authentication.getName() == null) {
+            Cookie cookie = clearSessionCookie.execute();
+            response.addCookie(cookie);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(findUserByEmailService.execute(authentication.getName()));

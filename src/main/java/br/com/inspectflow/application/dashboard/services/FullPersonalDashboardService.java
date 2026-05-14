@@ -21,7 +21,7 @@ public class FullPersonalDashboardService implements FullPersonalDashboardUseCas
     private final PersonalSummaryUseCase personalSummary;
     private final PersonalActivityUseCase personalActivity;
 
-    @Cacheable(value = "dashboard.personal.full", key = "#userId.toString() + #months")
+    @Cacheable(value = "dashboardPersonalFull", key = "#userId.toString() + #months")
     @Override
     public PersonalDashboardFullDto execute(UUID userId, int months) {
         return new PersonalDashboardFullDto(

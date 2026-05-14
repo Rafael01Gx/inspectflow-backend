@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.stock.models.StockItemUsage;
 import br.com.inspectflow.domain.stock.repositories.StockItemUsageRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class FindAllStockItemUsageService implements FindAllStockItemUsageUseCas
     @Transactional(readOnly = true)
     @Observed(name = "stock.history-list",
             contextualName = "lista histórico de uso de um StockItem")
+    @Cacheable(value = "stockItemUsage", key = "'id:' + #id + ':p:' + #pageRequest.page + ':s:' + #pageRequest.size")
     public PagedResponse<StockItemUsageResponse> execute(Long id,PageRequest pageRequest) {
 
         PagedResponse<StockItemUsage> page = repository.findAllByStockItemId(id,pageRequest);

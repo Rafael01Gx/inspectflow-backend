@@ -2,6 +2,7 @@ package br.com.inspectflow.application.dashboard.services;
 
 import br.com.inspectflow.application.dashboard.dto.KpiSummaryDto;
 import br.com.inspectflow.application.dashboard.ports.in.KpiSummaryUseCase;
+import br.com.inspectflow.domain.equipment.repositories.EquipmentHealthSheetRepository;
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import io.micrometer.observation.annotation.Observed;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class KpiSummaryService implements KpiSummaryUseCase {
     private final InspectionRepository inspectionRepository;
     private final WorkOrderRepository workOrderRepository;
+    private final EquipmentHealthSheetRepository healthSheetRepository;
 
     @Override
     @Cacheable(value = "dashboardKpis", key = "'summary'")
@@ -31,7 +33,7 @@ public class KpiSummaryService implements KpiSummaryUseCase {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime fifteenDaysLater = now.plusDays(15);
-        long upcomingInspectionsCount = inspectionRepository.countByDateBetweenAndStatusNotIn(now, fifteenDaysLater);
+        long upcomingInspectionsCount = healthSheetRepository.countUpcomingInspections(now, fifteenDaysLater);
 
         long completedAndOnTime = inspectionRepository.countCompletedAndOnTimeInspections(now);
         long allInspectionsUpToNow = inspectionRepository.countAllInspectionsUpTo(now);

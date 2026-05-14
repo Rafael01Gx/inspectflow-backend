@@ -12,6 +12,7 @@ import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ public class CreateEquipmentService implements CreateEquipmentUseCase {
     @Transactional
     @Observed(name = "equipment.create",
             contextualName = "Cria novo equipamento")
+    @CacheEvict(value = "findAllEquipmentList", allEntries = true)
     public EquipmentResponse execute(CreateEquipmentRequest dto, MultipartFile file) {
 
         validation.execute(dto.code());

@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +23,11 @@ public class FindAllStockItemsService implements FindAllStockItemsUseCase {
     @Override
     @Observed(name = "stock.list",
             contextualName = "lista itens de estoque")
+    @Cacheable(value = "allStockItem", key = "':p:' + #pageRequest.page + ':s:' + #pageRequest.size")
+    @Transactional(readOnly = true)
     public PagedResponse<StockItemResponse> execute(PageRequest pageRequest) {
-        var page =repository.findAll(pageRequest);
-        return new  PagedResponse<StockItemResponse>(
+        var page = repository.findAll(pageRequest);
+        return new PagedResponse<StockItemResponse>(
                 page.content().stream()
                         .map(StockItemResponse::from)
                         .toList(),
@@ -33,7 +36,7 @@ public class FindAllStockItemsService implements FindAllStockItemsUseCase {
                 page.totalElements(),
                 page.totalPages(),
                 page.isLast()
-                );
+        );
     }
 
     @Override

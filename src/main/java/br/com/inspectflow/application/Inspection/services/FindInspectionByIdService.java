@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.inspection.models.Inspection;
 import br.com.inspectflow.domain.inspection.repositories.InspectionRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class FindInspectionByIdService implements FindInspectionByIdUseCase {
     @Transactional(readOnly = true)
     @Observed(name = "inspection.find-id",
             contextualName = "Busca inspeção por id")
+    @Cacheable(value = "inspectionById", key = "#id.toString()")
     public Inspection execute(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Inspection not found"));
     }

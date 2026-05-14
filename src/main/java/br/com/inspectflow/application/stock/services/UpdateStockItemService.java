@@ -16,6 +16,7 @@ import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,13 @@ public class UpdateStockItemService implements UpdateStockItemUseCase {
 
     @Override
     @Transactional
-    @CacheEvict(value = "dashboardStockItems", key = "'lowQuantity'")
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardStockItems", key = "'lowQuantity'"),
+            @CacheEvict(value = "allStockItemByEquipmentId", allEntries = true),
+            @CacheEvict(value = "allStockItem", allEntries = true),
+            @CacheEvict(value = "stockItemById", key = "#id.toString()"),
+    })
+
     @Observed(name = "stock.update",
             contextualName = "atualiza item de estoque")
     public StockItemResponse execute(Long id, UpdateStockItemRequest dto, MultipartFile file) {

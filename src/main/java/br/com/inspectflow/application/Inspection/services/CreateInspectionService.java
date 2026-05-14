@@ -20,6 +20,7 @@ import br.com.inspectflow.domain.user.repositories.UserRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,11 @@ public class CreateInspectionService implements CreateInspectionUseCase {
 
     @Override
     @Transactional
-    @CacheEvict(value = "dashboardInspections", key = "'summary'")
+    @Caching(evict = {
+            @CacheEvict(value = "inspectionHistory", allEntries = true),
+            @CacheEvict(value = "dashboardInspections", key = "'summary'")
+    })
+
     @Observed(name = "inspection.create",
             contextualName = "cria nova inspeção")
     public Inspection execute(InspectionRequest dto, Authentication auth) {

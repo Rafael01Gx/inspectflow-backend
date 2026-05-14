@@ -13,11 +13,11 @@ public interface MongoInspectionRepository extends MongoRepository<Inspection, U
 
     List<Inspection> findAll();
 
-    @Query(value = "{ 'date' : { $exists: true, $gte: ?0, $lte: ?1 }, 'status' : { $nin: ['COMPLETED', 'CANCELLED'] } }", count = true)
+    @Query(value = "{ 'date' : { $exists: true, $gte: ?0, $lte: ?1 } }", count = true)
     Long countByDateBetweenAndStatusNotIn(LocalDateTime startDate, LocalDateTime endDate);
 
 
-    @Query(value = "{ 'status' : 'COMPLETED', 'date' : { $exists: true, $lte: ?0 } }", count = true)
+    @Query(value = "{ 'date' : { $exists: true, $lte: ?0 } }", count = true)
     Long countCompletedAndOnTimeInspections(LocalDateTime now);
 
     @Query(value = "{ 'date' : { $exists: true, $lte: ?0 } }", count = true)

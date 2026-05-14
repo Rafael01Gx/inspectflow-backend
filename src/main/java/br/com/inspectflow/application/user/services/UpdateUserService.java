@@ -1,17 +1,16 @@
 package br.com.inspectflow.application.user.services;
 
-import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
 import br.com.inspectflow.application.http.handlers.BusinessException;
+import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.dto.UpdateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
-import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.user.ports.in.UpdateUserUseCase;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +27,8 @@ public class UpdateUserService implements UpdateUserUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.update",
+            contextualName = "atualiza informações de usuário")
     public UserResponse execute(UUID id, Authentication auth, UpdateUserRequest dto) {
 
         User userDetails = userRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
@@ -35,7 +36,7 @@ public class UpdateUserService implements UpdateUserUseCase {
         if (!id.equals(userDetails.getId())) {
             log.atInfo().log("Usuário {} tentou alterar dados de segurança de outro usuário: {}", userDetails.getId(), id);
             throw new BusinessException("Você não tem permissão para realizar esta operação.");
-        };
+        }
 
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);

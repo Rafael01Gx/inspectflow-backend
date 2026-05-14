@@ -1,5 +1,6 @@
 package br.com.inspectflow.domain.equipment.repositories;
 
+import br.com.inspectflow.application.equipment.dto.EquipmentSummaryResponse;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.equipment.models.Equipment;
@@ -11,8 +12,8 @@ import java.util.UUID;
 public interface EquipmentRepository {
     Equipment save(Equipment equipment);
     Optional<Equipment> findById(UUID id);
-    List<Equipment> findAll();
-    PagedResponse<Equipment> findAll(PageRequest pageRequest);
+    List<EquipmentSummaryResponse> findAll();
+    PagedResponse<EquipmentSummaryResponse> findAll(PageRequest pageRequest);
     void deleteById(UUID id);
     Optional<Equipment> findByCode(String code);
 

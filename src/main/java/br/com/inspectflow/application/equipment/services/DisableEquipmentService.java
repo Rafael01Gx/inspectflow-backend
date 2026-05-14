@@ -4,7 +4,9 @@ import br.com.inspectflow.application.equipment.ports.in.DisableEquipmentUseCase
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ public class DisableEquipmentService implements DisableEquipmentUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "equipment.disable",
+            contextualName = "Desativa um equipamento")
+    @CacheEvict(value = "findAllEquipmentList", allEntries = true)
     public void execute(UUID id) {
         var equipment = repository.findById(id).orElseThrow(EquipmentNotFoundException::new);
 

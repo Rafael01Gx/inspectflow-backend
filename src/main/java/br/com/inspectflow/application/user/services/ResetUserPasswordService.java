@@ -8,6 +8,7 @@ import br.com.inspectflow.domain.user.models.PasswordResetToken;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.PasswordResetTokenRepository;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class ResetUserPasswordService implements ResetUserPasswordUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "user.reset-password",
+            contextualName = "recupera credenciais de usuário")
     public void execute(String token, ResetPasswordRequest dto) {
         PasswordResetToken resetToken = tokenRepository.findByToken(token).orElseThrow(InvalidTokenException::new);
 

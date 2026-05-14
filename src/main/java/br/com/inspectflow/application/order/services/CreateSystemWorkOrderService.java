@@ -1,15 +1,18 @@
 package br.com.inspectflow.application.order.services;
 
-import br.com.inspectflow.application.notification.templates.CreateOrderNotification;
+import br.com.inspectflow.application.order.events.WorkOrderCreatedEvent;
+import br.com.inspectflow.application.order.events.publisher.WorkOrderEventPublisher;
 import br.com.inspectflow.application.order.ports.in.CreateSystemWorkOrderUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
-import br.com.inspectflow.domain.notification.enums.NotificationType;
 import br.com.inspectflow.domain.order.enums.OrderPriority;
 import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +25,16 @@ import java.util.stream.Collectors;
 public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCase {
 
     private final WorkOrderRepository repository;
-    private final CreateOrderNotification notification;
-
+    private final WorkOrderEventPublisher eventPublisher;
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
+    @Observed(name = "order.create-auto",
+            contextualName = "cria uma ordem de serviço automática")
     public void execute(User user, Equipment equipment, List<String> descriptions) {
 
         String description = descriptions.stream()
@@ -53,6 +61,7 @@ public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCas
                 .build();
         order.addSystemInfo("Esta ordem de serviço foi gerada automaticamente pelo sistema.");
         repository.save(order);
-        notification.execute(order, NotificationType.WARNING);
+
+        eventPublisher.publishCreated(WorkOrderCreatedEvent.from(order));
     }
 }

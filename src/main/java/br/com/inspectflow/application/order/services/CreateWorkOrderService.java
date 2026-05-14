@@ -2,20 +2,23 @@ package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.http.handlers.EquipmentComponentNotFoundExceprion;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
-import br.com.inspectflow.application.notification.templates.CreateOrderNotification;
 import br.com.inspectflow.application.order.dto.CreateOrderRequest;
 import br.com.inspectflow.application.order.dto.OrderResponse;
+import br.com.inspectflow.application.order.events.WorkOrderCreatedEvent;
+import br.com.inspectflow.application.order.events.publisher.WorkOrderEventPublisher;
 import br.com.inspectflow.application.order.helpers.SetInfoStockMessage;
 import br.com.inspectflow.application.order.mappers.WorkOrderMapper;
 import br.com.inspectflow.application.order.ports.in.CreateWorkOrderUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
-import br.com.inspectflow.domain.notification.enums.NotificationType;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +30,19 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
     private final EquipmentRepository equipmentRepository;
     private final UserRepository userRepository;
     private final SetInfoStockMessage setInfoStockMessage;
-    private final CreateOrderNotification notification;
+    private final WorkOrderEventPublisher eventPublisher;
+
+
 
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
+    @Observed(name = "order.create",
+            contextualName = "cria uma ordem de serviço")
     public OrderResponse execute(CreateOrderRequest dto, Authentication authUser) {
 
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);
@@ -48,12 +59,8 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
 
         repository.save(order);
 
-        notification.execute(order, NotificationType.INFO);
+        eventPublisher.publishCreated(WorkOrderCreatedEvent.from(order));
 
         return OrderResponse.from(order);
     }
-
-
-
-
 }

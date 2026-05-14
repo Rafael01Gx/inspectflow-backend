@@ -4,6 +4,7 @@ import br.com.inspectflow.application.http.handlers.EquipmentCodeInvalidExceptio
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -12,6 +13,7 @@ public class UniqueEquipmentCodeValidation implements EquipmentValidator<String>
     private final CodeStringValidator codeStringValidator;
 
     @Override
+    @Transactional(readOnly = true)
     public void execute(String code) {
         codeStringValidator.execute(code);
         if (repository.existsByCode(code)) {

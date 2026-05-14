@@ -26,7 +26,9 @@ public class InspectionMapper {
                         switch (user.getRole()){
                             case ELETRICISTA -> InspectionCategory.ELETRICA;
                             case MECANICO -> InspectionCategory.MECANICA;
-                            default -> InspectionCategory.INSPECAO;
+                            case INSTRUMENTISTA -> InspectionCategory.AFERICAO;
+                            case ADMINISTRADOR -> InspectionCategory.INSPECAO;
+                            default -> throw new IllegalArgumentException("Categoria não suportada para atualização automática");
                         }
                 )
                 .date(LocalDateTime.now())

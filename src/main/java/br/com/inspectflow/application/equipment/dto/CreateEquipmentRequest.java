@@ -4,6 +4,7 @@ import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
+import br.com.inspectflow.domain.inspection.enums.InspectionCategory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -38,8 +39,7 @@ public record CreateEquipmentRequest(
 
         Map<PartCategory, String> consignmentCodes ,
 
-        @NotNull
-        InspectionFrequency inspectionFrequency,
+        Map<InspectionCategory,InspectionFrequency> inspectionFrequency,
 
         @Valid
         Set<CreateEquipmentComponentRequest> components,

@@ -1,13 +1,15 @@
 spring:
   application:
     name: inspectflow
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
   threads:
     virtual:
       enabled: true
 
   profiles:
-    active: ${SPRING_PROFILE:dev}
+    active: ${SPRING_PROFILE_ACTIVE:dev}
 
   servlet:
     multipart:
@@ -20,14 +22,20 @@ spring:
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 30
       minimum-idle: 5
       connection-timeout: 30000
 
   jpa:
+    open-in-view: false
     properties:
       hibernate:
         default_schema: public
+        generate_statistics: true
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 100
 
   flyway:
     enabled: true
@@ -35,10 +43,31 @@ spring:
     locations: classpath:db/migration/prod
 
   data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin}
+      database: inspectflow
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:admin}
 
+  redis:
+    lettuce:
+      pool:
+        enabled: true
+
+  task:
+    execution:
+      thread-name-prefix: inspectflow-async-
+      pool:
+        core-size: 4
+        max-size: 16
+        queue-capacity: 100
+        keep-alive: 60s
+    scheduling:
+      thread-name-prefix: inspectflow-scheduler-
+      pool:
+        size: 4
 
   mail:
     host: smtp.gmail.com
@@ -58,24 +87,31 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+
+# ==============================================================================
+# SERVER
+# ==============================================================================
 server:
   port: 3000
+  compression:
+    enabled: true
+  shutdown: graceful
+
+# ==============================================================================
+# APPLICATION
+# ==============================================================================
 app:
   security:
     jwt:
       issuer: https://inspectflow.rflgx.com.br
-      expiration: ${JWT_EXPIRATION:86400000}  # 24 hours
+      expiration: ${JWT_EXPIRATION:86400}
       cookie-name: ${JWT_COOKIE_NAME:auth-token}
-      cookie-secure: ${COOKIE_SECURE:false}
+      cookie-age: ${COOKIE_AGE:86400}
+      cookie-secure: ${COOKIE_SECURE:true}
       cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
       cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}
       private-key-path: "classpath:keys/private.pem"
       public-key-path: "classpath:keys/public.pem"
-
-  data:
-    mongodb:
-      uri: ${MONGO_URI:mongodb://admin:admin_pass@127.0.0.1:27017/inspectflow?authSource=admin}
-      database: inspectflow
 
   bucket:
     minio:
@@ -86,13 +122,139 @@ app:
       public-url: ${MINIO_PUBLIC_URL:http://minio.rflgx.com.br}
 
   host:
-    api: ${APP_HOST_WEB:http://localhost:8080}
+    api: ${APP_HOST_API:http://localhost:8080}
     web: ${APP_HOST_WEB:https://inspectflow.rflgx.com.br}
 
-
+# ==============================================================================
+# SPRINGDOC
+# ==============================================================================
 springdoc:
   api-docs:
     enabled: false
 
 scalar:
   enabled: false
+
+# ==============================================================================
+# MANAGEMENT / OBSERVABILIDADE
+# ==============================================================================
+management:
+  server:
+    port: 8090
+
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+          - httpexchanges
+          - loggers
+          - env
+          - threaddump
+          - scheduledtasks
+      base-path: /actuator
+
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include: livenessState, ping
+        readiness:
+          include: readinessState, db, mongo, redis
+    info:
+      enabled: true
+
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name:inspectflow}
+      environment: ${ENVIRONMENT:local}
+      version: ${BUILD_VERSION:0.0.1-SNAPSHOT}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        spring.data.repository.invocations: true
+        jdbc.query: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+        jdbc.query: 0.5, 0.95, 0.99
+      slo:
+        http.server.requests: 50ms, 100ms, 200ms, 500ms, 1s
+    enable:
+      jvm: true
+      process: true
+      system: true
+      tomcat: true
+      logback: true
+      hikari: true
+      mongo: true
+      redis: true
+      executor: true
+
+  tracing:
+    enabled: true
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+    propagation:
+      type: W3C
+    baggage:
+      remote-fields:
+        - userId
+        - correlationId
+
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
+      compression: gzip
+      timeout: 10s
+    metrics:
+      export:
+        enabled: false
+
+# ==============================================================================
+# DATASOURCE MICROMETER — PostgreSQL/JDBC
+# ==============================================================================
+datasource:
+  micrometer:
+    enabled: true
+    includes:
+      - connection-id
+      - query
+      - query-parameters
+      - row-count
+      - result-set
+      - statement
+    observation:
+      enabled: true
+
+# ==============================================================================
+# LOGGING
+# ==============================================================================
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [${spring.application.name},%X{traceId:-},%X{spanId:-}] %cyan(%logger{36}) - %msg%n"
+  level:
+    root: INFO
+    io.micrometer: INFO
+    io.opentelemetry: INFO
+    io.opentelemetry.exporter: WARN
+    net.ttddyy.observation: INFO
+    com.google.protobuf: ERROR
+    br.com.inspectflow: INFO
+    io.opentelemetry.sdk: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE

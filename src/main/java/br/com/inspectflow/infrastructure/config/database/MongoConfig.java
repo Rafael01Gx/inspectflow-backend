@@ -8,10 +8,13 @@ import com.mongodb.client.MongoClients;
 import lombok.RequiredArgsConstructor;
 import org.bson.UuidRepresentation;
 import org.springframework.boot.mongodb.autoconfigure.MongoClientSettingsBuilderCustomizer;
+import org.springframework.boot.mongodb.health.MongoHealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingEntityCallback;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -32,13 +35,30 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     }
 
     @Override
+    @Primary
+    @Bean
     public MongoClient mongoClient() {
-        ConnectionString connectionString = new ConnectionString(properties.uri());
-        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                .applyConnectionString(connectionString)
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(properties.uri()))
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .build();
-        return MongoClients.create(mongoClientSettings);
+        return MongoClients.create(settings);
+    }
+
+    @Override
+    protected boolean autoIndexCreation() {
+        return false;
+    }
+
+    @Primary
+    @Bean
+    public MongoTemplate mongoTemplate(MongoClient mongoClient) {
+        return new MongoTemplate(mongoClient, properties.database());
+    }
+
+    @Bean
+    public MongoHealthIndicator mongoHealthIndicator(MongoClient mongoClient) {
+        return new MongoHealthIndicator(mongoClient);
     }
 
     @Bean

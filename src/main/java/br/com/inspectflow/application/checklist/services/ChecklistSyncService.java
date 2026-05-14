@@ -4,6 +4,7 @@ import br.com.inspectflow.application.checklist.mappers.ChecklistMapper;
 import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.checklist.repositories.CheckListRepository;
 import br.com.inspectflow.domain.equipment.models.Equipment;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ public class ChecklistSyncService {
 
     private final CheckListRepository checkListRepository;
 
+    @Observed(name = "checklist.sync",
+    contextualName = "Sincroniza checklist do equipamento")
     public String syncFromEquipment(Equipment equipment) {
         String existingId = equipment.getChecklistId();
 

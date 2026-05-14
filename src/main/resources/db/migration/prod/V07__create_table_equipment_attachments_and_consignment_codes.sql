@@ -13,11 +13,7 @@ CREATE TABLE IF NOT EXISTS equipment_attachments (
     CONSTRAINT uq_equipment_attachment_type UNIQUE (equipment_id, type)
 );
 
--- =============================================================
--- Tabela: equipment_consignment_codes
--- Depende de: equipments (V04)
--- =============================================================
-
+-- Depende de: V04 (equipments)
 CREATE TABLE IF NOT EXISTS equipment_consignment_codes (
     equipment_id      UUID         NOT NULL,
     consignment_value VARCHAR(255),

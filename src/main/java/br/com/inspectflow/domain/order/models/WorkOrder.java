@@ -68,7 +68,10 @@ public class WorkOrder {
     @Column(nullable = false)
     private String performedWork;
 
-    private LocalDate completionDate;
+    private LocalDateTime completionDate;
+
+    @Setter
+    private String stockRequisition;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -83,7 +86,7 @@ public class WorkOrder {
         }
     }
 
-    public void update(String title, String description, OrderPriority orderPriority, LocalDate dueDate, List<MaintenancePart> parts, LocalDate completionDate, User user) {
+    public void update(String title, String description, OrderPriority orderPriority, LocalDate dueDate, List<MaintenancePart> parts, User user) {
         var updateMessage = "Ordem de serviço atualizada/modificada por: " + user.getName() + " - " + user.getRole();
         if (title != null) this.title = title;
         if (description != null) this.description = description;
@@ -112,12 +115,12 @@ public class WorkOrder {
 
     public void completeOrder() {
         this.orderStatus = OrderStatus.COMPLETED;
-        this.completionDate = LocalDate.now();
+        this.completionDate = LocalDateTime.now();
     }
 
     public void cancelOrder() {
         this.orderStatus = OrderStatus.CANCELLED;
-        this.completionDate = LocalDate.now();
+        this.completionDate = LocalDateTime.now();
     }
 
 

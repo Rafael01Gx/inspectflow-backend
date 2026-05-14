@@ -1,8 +1,8 @@
 package br.com.inspectflow.application.email.services;
 
 import br.com.inspectflow.application.email.ports.in.SendEmailUseCase;
+import br.com.inspectflow.infrastructure.config.properties.SpringApplicationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 public class SendEmailService implements SendEmailUseCase {
 
     private final JavaMailSender mailSender;
-    @Value("${spring.mail.from:contato@inspectflow.com.br}")
-    private String emailFrom;
+    private final SpringApplicationProperties springApplicationProperties;
 
     @Override
     public void execute(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(emailFrom);
+        message.setFrom(springApplicationProperties.mail().from());
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);

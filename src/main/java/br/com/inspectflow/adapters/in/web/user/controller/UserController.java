@@ -2,12 +2,7 @@ package br.com.inspectflow.adapters.in.web.user.controller;
 
 import br.com.inspectflow.adapters.in.mappers.PageableRequestMapper;
 import br.com.inspectflow.adapters.in.mappers.UserMapper;
-import br.com.inspectflow.application.auth.dto.RegisterRequest;
-import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
-import br.com.inspectflow.application.user.dto.UpdateUserRequest;
-import br.com.inspectflow.application.user.dto.UpdateUserRoleRequest;
-import br.com.inspectflow.application.user.dto.UpdateUserStatusRequest;
-import br.com.inspectflow.application.user.dto.UserResponse;
+import br.com.inspectflow.application.user.dto.*;
 import br.com.inspectflow.application.user.ports.in.*;
 import br.com.inspectflow.application.user.services.SecurityUser;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -35,7 +30,7 @@ public class UserController {
     private final SearchByNameUseCase searchByName;
     private final UpdateUserRoleUseCase updateUserRole;
     private final UpdateUserStatusUseCase updateUserStatus;
-    private final RegisterUseCase register;
+    private final CreateUserUseCase register;
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal SecurityUser user) {
@@ -76,14 +71,11 @@ public class UserController {
     @PreAuthorize("hasRole('GESTOR')")
     @PostMapping("/new")
     public ResponseEntity<Void> register(
-            @Valid @RequestBody RegisterRequest request,
+            @Valid @RequestBody CreateUserRequest request,
             HttpServletResponse response
     ) {
 
         register.execute(request);
-
-//        Cookie cookie = cookieService.createSessionCookie(result.token());
-//        response.addCookie(cookie);
 
         return ResponseEntity.ok().build();
     }

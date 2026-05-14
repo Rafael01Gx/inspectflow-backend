@@ -71,9 +71,6 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(Authentication authentication) {
-        if (authentication.getName() == null) {
-            return ResponseEntity.ok(null);
-        }
         return ResponseEntity.ok(findUserByEmailService.execute(authentication.getName()));
     }
 }

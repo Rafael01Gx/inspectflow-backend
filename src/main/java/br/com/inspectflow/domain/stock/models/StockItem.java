@@ -1,17 +1,18 @@
 package br.com.inspectflow.domain.stock.models;
 
 import br.com.inspectflow.application.stock.dto.UpdateStockItemRequest;
-import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.common.enums.PartCategory;
+import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.enums.StockType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "stock_items")
@@ -24,10 +25,10 @@ public class StockItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include
     private String name;
 
     @Column(nullable = false)
@@ -45,7 +46,6 @@ public class StockItem {
 
     @Builder.Default
     @ManyToMany(mappedBy = "partsInStock")
-    @JsonBackReference
     @Setter
     private Set<Equipment> linkedEquipments = new HashSet<>();
 
@@ -64,7 +64,7 @@ public class StockItem {
     private LocalDateTime createdAt;
 
 
-    public void addEquipament(Equipment equipment) {
+    public void addEquipment(Equipment equipment) {
         if (equipment == null) return;
         this.linkedEquipments.add(equipment);
         equipment.getPartsInStock().add(this);
@@ -92,13 +92,13 @@ public class StockItem {
     public void update(UpdateStockItemRequest dto, List<Equipment> linkedEquipment ){
         this.update(dto);
         if (linkedEquipment != null) {
-            linkedEquipment.forEach(this::addEquipament);
+            linkedEquipment.forEach(this::addEquipment);
         }
     }
 
     public void addEquipments(List<Equipment> equipmentsToAdd) {
         if (equipmentsToAdd != null) {
-            equipmentsToAdd.forEach(this::addEquipament);
+            equipmentsToAdd.forEach(this::addEquipment);
         }
     }
 

@@ -14,10 +14,10 @@ public record UpdateOrderRequest(
         @NotNull
         UUID id,
 
-        @Size(min = 5, max = 100)
+        @Size(min = 5, max = 100, message = "O título deve ter entre 5 e 100 caracteres")
         String title,
 
-        @Size(min = 5, max = 100)
+        @Size(min = 5, message = "A descrição deve ter no mínimo 5 caracteres")
         String description,
 
         OrderPriority orderPriority,

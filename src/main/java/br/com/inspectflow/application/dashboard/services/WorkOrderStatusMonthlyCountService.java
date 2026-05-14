@@ -5,9 +5,11 @@ import br.com.inspectflow.application.dashboard.dto.WorkOrderStatusMonthlyCountD
 import br.com.inspectflow.application.dashboard.ports.in.WorkOrderStatusMonthlyCountUseCase;
 import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +22,10 @@ public class WorkOrderStatusMonthlyCountService implements WorkOrderStatusMonthl
     private final WorkOrderRepository workOrderRepository;
 
     @Override
-    @Cacheable(value = "dashboardWorkOrders", key = "'monthlyStatusCounts'")
+    @Cacheable(value = "dashboardWorkOrderStatusCounts", key = "'monthlyStatusCounts'")
+    @Transactional(readOnly = true)
+    @Observed(name = "dashboard.order-status-mouthly.count",
+    contextualName = "contagem mensal de ordens por status")
     public List<WorkOrderStatusMonthlyCountDto> execute() {
         List<Object[]> results = workOrderRepository.countWorkOrdersByStatusMonthly();
 

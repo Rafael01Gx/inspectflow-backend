@@ -56,16 +56,19 @@ public class MongoInspectionRepositoryAdapter implements InspectionRepository {
 
     @Override
     public long countByDateBetweenAndStatusNotIn(LocalDateTime startDate, LocalDateTime endDate) {
-        return repository.countByDateBetweenAndStatusNotIn(startDate, endDate);
+        Long result = repository.countByDateBetweenAndStatusNotIn(startDate, endDate);
+        return result != null ? result : 0L;
     }
 
     @Override
     public long countCompletedAndOnTimeInspections(LocalDateTime now) {
-        return repository.countCompletedAndOnTimeInspections(now);
+        Long result = repository.countCompletedAndOnTimeInspections(now);
+        return result != null ? result : 0L;
     }
 
     @Override
     public long countAllInspectionsUpTo(LocalDateTime now) {
-        return repository.countAllInspectionsUpTo(now);
+        Long result = repository.countAllInspectionsUpTo(now);
+        return result != null ? result : 0L;
     }
 }

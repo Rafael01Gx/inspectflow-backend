@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="pt-BR"
+>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { background-color: #1e293b; color: #ffffff; padding: 30px; text-align: center; }
+        .content { padding: 30px; line-height: 1.6; color: #334155; }
+        .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .details-table td { padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+        .details-table td strong { color: #1e293b; }
+        .stock-requisition { background: #fffbe6; border-left: 4px solid #facc15; padding: 15px; margin-top: 20px; border-radius: 4px; color: #78350f; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff !important; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+        .footer { background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 0.8em; color: #94a3b8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2 th:text="|Nova Ordem de Serviço: ${equipmentName} - ${codigoEquipamento}|">Nova Ordem de Serviço</h2>
+    </div>
+    <div class="content">
+        <p>Informamos que uma nova ordem de serviço foi gerada no <strong>InspectFlow</strong>.</p>
+
+        <table class="details-table">
+            <tr>
+                <td><strong>Prioridade:</strong></td>
+                <td th:text="${orderPriority}">[Prioridade da Ordem]</td>
+            </tr>
+            <tr>
+                <td><strong>Data Prevista de Execução:</strong></td>
+                <td th:text="${#temporals.format(dueDate, 'dd/MM/yyyy')}">[Data Prevista]</td>
+            </tr>
+            <tr>
+                <td><strong>Resumo:</strong></td>
+                <td th:text="${title}">[Título da Ordem]</td>
+            </tr>
+            <tr>
+                <td><strong>Descrição:</strong></td>
+                <td th:text="${description}">[Descrição da Ordem]</td>
+            </tr>
+            <tr>
+                <td><strong>Responsável:</strong></td>
+                <td th:text="${assignee}">[Responsável]</td>
+            </tr>
+            <tr>
+                <td><strong>Data de Criação:</strong></td>
+                <td th:text="${#temporals.format(createdAt, 'dd/MM/yyyy HH:mm')}">[Data de Criação]</td>
+            </tr>
+        </table>
+
+        <div th:if="${stockRequisition != null and stockRequisition != ''}" class="stock-requisition">
+            <p><strong>Requisição de Peças:</strong></p>
+            <p th:text="${stockRequisition}"></p>
+        </div>
+
+        <p>Para visualizar os detalhes completos da ordem de serviço, clique no botão abaixo:</p>
+
+        <center>
+            <a th:href="${urlOrdemServico}" class="button">Ver Detalhes da Ordem de Serviço</a>
+        </center>
+
+    </div>
+    <div class="footer">
+        <p>© 2026 InspectFlow - Sistema de Gestão Industrial</p>
+    </div>
+</div>
+</body>
+</html>

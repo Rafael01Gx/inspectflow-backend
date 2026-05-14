@@ -8,11 +8,6 @@ CREATE TABLE IF NOT EXISTS equipment_components (
         FOREIGN KEY (equipment_id) REFERENCES equipments (id) ON DELETE CASCADE
 );
 
--- =============================================================
--- Tabela: inspection_items
--- Depende de: equipment_components
--- =============================================================
-
 CREATE TABLE IF NOT EXISTS inspection_items (
     id                     BIGSERIAL PRIMARY KEY,
     title                  VARCHAR(255) NOT NULL,

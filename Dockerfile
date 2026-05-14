@@ -1,9 +1,11 @@
 # Estágio 1: Build
-FROM eclipse-temurin:25-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /app
 
 # Instala o bash para execução do mvnw
-RUN apk add --no-cache bash
+RUN apt-get update && \
+    apt-get install -y bash && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copia os arquivos de configuração do Maven Wrapper para aproveitar o cache
 COPY .mvn/ .mvn/
@@ -18,11 +20,13 @@ COPY src/ src/
 RUN ./mvnw clean package -DskipTests
 
 # Estágio 2: Runtime
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25-jre-noble
 WORKDIR /app
 
 # Dependências úteis e fuso horário
-RUN apk add --no-cache curl tzdata
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tzdata curl && \
+    rm -rf /var/lib/apt/lists/*
 ENV TZ=America/Sao_Paulo
 
 # Copia o JAR do estágio de build

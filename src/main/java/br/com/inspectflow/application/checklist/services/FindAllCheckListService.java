@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.checklist.models.Checklist;
 import br.com.inspectflow.domain.checklist.repositories.CheckListRepository;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ public class FindAllCheckListService implements FindAllCheckListUseCase {
     private final CheckListRepository repository;
 
     @Override
+    @Observed(name = "checlist.list",
+    contextualName = "lista checklists")
     public PagedResponse<Checklist> execute(PageRequest pageRequest) {
         var page = repository.findAll(pageRequest);
         return new PagedResponse<>(

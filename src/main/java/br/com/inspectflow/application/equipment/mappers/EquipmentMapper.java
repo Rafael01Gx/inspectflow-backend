@@ -8,6 +8,7 @@ import br.com.inspectflow.application.equipment.dto.UpdateEquipmentComponentRequ
 import br.com.inspectflow.application.equipment.dto.UpdateEquipmentRequest;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
+import br.com.inspectflow.domain.equipment.models.EquipmentHealthSheet;
 import br.com.inspectflow.domain.inspection.models.InspectionItem;
 
 import java.util.*;
@@ -24,7 +25,6 @@ public class EquipmentMapper {
                 .type(dto.type())
                 .location(dto.location())
                 .consignmentCodes(dto.consignmentCodes())
-                .inspectionFrequency(dto.inspectionFrequency())
                 .propertyCode(
                         Optional.ofNullable(dto.propertyCode())
                                 .filter(s -> !s.isBlank())
@@ -32,6 +32,14 @@ public class EquipmentMapper {
                                 .orElse(null)
                 )
                 .build();
+
+        EquipmentHealthSheet healthSheet = new EquipmentHealthSheet();
+        healthSheet.setEquipment(equipment);
+
+        if (dto.inspectionFrequency() != null){
+            healthSheet.updateInspectionFrequency(dto.inspectionFrequency());
+        }
+
 
         if (dto.components() != null) {
             dto.components().forEach(compDto -> {
@@ -58,7 +66,7 @@ public class EquipmentMapper {
 
 
             dto.components().forEach(compDto -> {
-                if (compDto.id() == null) {
+                if (compDto.id() == null || !dtoComponentsMap.containsKey(compDto.id())) {
 
                     buildComponentInEquipment(equipment, new CreateEquipmentComponentRequest(
                             compDto.name(),
@@ -67,7 +75,7 @@ public class EquipmentMapper {
                     ));
                 } else {
                     equipment.getComponents().stream()
-                            .filter(c -> c.getId().equals(compDto.id()))
+                            .filter(c -> Objects.equals(c.getId(), compDto.id()))
                             .findFirst()
                             .ifPresent(existingComponent -> {
                                 existingComponent.update(compDto.name(), compDto.category());
@@ -111,7 +119,7 @@ public class EquipmentMapper {
             } else {
                 // ATUALIZAR ITEM EXISTENTE
                 component.getInspectionItem().stream()
-                        .filter(i -> i.getId().equals(itemDto.id()))
+                        .filter(i -> Objects.equals(i.getId(), itemDto.id()))
                         .findFirst()
                         .ifPresent(existingItem -> {
                             existingItem.update(

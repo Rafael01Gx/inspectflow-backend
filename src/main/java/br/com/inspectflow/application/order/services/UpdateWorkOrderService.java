@@ -12,8 +12,11 @@ import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,12 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
+            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+    })
+    @Observed(name = "order.update",
+            contextualName = "atualiza ordem")
     public OrderResponse execute(UUID id, UpdateOrderRequest dto, Authentication authUser) {
 
         idConsistencyValidator.execute(id, dto.id());
@@ -41,7 +50,7 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
 
         updatePermissionValidator.execute(order, user);
 
-        order.update(dto.title(), dto.description(), dto.orderPriority(), dto.dueDate(), dto.parts(), dto.completionDate(), user);
+        order.update(dto.title(), dto.description(), dto.orderPriority(), dto.dueDate(), dto.parts(), user);
 
         setInfoStockMessage.execute(order);
 

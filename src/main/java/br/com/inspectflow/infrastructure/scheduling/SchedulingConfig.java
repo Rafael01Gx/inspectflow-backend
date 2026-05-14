@@ -1,7 +1,7 @@
 package br.com.inspectflow.infrastructure.scheduling;
 
 import br.com.inspectflow.infrastructure.notification.sse.SseEmitterRegistry;
-import br.com.inspectflow.infrastructure.persistence.postgres.repositories.PostgresNotificationRepository;
+import br.com.inspectflow.infrastructure.persistence.postgres.notification.PostgresNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;

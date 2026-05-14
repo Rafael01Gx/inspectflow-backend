@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+management:
+  server:
+    address: 0.0.0.0
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4318/v1/traces}
+
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.1}                 # 10%
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+    io.opentelemetry.exporter: WARN
+    io.opentelemetry: WARN
+
+datasource:
+  micrometer:
+    includes:
+      - connection-id
+      - query      # sem query-parameters
+      - row-count

@@ -2,7 +2,6 @@ package br.com.inspectflow.domain.inspection.models;
 
 import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.models.EquipmentComponent;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,7 +38,6 @@ public class InspectionItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_component_id")
-    @JsonBackReference
     private EquipmentComponent equipmentComponent;
 
     public void update(String title, String description, PartCategory category, Boolean impedimentItem){

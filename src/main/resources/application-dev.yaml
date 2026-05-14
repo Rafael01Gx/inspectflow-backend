@@ -1,19 +1,37 @@
 spring:
   flyway:
     locations: classpath:db/migration/dev
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://127.0.0.1:4318/v1/traces
 
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
+    net.ttddyy.observation: DEBUG
+    com.google.protobuf: ERROR
+    io.opentelemetry: DEBUG
+    io.micrometer.tracing: DEBUG
+    io.micrometer.registry.otlp: WARN
+    io.opentelemetry.exporter.otlp: DEBUG
+    io.opentelemetry.sdk.trace.export: DEBUG
+    io.opentelemetry.exporter.internal: DEBUG
+
 
 app:
   security:
     jwt:
       issuer: http://localhost:4200
-      cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:false}
-      cookie-same-site: ${JWT_COOKIE_SAME_SITE:None}
+      cookie-http-only: false
+      cookie-same-site: Lax
 
   bucket:
     minio:

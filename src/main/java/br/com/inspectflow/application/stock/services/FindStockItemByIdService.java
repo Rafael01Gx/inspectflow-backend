@@ -5,16 +5,24 @@ import br.com.inspectflow.application.http.handlers.StockItemNotFoundException;
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
 import br.com.inspectflow.application.stock.ports.in.FindStockItemByIdUseCase;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FindStockItemByIdService implements FindStockItemByIdUseCase {
     private final StockItemRepository repository;
     private final CreatePresignedUrlUseCase presignedUrl;
 
     @Override
+    @Transactional(readOnly = true)
+    @Observed(name = "stock.find-id",
+            contextualName = "busca item de estoque por id")
+    @Cacheable(value = "stockItemById", key = "#id.toString()")
     public StockItemResponse execute(Long id) {
         var stockItem = repository.findById(id).orElseThrow(StockItemNotFoundException::new);
 

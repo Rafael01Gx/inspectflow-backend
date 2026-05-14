@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- =============================================================== -->
+    <!-- PROPERTIES -->
+    <!-- =============================================================== -->
+
+    <springProperty name="APP_NAME"
+                    source="spring.application.name"
+                    defaultValue="inspectflow"/>
+
+    <springProperty name="LOG_PATH"
+                    source="logging.file.path"
+                    defaultValue="logs"/>
+
+    <springProperty name="ACTIVE_PROFILE"
+                    source="spring.profiles.active"
+                    defaultValue="dev"/>
+
+    <!-- =============================================================== -->
+    <!-- COMMON LOGGERS
+         Níveis adequados para produção — DEBUG/TRACE do Hibernate
+         desativados pois geram volume extremo e expõem dados sensíveis.
+    -->
+    <!-- =============================================================== -->
+
+    <!-- Produção: WARN — evita SQL e bind parameters nos logs -->
+    <logger name="org.hibernate.SQL"          level="WARN"/>
+    <logger name="org.hibernate.orm.jdbc.bind" level="WARN"/>
+
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.mongodb.driver"           level="WARN"/>
+    <logger name="io.micrometer"               level="WARN"/>
+    <logger name="io.opentelemetry.exporter"   level="WARN"/>
+
+    <!-- =============================================================== -->
+    <!-- DEV -->
+    <!-- =============================================================== -->
+
+    <springProfile name="dev">
+
+        <!-- CONSOLE — colorido, legível para desenvolvimento -->
+        <appender name="CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>
+                    %d{yyyy-MM-dd HH:mm:ss.SSS}
+                    %highlight(%-5level)
+                    [${APP_NAME},%X{traceId:-},%X{spanId:-}]
+                    %cyan(%logger{36})
+                    [%thread]
+                    - %msg%n%throwable
+                </pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+
+        <!-- JSON FILE — para Promtail/Loki -->
+        <appender name="JSON_FILE"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <file>${LOG_PATH}/${APP_NAME}.log</file>
+
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>
+                    ${LOG_PATH}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log.gz
+                </fileNamePattern>
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>7</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"${APP_NAME}","environment":"local"}</customFields>
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+                <throwableConverter
+                        class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                    <maxLength>4096</maxLength>
+                    <shortenedClassNameLength>20</shortenedClassNameLength>
+                    <rootCauseFirst>true</rootCauseFirst>
+                </throwableConverter>
+            </encoder>
+
+        </appender>
+
+        <appender name="ASYNC_JSON_FILE"
+                  class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="JSON_FILE"/>
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>false</neverBlock>
+        </appender>
+
+        <!-- Dev: nível DEBUG disponível para desenvolvimento -->
+        <logger name="org.hibernate.SQL"          level="DEBUG"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_JSON_FILE"/>
+        </root>
+
+    </springProfile>
+
+    <!-- =============================================================== -->
+    <!-- PROD
+         - Sem console colorido (saída JSON para stdout → coletada pelo Docker)
+         - queueSize grande + neverBlock=true para não bloquear threads sob carga
+         - Retenção de 30 dias / cap de 10 GB
+         - environment label = "production" para correlação no Grafana
+    -->
+    <!-- =============================================================== -->
+
+    <springProfile name="prod">
+
+        <!-- JSON CONSOLE — Docker captura stdout e encaminha ao log driver -->
+        <appender name="JSON_CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"${APP_NAME}","environment":"production"}</customFields>
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+                <throwableConverter
+                        class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                    <maxLength>4096</maxLength>
+                    <shortenedClassNameLength>20</shortenedClassNameLength>
+                    <rootCauseFirst>true</rootCauseFirst>
+                </throwableConverter>
+            </encoder>
+
+        </appender>
+
+        <!-- JSON FILE — para Promtail/Loki (via volume compartilhado) -->
+        <appender name="JSON_FILE"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <file>${LOG_PATH}/${APP_NAME}.log</file>
+
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>
+                    ${LOG_PATH}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log.gz
+                </fileNamePattern>
+                <maxFileSize>100MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>10GB</totalSizeCap>
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"${APP_NAME}","environment":"production"}</customFields>
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+                <throwableConverter
+                        class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                    <maxLength>4096</maxLength>
+                    <shortenedClassNameLength>20</shortenedClassNameLength>
+                    <rootCauseFirst>true</rootCauseFirst>
+                </throwableConverter>
+            </encoder>
+
+        </appender>
+
+        <!-- ASYNC CONSOLE — neverBlock=true: descarta log em vez de travar thread -->
+        <appender name="ASYNC_JSON_CONSOLE"
+                  class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="JSON_CONSOLE"/>
+            <queueSize>8192</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>true</neverBlock>
+        </appender>
+
+        <!-- ASYNC FILE -->
+        <appender name="ASYNC_JSON_FILE"
+                  class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="JSON_FILE"/>
+            <queueSize>8192</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>true</neverBlock>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC_JSON_CONSOLE"/>
+            <appender-ref ref="ASYNC_JSON_FILE"/>
+        </root>
+
+    </springProfile>
+
+    <!-- =============================================================== -->
+    <!-- TEST -->
+    <!-- =============================================================== -->
+
+    <springProfile name="test">
+
+        <appender name="TEST_CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="WARN">
+            <appender-ref ref="TEST_CONSOLE"/>
+        </root>
+
+    </springProfile>
+
+</configuration>

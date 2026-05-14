@@ -2,6 +2,7 @@ package br.com.inspectflow.infrastructure.config.security;
 
 import br.com.inspectflow.domain.user.enums.Role;
 import br.com.inspectflow.infrastructure.config.properties.AppHostProperties;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     private final CookieBearerTokenResolver tokenResolver;
     private final AppHostProperties appHosts;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -49,12 +51,21 @@ public class SecurityConfig {
                             "/orders/search/equipment/**",
                             "/attachments/**")
                             .permitAll();
+                    request.requestMatchers("/actuator/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/attachments/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/scalar/**").permitAll();
                     request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     request.anyRequest().authenticated();
                         }
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        })
                 )
 
                 .oauth2ResourceServer(oauth ->
@@ -110,9 +121,13 @@ public class SecurityConfig {
 
                 .role(Role.LIDER.name()).implies(Role.ELETRICISTA.name())
                 .role(Role.LIDER.name()).implies(Role.MECANICO.name())
+                .role(Role.LIDER.name()).implies(Role.INSTRUMENTISTA.name())
+
 
                 .role(Role.SUPERVISOR.name()).implies(Role.ELETRICISTA.name())
                 .role(Role.SUPERVISOR.name()).implies(Role.MECANICO.name())
+                .role(Role.SUPERVISOR.name()).implies(Role.INSTRUMENTISTA.name())
+
 
                 .build();
     }

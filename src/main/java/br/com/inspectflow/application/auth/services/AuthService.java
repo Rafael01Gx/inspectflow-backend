@@ -1,33 +1,24 @@
 package br.com.inspectflow.application.auth.services;
 
 import br.com.inspectflow.application.auth.dto.AuthResponse;
-import br.com.inspectflow.application.auth.dto.RegisterRequest;
 import br.com.inspectflow.application.auth.ports.in.AuthenticateUseCase;
 import br.com.inspectflow.application.auth.ports.in.GenerateTokenUseCase;
-import br.com.inspectflow.application.auth.ports.in.RegisterUseCase;
 import br.com.inspectflow.application.auth.ports.out.IdentityProviderPort;
-import br.com.inspectflow.application.email.ports.in.FirstAccessMailUseCase;
-import br.com.inspectflow.application.user.dto.CreateUserRequest;
 import br.com.inspectflow.application.user.dto.UserResponse;
 import br.com.inspectflow.application.user.ports.in.CreateUserUseCase;
 import br.com.inspectflow.application.user.ports.in.FindUserByEmailUseCase;
-import br.com.inspectflow.domain.user.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements AuthenticateUseCase, RegisterUseCase {
+public class AuthService implements AuthenticateUseCase {
 
     private final IdentityProviderPort identityProvider;
     private final GenerateTokenUseCase generateTokenService;
     private final CreateUserUseCase createUserUseCase;
     private final FindUserByEmailUseCase findUserByEmailUseCase;
-    private final FirstAccessMailUseCase firstAccessMail;
 
 
     public AuthResponse authenticate(String email, String password) {
@@ -38,24 +29,6 @@ public class AuthService implements AuthenticateUseCase, RegisterUseCase {
         return new AuthResponse(token, userResponse);
     }
 
-    @Override
-    @Transactional
-    public void execute(RegisterRequest request) {
-        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        UserResponse userResponse = createUserUseCase.execute(
-                new CreateUserRequest(
-                        request.name(),
-                        request.email(),
-                        tempPassword,
-                        Role.valueOf(request.role())
-                )
-        );
-        firstAccessMail.execute(userResponse.email(), userResponse.name(), tempPassword);
-//        Authentication authentication = identityProvider.createAuthentication(userResponse.email(), userResponse.role().toString());
-//        String token = tokenService.generateToken(authentication);
-
-//        return new AuthResponse(token, userResponse);
-    }
 
     @Override
     public AuthResponse execute(String email, String password) {

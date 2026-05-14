@@ -4,8 +4,10 @@ import br.com.inspectflow.application.equipment.ports.in.FindManyEquipmentsByCod
 import br.com.inspectflow.application.equipment.validators.AllEquipmentCodeExistValidator;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public class FindManyEquipmentsByCodeService implements FindManyEquipmentsByCode
 
 
     @Override
+    @Transactional(readOnly = true)
+    @Observed(name = "equipment.list-many-code",
+            contextualName = "Lista equipamentos por código")
     public List<Equipment> execute(List<String> codes) {
         if(codes != null && !codes.isEmpty()){
             validator.execute(codes);

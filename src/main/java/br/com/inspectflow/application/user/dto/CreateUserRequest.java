@@ -8,9 +8,12 @@ import jakarta.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreateUserRequest(
-        @NotBlank String name,
-        @NotBlank @Email String email,
-        @NotBlank String password,
-        @NotNull Role role
+        @NotBlank(message = "O nome é obrigatório")
+        String name,
+        @NotBlank(message = "O email é obrigatório")
+        @Email(message = "O email é obrigatório")
+        String email,
+        @NotNull(message = "A role é obrigatória")
+        Role role
 ) {
 }

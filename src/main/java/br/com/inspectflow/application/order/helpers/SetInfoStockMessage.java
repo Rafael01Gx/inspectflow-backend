@@ -18,6 +18,8 @@ public class SetInfoStockMessage {
 
     public void execute(WorkOrder order) {
 
+        StringBuilder stockRequisition = new StringBuilder();
+
         if (order.getEquipmentName() == null || order.getEquipmentName().isBlank()) {
             return;
         }
@@ -53,10 +55,17 @@ public class SetInfoStockMessage {
                                     + part.quantity()
                                     + ") necessária(s) para a manutenção."
                     );
+                    stockRequisition.append("Descrição do item: ").append(stockItem.getName().toUpperCase())
+                            .append(" - Qntd. necessária: ").append(part.quantity() - stockItem.getQuantity())
+                            .append(stockItem.getSupplierCode().isEmpty() ? "" : " - Código: " + stockItem.getSupplierCode()).append("\n");
                 }
 
             } else {
                 hasNonStockItem = true;
+
+                stockRequisition.append("Descrição do item: ").append(part.name().toUpperCase())
+                        .append(" - Qntd. necessária: ").append(part.quantity()).append(" | Sem cadastro , solicitação externa!".toUpperCase())
+                        .append("\n");
             }
         }
 
@@ -65,5 +74,7 @@ public class SetInfoStockMessage {
                     "Um ou mais itens necessários para a manutenção não estão cadastrados no estoque!"
             );
         }
+        order.setStockRequisition(stockRequisition.toString());
+        return;
     }
 }

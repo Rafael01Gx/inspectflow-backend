@@ -12,8 +12,10 @@ import br.com.inspectflow.application.equipment.validators.AttachmentFileIsValid
 import br.com.inspectflow.application.http.handlers.EquipmentNotFoundException;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +36,9 @@ public class UpdateEquipmentService implements UpdateEquipmentUseCase {
 
     @Override
     @Transactional
+    @CacheEvict(value = "dashboardEquipments", key = "'statusCounts'")
+    @Observed(name = "equipment.update",
+            contextualName = "Atualiza um equipamento")
     public EquipmentResponse execute(UUID id, UpdateEquipmentRequest dto, MultipartFile file) {
        idValidator.execute(id,dto.id());
 

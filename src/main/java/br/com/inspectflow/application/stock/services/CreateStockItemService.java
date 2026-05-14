@@ -11,7 +11,10 @@ import br.com.inspectflow.application.stock.validators.ValidateStockItemDoesNotE
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.stock.models.StockItem;
 import br.com.inspectflow.domain.stock.repositories.StockItemRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,15 +33,20 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
 
     @Override
     @Transactional
+    @Observed(name = "stock.create",
+            contextualName = "cria item de estoque")
+    @Caching(evict = {
+            @CacheEvict(value = "allStockItem",allEntries = true),
+    })
     public StockItemResponse execute(CreateStockItemRequest dto, MultipartFile file) {
         validate.execute(dto);
         StockItem stockItem = StockItemMapper.toStockItem(dto);
 
+        var savedStockItem = stockItemRepository.save(stockItem);
+
         if(dto.linkedEquipmentCodes() != null){
             linkEquipmentsTo(stockItem, dto.linkedEquipmentCodes());
         }
-
-        var savedStockItem = stockItemRepository.save(stockItem);
 
         if (file != null && !file.isEmpty()) {
             fileValidator.execute(file);
@@ -54,9 +62,6 @@ public class CreateStockItemService implements CreateStockItemsUseCase {
         if (equipmentIds == null || equipmentIds.isEmpty()) return;
         List<Equipment> foundEquipments = findManyEquipmentsByCodeService.execute(equipmentIds);
 
-        foundEquipments.forEach(equipment -> {
-            equipment.getPartsInStock().add(stockItem);
-            stockItem.getLinkedEquipments().add(equipment);
-        });
+        foundEquipments.forEach(stockItem::addEquipment);
     }
 }

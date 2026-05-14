@@ -4,8 +4,8 @@ import br.com.inspectflow.domain.common.enums.PartCategory;
 import br.com.inspectflow.domain.equipment.enums.EquipmentStatus;
 import br.com.inspectflow.domain.equipment.enums.EquipmentType;
 import br.com.inspectflow.domain.equipment.enums.InspectionFrequency;
+import br.com.inspectflow.domain.inspection.enums.InspectionCategory;
 import br.com.inspectflow.domain.stock.models.StockItem;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,6 +24,7 @@ public class Equipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(nullable = false)
@@ -44,15 +45,8 @@ public class Equipment {
     @Column(nullable = false)
     private String location;
 
-    @Setter
-    private LocalDateTime lastInspection;
-
-    @Setter
-    private LocalDateTime nextInspection;
-
     @Builder.Default
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Set<EquipmentComponent> components = new HashSet<>();
 
     @Builder.Default
@@ -62,7 +56,6 @@ public class Equipment {
             joinColumns = @JoinColumn(name = "equipment_id"),
             inverseJoinColumns = @JoinColumn(name = "stock_item_id")
     )
-    @JsonManagedReference
     private Set<StockItem> partsInStock = new HashSet<>();
 
     @Setter
@@ -78,8 +71,6 @@ public class Equipment {
     private Set<EquipmentAttachment> attachments = new HashSet<>();
 
 
-    private InspectionFrequency inspectionFrequency ;
-
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "equipment_consignment_codes",joinColumns = @JoinColumn(name = "equipment_id"))
@@ -94,16 +85,29 @@ public class Equipment {
 
     private String propertyCode;
 
+    @OneToOne(
+            mappedBy = "equipment",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private EquipmentHealthSheet healthSheet;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public void update(String name, EquipmentStatus status, EquipmentType type, String location,InspectionFrequency inspectionFrequency,String propertyCode){
+    public void update(String name, EquipmentStatus status, EquipmentType type, String location, Map<InspectionCategory,InspectionFrequency> inspectionFrequency, String propertyCode){
         if (name != null) this.name = name;
         if (status != null) this.status = status;
         if (type != null) this.type = type;
         if (location != null) this.location = location;
-        if (inspectionFrequency != null) this.inspectionFrequency = inspectionFrequency;
+        if (inspectionFrequency != null) {
+            if(this.healthSheet == null){
+                this.healthSheet = new EquipmentHealthSheet();
+                this.healthSheet.setEquipment(this);
+            }
+            this.healthSheet.updateInspectionFrequency(inspectionFrequency);
+        }
         if (propertyCode != null) this.propertyCode = propertyCode.toUpperCase();
 
     }
@@ -122,7 +126,7 @@ public class Equipment {
     public void addPart(StockItem part) {
         if (part == null) return;
         partsInStock.add(part);
-        part.addEquipament(this);
+        part.addEquipment(this);
     }
 
     public void removePart(StockItem part) {
@@ -155,10 +159,23 @@ public class Equipment {
        consignmentCodes.forEach((e,s) -> this.consignmentCodes.put(e,s.toUpperCase()));
     }
 
-    public void updateInspection(){
-        var dateNow = LocalDateTime.now();
-        this.nextInspection = dateNow.plusDays(this.inspectionFrequency.getDias());
-        this.lastInspection = dateNow;
+    public void updateInspection(InspectionCategory category){
+        if (this.healthSheet == null) {
+            this.healthSheet = new EquipmentHealthSheet();
+            this.healthSheet.setEquipment(this);
+        }
+        this.healthSheet.updateInspectionDate(category);
+    }
+
+    public void setHealthSheet(EquipmentHealthSheet healthSheet) {
+        if (healthSheet == null) {
+            if (this.healthSheet != null) {
+                this.healthSheet.setEquipment(null);
+            }
+        } else {
+            healthSheet.setEquipment(this);
+        }
+        this.healthSheet = healthSheet;
     }
 
 }

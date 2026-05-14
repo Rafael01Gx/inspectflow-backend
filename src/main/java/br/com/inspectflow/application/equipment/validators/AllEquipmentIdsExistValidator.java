@@ -5,6 +5,7 @@ import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.equipment.repositories.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class AllEquipmentIdsExistValidator implements EquipmentValidator<List<UU
     private final EquipmentRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public void execute(List<UUID> ids) {
         if (ids == null || ids.isEmpty()) return;
 

@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record JwtProperties(
         Long expiration,
         String cookieName,
+        Integer cookieAge,
         Boolean cookieSecure,
         Boolean cookieHttpOnly,
         String cookieSameSite,

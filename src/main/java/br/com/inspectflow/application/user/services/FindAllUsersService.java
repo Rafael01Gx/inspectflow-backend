@@ -6,8 +6,10 @@ import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import br.com.inspectflow.domain.user.models.User;
 import br.com.inspectflow.domain.user.repositories.UserRepository;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -18,6 +20,9 @@ public class FindAllUsersService implements FindAllUsersUseCase {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
+    @Observed(name = "user.list",
+            contextualName = "listar usuários")
     public PagedResponse<UserResponse> execute(PageRequest pageRequest) {
         PagedResponse<User> pagedUsers = userRepository.findAll(pageRequest);
         

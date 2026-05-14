@@ -35,7 +35,7 @@ public class GenerateTokenService implements GenerateTokenUseCase {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtProperties.issuer())
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(jwtProperties.expiration(), ChronoUnit.SECONDS))
                 .subject(authentication.getName())
                 .claim("roles", authorities)
                 .claim("userId", securityUser.getId().toString())

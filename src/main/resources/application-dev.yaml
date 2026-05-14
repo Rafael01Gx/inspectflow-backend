@@ -31,7 +31,7 @@ app:
     jwt:
       issuer: http://localhost:4200
       cookie-http-only: false
-      cookie-same-site: None
+      cookie-same-site: Lax
 
   bucket:
     minio:

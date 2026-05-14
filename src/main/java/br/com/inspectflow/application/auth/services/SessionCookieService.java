@@ -17,12 +17,12 @@ public class SessionCookieService implements CreateSessionCookieUseCase, ClearSe
     public Cookie execute(String token) {
         var cookie = new Cookie(properties.cookieName(), token);
 
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setHttpOnly(properties.cookieHttpOnly());
+        cookie.setSecure(properties.cookieSecure());
         cookie.setPath("/");
         cookie.setMaxAge(properties.cookieAge());
 
-        cookie.setAttribute("SameSite", "Strict");
+        cookie.setAttribute("SameSite", properties.cookieSameSite());
 
         return cookie;
     }

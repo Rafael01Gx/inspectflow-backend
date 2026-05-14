@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.stock.models.StockItemUsage;
 import br.com.inspectflow.domain.stock.repositories.StockItemUsageRepository;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class CreateStockItemUsageService implements CreateStockItemUsageUseCase 
     @Transactional
     @Observed(name = "stock.history-create",
             contextualName = "adiciona uso do stockItem ao histórico")
+    @CacheEvict(value = "stockItemUsage", allEntries = true)
     public StockItemUsage execute(WorkOrder workOrder, StockItem stockItem, Integer quantityUsed) {
 
         StockItemUsage usage = StockItemUsage.builder()

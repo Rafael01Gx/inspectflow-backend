@@ -5,15 +5,22 @@ import br.com.inspectflow.domain.user.models.User;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PostgresWorkOrderRepository extends JpaRepository<WorkOrder, UUID>, JpaSpecificationExecutor<WorkOrder> {
-    
+
+    @EntityGraph(attributePaths = {
+            "documents",
+            "parts"
+    })
+    Optional<WorkOrder> findById(UUID id);
     @Query("SELECT wo.orderStatus, COUNT(wo) FROM WorkOrder wo GROUP BY wo.orderStatus")
     List<Object[]> countWorkOrdersByStatus();
 

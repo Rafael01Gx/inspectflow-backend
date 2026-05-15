@@ -14,7 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class WorkOrderEventListener {
+public class WorkOrderCreateEventListener {
 
     private final CreateOrderNotification notification;
     private final SendWorkOrderCreatedMailUseCase sendWorkOrderCreatedMailUseCase;

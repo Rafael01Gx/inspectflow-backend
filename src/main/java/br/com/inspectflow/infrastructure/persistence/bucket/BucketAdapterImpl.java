@@ -3,6 +3,7 @@ package br.com.inspectflow.infrastructure.persistence.bucket;
 import br.com.inspectflow.domain.bucket.dto.UploadRequest;
 import br.com.inspectflow.domain.bucket.repository.BucketRepository;
 import br.com.inspectflow.domain.equipment.enums.AttachmentType;
+import br.com.inspectflow.domain.order.enums.OrderAttachmentType;
 import br.com.inspectflow.infrastructure.persistence.bucket.repositories.DeleteFileUseCase;
 import br.com.inspectflow.infrastructure.persistence.bucket.repositories.GetFileUseCase;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -35,6 +37,13 @@ public class BucketAdapterImpl implements BucketRepository {
         upload.execute(fileNameLocalNameUrl, file);
 
         return new UploadRequest(equipmentCode.toLowerCase() +"-"+ attType.getValue().toLowerCase(),fileNameLocalNameUrl) ;
+    }
+
+    @Override
+    public UploadRequest uploadOrderDoc(String equipmentCode, OrderAttachmentType orderAttachmentType, MultipartFile file, UUID orderId) {
+        var fileNameLocalNameUrl= equipmentCode.toLowerCase() +"/"+ orderAttachmentType.name().toLowerCase() +"/"+ orderId.toString();
+        upload.execute(fileNameLocalNameUrl, file);
+        return new UploadRequest(equipmentCode.toLowerCase() +"-"+ orderAttachmentType.name().toLowerCase(),fileNameLocalNameUrl) ;
     }
 
     @Override

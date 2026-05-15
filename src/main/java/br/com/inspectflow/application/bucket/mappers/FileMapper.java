@@ -2,12 +2,22 @@ package br.com.inspectflow.application.bucket.mappers;
 
 import br.com.inspectflow.domain.bucket.dto.DownloadResponse;
 import br.com.inspectflow.domain.equipment.models.EquipmentAttachment;
+import br.com.inspectflow.domain.order.models.OrderAttachment;
 
 import java.io.InputStream;
 
 public class FileMapper {
 
     public static DownloadResponse toResponse(EquipmentAttachment attachment, InputStream file){
+        var filename = attachment.getFileName() + "." + fileExtension(attachment.getContentType());
+        return DownloadResponse.builder()
+                .contentType(attachment.getContentType())
+                .filename(filename)
+                .file(file)
+                .build();
+    }
+
+    public static DownloadResponse toResponse(OrderAttachment attachment, InputStream file){
         var filename = attachment.getFileName() + "." + fileExtension(attachment.getContentType());
         return DownloadResponse.builder()
                 .contentType(attachment.getContentType())

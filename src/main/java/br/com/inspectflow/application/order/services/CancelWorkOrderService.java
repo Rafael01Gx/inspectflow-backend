@@ -34,7 +34,8 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
     @Transactional
     @Caching(evict = {
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
-            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+            @CacheEvict(value = "dashboardKpis", key = "'summary'"),
+
     })
     @Observed(name = "order.cancel",
             contextualName = "cancela uma ordem de serviço")

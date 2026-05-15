@@ -24,7 +24,7 @@ public interface StockItemRepository {
 
     List<StockItem> findByNameStartingWithIgnoreCase(String name);
 
-    List<StockItem>  findTop5ByNameContainingIgnoreCase(String name);
+    List<StockItem>  findTop10ByNameContainingIgnoreCase(String name);
 
     List<StockItem> findByLowQuantity();
 

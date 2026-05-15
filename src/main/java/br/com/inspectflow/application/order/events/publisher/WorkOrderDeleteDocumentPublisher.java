@@ -1,17 +1,19 @@
 package br.com.inspectflow.application.order.events.publisher;
 
-import br.com.inspectflow.application.order.events.WorkOrderCreatedEvent;
+import br.com.inspectflow.application.order.events.WorkOrderDeleteDocumentEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class WorkOrderEventPublisher {
+public class WorkOrderDeleteDocumentPublisher {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public void publishCreated(WorkOrderCreatedEvent order) {
-        eventPublisher.publishEvent(order);
+    public void publishDeleteDocument(WorkOrderDeleteDocumentEvent event){
+        eventPublisher.publishEvent(event);
     }
+
+
 }

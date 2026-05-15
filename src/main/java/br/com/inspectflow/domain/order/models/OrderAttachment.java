@@ -1,32 +1,31 @@
-package br.com.inspectflow.domain.equipment.models;
+package br.com.inspectflow.domain.order.models;
 
 import br.com.inspectflow.domain.common.shared.AbstractAttachment;
-import br.com.inspectflow.domain.equipment.enums.AttachmentType;
+import br.com.inspectflow.domain.order.enums.OrderAttachmentType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+
 @Entity
-@Table(name = "equipment_attachments",
+@Table(name = "work_order_attachments",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"equipment_id", "type"})
+                @UniqueConstraint(columnNames = {"work_order_id", "type"})
         })
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class EquipmentAttachment extends AbstractAttachment<AttachmentType> {
+public class OrderAttachment extends AbstractAttachment<OrderAttachmentType> {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @EqualsAndHashCode.Include
-    private AttachmentType type;
+    private OrderAttachmentType type;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "equipment_id", nullable = false)
-    private Equipment equipment;
-
-
+    @JoinColumn(name = "work_order_id", nullable = false)
+    private WorkOrder order;
 }

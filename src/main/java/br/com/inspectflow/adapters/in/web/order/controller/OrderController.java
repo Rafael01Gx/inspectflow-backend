@@ -61,7 +61,7 @@ public class OrderController {
         return ResponseEntity.ok(findAllWorkOrderByUser.execute(authUser,PageableRequestMapper.fromRequest(pageable)));
     }
 
-    @PreAuthorize("hasRole('SUPERVISOR')")
+    @PreAuthorize("hasRole('LIDER')")
     @GetMapping("/search")
     public ResponseEntity<PagedResponse<OrderResponse>> search(  @ModelAttribute SearchOrderFilterRequest filter,
                                                         Pageable pageable) {

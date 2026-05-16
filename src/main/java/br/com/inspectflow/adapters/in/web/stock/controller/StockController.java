@@ -41,7 +41,7 @@ public class StockController {
 
     @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/all")
-    public ResponseEntity<List<StockItemResponse>> getAll(){
+    public ResponseEntity<List<StockListAllResponse>> getAll(){
         return ResponseEntity.ok(findAllStockItems.execute());
     }
 

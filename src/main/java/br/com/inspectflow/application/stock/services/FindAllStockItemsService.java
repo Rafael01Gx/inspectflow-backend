@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.stock.services;
 
 import br.com.inspectflow.application.stock.dto.StockItemResponse;
+import br.com.inspectflow.application.stock.dto.StockListAllResponse;
 import br.com.inspectflow.application.stock.ports.in.FindAllStockItemsUseCase;
 import br.com.inspectflow.domain.common.pagination.PageRequest;
 import br.com.inspectflow.domain.common.pagination.PagedResponse;
@@ -40,8 +41,10 @@ public class FindAllStockItemsService implements FindAllStockItemsUseCase {
     }
 
     @Override
-    public List<StockItemResponse> execute() {
-        return repository.findAll().stream().map(StockItemResponse::from)
+    @Cacheable(value = "allStockItem", key = "'list'")
+    @Transactional(readOnly = true)
+    public List<StockListAllResponse> execute() {
+        return repository.findAll().stream().map(StockListAllResponse::from)
                 .toList();
     }
 }

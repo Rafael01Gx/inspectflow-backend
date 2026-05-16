@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Builder
-public record StockItemResponse(
+public record StockListAllResponse(
         Long id,
         String name,
         String type,
@@ -17,14 +17,12 @@ public record StockItemResponse(
         String supplierCode,
         List<String> linkedEquipmentCodes,
         String location,
-        Integer minQuantity,
-        String imageUrl
+        Integer minQuantity
 ) {
 
-
-    public static StockItemResponse from(StockItem stockItem) {
+    public static StockListAllResponse from(StockItem stockItem) {
         if (stockItem == null) return null;
-        return StockItemResponse.builder()
+        return StockListAllResponse.builder()
                 .id(stockItem.getId())
                 .name(stockItem.getName())
                 .type(stockItem.getType().name())
@@ -33,12 +31,10 @@ public record StockItemResponse(
                 .supplierCode(stockItem.getSupplierCode())
                 .linkedEquipmentCodes(stockItem.getLinkedEquipments() != null ?
                         stockItem.getLinkedEquipments().stream()
-                                .map(Equipment::getCode)
-                                .toList() : Collections.emptyList())
+                        .map(Equipment::getCode)
+                        .toList() : Collections.emptyList())
                 .location(stockItem.getLocation())
                 .minQuantity(stockItem.getMinQuantity())
-                .imageUrl(stockItem.getImageUrl())
                 .build();
     }
-
 }

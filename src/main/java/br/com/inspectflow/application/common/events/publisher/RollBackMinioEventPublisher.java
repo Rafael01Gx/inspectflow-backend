@@ -1,18 +1,18 @@
-package br.com.inspectflow.application.order.events.publisher;
+package br.com.inspectflow.application.common.events.publisher;
 
-import br.com.inspectflow.application.order.events.WorkOrderRollBackMinio;
+import br.com.inspectflow.application.common.events.RollBackMinio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class WorkOrderRollBackEventPublisher {
+public class RollBackMinioEventPublisher {
 
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public void publishRollBackMinio(WorkOrderRollBackMinio event) {
+    public void publishRollBackMinio(RollBackMinio event) {
         eventPublisher.publishEvent(event);
     }
 }

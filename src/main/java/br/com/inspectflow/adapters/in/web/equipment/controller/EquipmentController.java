@@ -36,6 +36,10 @@ public class EquipmentController {
                 findAllEquipmentService.execute(PageableRequestMapper.fromRequest(pageable))
         );
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<EquipmentListResponse>> getAllList() {
+        return ResponseEntity.ok(findAllEquipmentService.execute());
+    }
 
     @GetMapping("code/{code}")
     public ResponseEntity<EquipmentDetailsResponse> getByCode(@PathVariable @Valid String code) {

@@ -7,9 +7,9 @@ import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException
 import br.com.inspectflow.application.order.dto.OrderAttachmentRequest;
 import br.com.inspectflow.application.order.dto.OrderDetailResponse;
 import br.com.inspectflow.application.order.events.WorkOrderAddDocumentEvent;
-import br.com.inspectflow.application.order.events.WorkOrderRollBackMinio;
+import br.com.inspectflow.application.common.events.RollBackMinio;
 import br.com.inspectflow.application.order.events.publisher.WorkOrderAddDocumentPublisher;
-import br.com.inspectflow.application.order.events.publisher.WorkOrderRollBackEventPublisher;
+import br.com.inspectflow.application.common.events.publisher.RollBackMinioEventPublisher;
 import br.com.inspectflow.application.order.ports.in.UploadOrderAttachmentUseCase;
 import br.com.inspectflow.application.order.validators.OrderAttachmentFileIsValid;
 import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
@@ -36,7 +36,7 @@ public class UploadOrderAttachmentService implements UploadOrderAttachmentUseCas
     private final UploadFileService uploadFileService;
     private final WorkOrderRepository repository;
     private final UserRepository userRepository;
-    private final WorkOrderRollBackEventPublisher publisher;
+    private final RollBackMinioEventPublisher publisher;
     private final WorkOrderAddDocumentPublisher docPublisher;
     private final WorkOrderUpdatePermissionValidator hasPermissionValidator;
 
@@ -69,7 +69,7 @@ public class UploadOrderAttachmentService implements UploadOrderAttachmentUseCas
                 .build();
         order.addDocument(doc);
 
-        publisher.publishRollBackMinio(new WorkOrderRollBackMinio(uploadResponse.fileUrl()));
+        publisher.publishRollBackMinio(new RollBackMinio(uploadResponse.fileUrl()));
         docPublisher.publishWorkOrderAddDocument(WorkOrderAddDocumentEvent.from(order,doc));
         repository.save(order);
 

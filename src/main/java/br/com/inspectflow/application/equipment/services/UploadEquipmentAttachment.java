@@ -1,7 +1,8 @@
 package br.com.inspectflow.application.equipment.services;
 
-import br.com.inspectflow.application.bucket.services.DeleteFileService;
 import br.com.inspectflow.application.bucket.services.UploadFileService;
+import br.com.inspectflow.application.common.events.RollBackMinio;
+import br.com.inspectflow.application.common.events.publisher.RollBackMinioEventPublisher;
 import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
 import br.com.inspectflow.application.equipment.dto.EquipmentAttachmentRequest;
 import br.com.inspectflow.application.equipment.dto.EquipmentDetailsResponse;
@@ -28,9 +29,9 @@ public class UploadEquipmentAttachment implements UploadEquipmentAttachmentUseCa
 
     private final EquipmentRepository repository;
     private final UploadFileService uploadFileService;
-    private final DeleteFileService deleteFileService;
     private final AttachmentFileIsValid fileValidator;
     private final IdConsistencyValidator<UUID> idConsistencyValidator;
+    private final RollBackMinioEventPublisher publisher;
 
 
     @Override
@@ -45,22 +46,16 @@ public class UploadEquipmentAttachment implements UploadEquipmentAttachmentUseCa
 
         UploadRequest uploadResponse = uploadFileService.execute(equipment.getCode(), dto.type(), dto.file());
 
-        try {
-            EquipmentAttachment attachment = AttachmentMapper.toAttachment(dto, uploadResponse);
-            equipment.addAttachment(attachment);
-            repository.saveAndFlush(equipment);
 
-            return EquipmentDetailsResponse.from(equipment);
+        EquipmentAttachment attachment = AttachmentMapper.toAttachment(dto, uploadResponse);
 
-        } catch (Exception e) {
-            try {
-                log.warn("Erro ao salvar anexo no banco. Iniciando compensação no MinIO para o arquivo: {}", uploadResponse.fileUrl());
-                deleteFileService.deleteFile(uploadResponse.fileUrl());
-                log.info("Reversão bem-sucedida. Arquivo removido do MinIO.");
-            } catch (Exception deleteEx) {
-                log.error("FALHA NA REVERSÃO DO PROCESSAMENTO! Arquivo órfão no MinIO: {}", uploadResponse.fileUrl(), deleteEx);
-            }
-            throw e;
-        }
+        equipment.addAttachment(attachment);
+
+        publisher.publishRollBackMinio(new RollBackMinio(uploadResponse.fileUrl()));
+
+        repository.save(equipment);
+
+        return EquipmentDetailsResponse.from(equipment);
+
     }
 }

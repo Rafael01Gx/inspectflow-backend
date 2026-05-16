@@ -49,7 +49,13 @@ public class OrderController {
         return ResponseEntity.ok(findAllWorkOrder.execute(PageableRequestMapper.fromRequest(page)));
     }
 
+    @PreAuthorize("hasRole('LIDER')")
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderListAllResponse>> getAllList() {
+        return ResponseEntity.ok(findAllWorkOrder.execute());
+    }
 
+    @PreAuthorize("hasRole('LIDER')")
     @GetMapping("/{id}")
     public ResponseEntity<OrderDetailResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(findWorkOrderById.execute(id));
@@ -63,7 +69,7 @@ public class OrderController {
 
     @PreAuthorize("hasRole('LIDER')")
     @GetMapping("/search")
-    public ResponseEntity<PagedResponse<OrderResponse>> search(  @ModelAttribute SearchOrderFilterRequest filter,
+    public ResponseEntity<PagedResponse<OrderResponse>> search(@ModelAttribute SearchOrderFilterRequest filter,
                                                         Pageable pageable) {
         return ResponseEntity.ok(searchWorkOrder.execute(filter,PageableRequestMapper.fromRequest(pageable)));
     }

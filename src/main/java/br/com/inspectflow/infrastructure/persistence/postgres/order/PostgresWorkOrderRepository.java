@@ -15,6 +15,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PostgresWorkOrderRepository extends JpaRepository<WorkOrder, UUID>, JpaSpecificationExecutor<WorkOrder> {
+    @Override
+    @EntityGraph(attributePaths = {
+            "assignee"
+    })
+    List<WorkOrder> findAll();
 
     @EntityGraph(attributePaths = {
             "documents",

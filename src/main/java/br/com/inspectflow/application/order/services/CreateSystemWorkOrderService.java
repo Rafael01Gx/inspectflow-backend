@@ -1,7 +1,7 @@
 package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.order.events.WorkOrderCreatedEvent;
-import br.com.inspectflow.application.order.events.publisher.WorkOrderEventPublisher;
+import br.com.inspectflow.application.order.events.publisher.WorkOrderCreateEventPublisher;
 import br.com.inspectflow.application.order.ports.in.CreateSystemWorkOrderUseCase;
 import br.com.inspectflow.domain.equipment.models.Equipment;
 import br.com.inspectflow.domain.order.enums.OrderPriority;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCase {
 
     private final WorkOrderRepository repository;
-    private final WorkOrderEventPublisher eventPublisher;
+    private final WorkOrderCreateEventPublisher eventPublisher;
 
     @Override
     @Transactional

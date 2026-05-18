@@ -5,7 +5,7 @@ import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.order.dto.CreateOrderRequest;
 import br.com.inspectflow.application.order.dto.OrderResponse;
 import br.com.inspectflow.application.order.events.WorkOrderCreatedEvent;
-import br.com.inspectflow.application.order.events.publisher.WorkOrderEventPublisher;
+import br.com.inspectflow.application.order.events.publisher.WorkOrderCreateEventPublisher;
 import br.com.inspectflow.application.order.helpers.SetInfoStockMessage;
 import br.com.inspectflow.application.order.mappers.WorkOrderMapper;
 import br.com.inspectflow.application.order.ports.in.CreateWorkOrderUseCase;
@@ -30,7 +30,7 @@ public class CreateWorkOrderService implements CreateWorkOrderUseCase {
     private final EquipmentRepository equipmentRepository;
     private final UserRepository userRepository;
     private final SetInfoStockMessage setInfoStockMessage;
-    private final WorkOrderEventPublisher eventPublisher;
+    private final WorkOrderCreateEventPublisher eventPublisher;
 
 
 

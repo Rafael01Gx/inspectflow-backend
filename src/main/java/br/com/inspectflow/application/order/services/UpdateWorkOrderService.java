@@ -1,6 +1,7 @@
 package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
+import br.com.inspectflow.application.http.handlers.BusinessException;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
 import br.com.inspectflow.application.order.dto.OrderResponse;
@@ -8,6 +9,7 @@ import br.com.inspectflow.application.order.dto.UpdateOrderRequest;
 import br.com.inspectflow.application.order.helpers.SetInfoStockMessage;
 import br.com.inspectflow.application.order.ports.in.UpdateWorkOrderUseCase;
 import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
+import br.com.inspectflow.domain.order.enums.OrderStatus;
 import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.order.repositories.WorkOrderRepository;
 import br.com.inspectflow.domain.user.models.User;
@@ -36,7 +38,7 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
     @Transactional
     @Caching(evict = {
             @CacheEvict(value = "dashboardWorkOrders", key = "'statusCounts'"),
-            @CacheEvict(value = "dashboardKpis", key = "'summary'")
+            @CacheEvict(value = "dashboardKpis", key = "'summary'"),
     })
     @Observed(name = "order.update",
             contextualName = "atualiza ordem")
@@ -45,6 +47,10 @@ public class UpdateWorkOrderService implements UpdateWorkOrderUseCase {
         idConsistencyValidator.execute(id, dto.id());
 
         WorkOrder order = repository.findById(id).orElseThrow(WorkerOrderNotFoundException::new);
+
+        if (order.getOrderStatus().equals(OrderStatus.CANCELLED) || order.getOrderStatus().equals(OrderStatus.COMPLETED)){
+            throw new BusinessException("Uma ordem de serviço completa ou cancelada, não pode ser alterada.");
+        }
 
         User user = userRepository.findByEmail(authUser.getName()).orElseThrow(UserNotFoundException::new);
 

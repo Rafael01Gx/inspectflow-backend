@@ -18,7 +18,6 @@ public record StockItemResponse(
         List<String> linkedEquipmentCodes,
         String location,
         Integer minQuantity,
-
         String imageUrl
 ) {
 

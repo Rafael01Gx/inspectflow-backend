@@ -21,5 +21,7 @@ public interface WorkOrderRepository {
     List<Object[]> countWorkOrdersByStatus();
     List<Object[]> countWorkOrdersByStatusMonthly();
     Double calculateAverageRepairTimeInHours();
+
+    WorkOrder saveAndFlush(WorkOrder workOrder);
     PagedResponse<WorkOrder> findAllByAssignee(User assignee, PageRequest pageRequest);
 }

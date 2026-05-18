@@ -31,7 +31,7 @@ public interface PostgresStockItemRepository extends JpaRepository<StockItem, Lo
             immutable_unaccent(lower(s.name)), 
             immutable_unaccent(lower(:name))
         ) DESC
-        LIMIT 5
+        LIMIT 10
         """, nativeQuery = true)
     List<StockItem> searchSmart(@Param("name") String name);
 }

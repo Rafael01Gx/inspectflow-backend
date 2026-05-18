@@ -7,6 +7,7 @@ import br.com.inspectflow.domain.common.pagination.PagedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,14 @@ public class StockController {
 
 
     @GetMapping
-    public ResponseEntity<PagedResponse<StockItemResponse>> getAll(@PageableDefault Pageable pageable) {
+    public ResponseEntity<PagedResponse<StockItemResponse>> getAll(@PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
 
         return ResponseEntity.ok(findAllStockItems.execute(PageableRequestMapper.fromRequest(pageable)));
     }
 
     @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/all")
-    public ResponseEntity<List<StockItemResponse>> getAll(){
+    public ResponseEntity<List<StockListAllResponse>> getAll(){
         return ResponseEntity.ok(findAllStockItems.execute());
     }
 

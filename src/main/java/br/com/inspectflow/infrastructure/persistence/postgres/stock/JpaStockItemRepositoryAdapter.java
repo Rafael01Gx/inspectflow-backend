@@ -67,7 +67,7 @@ public class JpaStockItemRepositoryAdapter implements StockItemRepository {
     }
 
     @Override
-    public List<StockItem> findTop5ByNameContainingIgnoreCase(String name) {
+    public List<StockItem> findTop10ByNameContainingIgnoreCase(String name) {
         return repository.searchSmart(name);
     }
 

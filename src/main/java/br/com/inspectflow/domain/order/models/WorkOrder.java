@@ -70,6 +70,15 @@ public class WorkOrder {
 
     private LocalDateTime completionDate;
 
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private Set<OrderAttachment> documents = new HashSet<>();
+
     @Setter
     private String stockRequisition;
 
@@ -110,6 +119,17 @@ public class WorkOrder {
 
     public void removeAllParts() {
         this.parts.clear();
+    }
+
+    public void addDocument(OrderAttachment document){
+        if (document == null) return;
+        this.orderStatus = OrderStatus.IN_PROGRESS;
+        this.documents.add(document);
+        document.setOrder(this);
+    }
+    public void removeDocument(OrderAttachment document){
+        this.documents.remove(document);
+        document.setOrder(null);
     }
 
 

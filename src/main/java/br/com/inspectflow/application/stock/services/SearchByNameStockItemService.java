@@ -20,6 +20,6 @@ public class SearchByNameStockItemService implements SearchByNameStockItemUseCas
     @Observed(name = "stock.find-name",
             contextualName = "busca item de estoque por name")
     public List<StockItemResponse> execute(String name) {
-        return repository.findTop5ByNameContainingIgnoreCase(name).stream().map(StockItemResponse::from).toList();
+        return repository.findTop10ByNameContainingIgnoreCase(name).stream().map(StockItemResponse::from).toList();
     }
 }

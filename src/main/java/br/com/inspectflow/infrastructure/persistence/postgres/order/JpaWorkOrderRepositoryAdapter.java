@@ -84,6 +84,11 @@ public class JpaWorkOrderRepositoryAdapter implements WorkOrderRepository {
     }
 
     @Override
+    public WorkOrder saveAndFlush(WorkOrder workOrder) {
+        return repository.saveAndFlush(workOrder);
+    }
+
+    @Override
     public PagedResponse<WorkOrder> findAllByAssignee(User assignee, PageRequest pageRequest) {
         var page = repository.findAllByAssignee(assignee, PaginationMapper.toPageable(pageRequest));
 

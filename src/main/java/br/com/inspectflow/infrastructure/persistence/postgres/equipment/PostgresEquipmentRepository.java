@@ -23,6 +23,15 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
     })
     Optional<Equipment> findByCode(String code);
 
+    @Override
+    @EntityGraph(attributePaths = {
+            "components",
+            "attachments",
+            "consignmentCodes",
+            "healthSheet"
+    })
+    List<Equipment> findAll();
+
     boolean existsByCode(String code);
 
     List<Equipment> findAllByCodeIn(List<String> code);

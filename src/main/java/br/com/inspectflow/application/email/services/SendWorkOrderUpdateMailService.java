@@ -53,6 +53,7 @@ public class SendWorkOrderUpdateMailService implements SendWorkOrderUpdateMailUs
         try {
             Context context = new Context();
             context.setVariable("numeroOrdemServico", request.numeroOrdemServico());
+            context.setVariable("nomeEquipamento", request.equipmentName()+ "[" + request.equipmentCode() + "]");
             context.setVariable("statusOrdemServico", request.statusOrdemServico());
             context.setVariable("equipmentName", request.equipmentName());
             context.setVariable("tipoDocumento", request.tipoDocumento());
@@ -71,7 +72,7 @@ public class SendWorkOrderUpdateMailService implements SendWorkOrderUpdateMailUs
 
             helper.setFrom(springApplicationProperties.mail().from());
             helper.setBcc(distinctEmails.toArray(new String[0]));
-            helper.setSubject("Atualização na Ordem de Serviço: " + request.numeroOrdemServico());
+            helper.setSubject("Atualização na Ordem de Serviço: " + request.equipmentName() + "[" + request.numeroOrdemServico().toUpperCase() + "]");
             helper.setText(htmlBody, true);
 
             mailSender.send(mimeMessage);

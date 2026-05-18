@@ -6,6 +6,7 @@ public record SendWorkOrderUpdateMailSend(
         String numeroOrdemServico,
         String statusOrdemServico,
         String equipmentName,
+        String equipmentCode,
         OrderAttachmentType tipoDocumento,
         String nomeArquivo,
         String assigneeEmail

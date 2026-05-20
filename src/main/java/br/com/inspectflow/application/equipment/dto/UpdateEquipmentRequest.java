@@ -34,7 +34,9 @@ public record UpdateEquipmentRequest(
         @Valid
         Set<UpdateEquipmentComponentRequest> components,
 
-        String propertyCode
+        String propertyCode,
+        String manufacturer,
+        String model
 
 ) {
 }

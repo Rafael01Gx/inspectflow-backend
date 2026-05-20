@@ -24,7 +24,7 @@ public interface EquipmentRepository {
 
     boolean existsByCode(String code);
 
-    void saveAndFlush(Equipment equipment);
+    Equipment saveAndFlush(Equipment equipment);
 
     List<Equipment> findTop10ByCodeContainingIgnoreCaseOrNameContainingIgnoreCase(String q, String q1);
 

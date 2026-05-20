@@ -84,6 +84,8 @@ public class Equipment {
     private String imageUrl;
 
     private String propertyCode;
+    private String manufacturer;
+    private String model;
 
     @OneToOne(
             mappedBy = "equipment",
@@ -96,7 +98,10 @@ public class Equipment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public void update(String name, EquipmentStatus status, EquipmentType type, String location, Map<InspectionCategory,InspectionFrequency> inspectionFrequency, String propertyCode){
+    public void update(String name, EquipmentStatus status,
+                       EquipmentType type, String location,
+                       Map<InspectionCategory,InspectionFrequency> inspectionFrequency,
+                       String propertyCode,String manufacturer, String model){
         if (name != null) this.name = name;
         if (status != null) this.status = status;
         if (type != null) this.type = type;
@@ -109,6 +114,8 @@ public class Equipment {
             this.healthSheet.updateInspectionFrequency(inspectionFrequency);
         }
         if (propertyCode != null) this.propertyCode = propertyCode.toUpperCase();
+        if (manufacturer != null) this.manufacturer = manufacturer.toUpperCase();
+        if (model != null) this.model = model.toUpperCase();
 
     }
 

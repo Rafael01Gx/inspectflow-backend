@@ -53,4 +53,7 @@ public interface PostgresEquipmentRepository extends JpaRepository<Equipment, UU
 
     @Override
     Page<Equipment> findAll(Pageable pageable);
+
+    @Override
+    Equipment saveAndFlush(Equipment equipment);
 }

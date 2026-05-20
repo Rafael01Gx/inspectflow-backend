@@ -79,8 +79,9 @@ public class JpaEquipmentRepositoryAdapter implements EquipmentRepository {
     }
 
     @Override
-    public void saveAndFlush(Equipment equipment) {
+    public Equipment saveAndFlush(Equipment equipment) {
         repository.saveAndFlush(equipment);
+        return equipment;
     }
 
     @Override

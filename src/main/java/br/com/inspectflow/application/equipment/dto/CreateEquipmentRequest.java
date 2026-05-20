@@ -44,6 +44,8 @@ public record CreateEquipmentRequest(
         @Valid
         Set<CreateEquipmentComponentRequest> components,
 
-        String propertyCode
+        String propertyCode,
+        String manufacturer,
+        String model
 ) {
 }

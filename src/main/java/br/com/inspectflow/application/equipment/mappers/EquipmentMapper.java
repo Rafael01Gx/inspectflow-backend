@@ -31,15 +31,16 @@ public class EquipmentMapper {
                                 .map(String::toUpperCase)
                                 .orElse(null)
                 )
+                .manufacturer(dto.manufacturer())
+                .model(dto.model())
                 .build();
 
         EquipmentHealthSheet healthSheet = new EquipmentHealthSheet();
-        healthSheet.setEquipment(equipment);
 
         if (dto.inspectionFrequency() != null){
             healthSheet.updateInspectionFrequency(dto.inspectionFrequency());
         }
-
+        equipment.setHealthSheet(healthSheet);
 
         if (dto.components() != null) {
             dto.components().forEach(compDto -> {
@@ -50,7 +51,8 @@ public class EquipmentMapper {
     }
 
     public static Equipment fromUpdateDto(Equipment equipment, UpdateEquipmentRequest dto) {
-        equipment.update(dto.name(), dto.status(), dto.type(), dto.location(),dto.inspectionFrequency(),dto.propertyCode());
+        equipment.update(dto.name(), dto.status(), dto.type(),
+                dto.location(),dto.inspectionFrequency(),dto.propertyCode(), dto.manufacturer(), dto.model());
 
         if (dto.components() != null) {
             Map<UUID, UpdateEquipmentComponentRequest> dtoComponentsMap = dto.components().stream()

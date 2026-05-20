@@ -23,7 +23,9 @@ public record EquipmentDetailsResponse(
         Map<PartCategory, String> consignmentCodes,
         String imageUrl,
         String propertyCode,
-        EquipmentHealthSheetResponse healthSheet
+        EquipmentHealthSheetResponse healthSheet,
+        String manufacturer,
+        String model
 ) {
     public static EquipmentDetailsResponse from(Equipment equipment) {
         return new EquipmentDetailsResponse(
@@ -40,7 +42,9 @@ public record EquipmentDetailsResponse(
                 equipment.getConsignmentCodes(),
                 equipment.getImageUrl(),
                 equipment.getPropertyCode(),
-                Optional.ofNullable(equipment.getHealthSheet()).map(EquipmentHealthSheetResponse::from).orElse(null)
+                Optional.ofNullable(equipment.getHealthSheet()).map(EquipmentHealthSheetResponse::from).orElse(null),
+                equipment.getManufacturer(),
+                equipment.getModel()
         );
     }
 }

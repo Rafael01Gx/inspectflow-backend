@@ -60,8 +60,10 @@ public class CreateSystemWorkOrderService implements CreateSystemWorkOrderUseCas
                 .assignee(user)
                 .build();
         order.addSystemInfo("Esta ordem de serviço foi gerada automaticamente pelo sistema.");
-        repository.save(order);
 
         eventPublisher.publishCreated(WorkOrderCreatedEvent.from(order));
+
+        repository.save(order);
+
     }
 }

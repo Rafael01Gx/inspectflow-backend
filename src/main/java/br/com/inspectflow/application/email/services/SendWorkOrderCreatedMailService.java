@@ -69,7 +69,7 @@ public class SendWorkOrderCreatedMailService implements SendWorkOrderCreatedMail
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setFrom(springApplicationProperties.mail().from());
-            helper.setTo(to.toArray(String[]::new));
+            helper.setBcc(to.toArray(String[]::new));
             helper.setSubject("Nova Ordem de Serviço: " + request.equipmentName() + " - " + request.codigoEquipamento());
             helper.setText(htmlBody, true);
 

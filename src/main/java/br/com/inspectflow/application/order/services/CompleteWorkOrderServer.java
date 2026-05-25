@@ -2,9 +2,10 @@ package br.com.inspectflow.application.order.services;
 
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
-import br.com.inspectflow.application.notification.templates.CompleteOrderNotification;
 import br.com.inspectflow.application.order.dto.CompleteOrderRequest;
 import br.com.inspectflow.application.order.dto.OrderResponse;
+import br.com.inspectflow.application.order.events.CompleteWorkOrderEvent;
+import br.com.inspectflow.application.order.events.publisher.CompleteWorkOrderEventPublisher;
 import br.com.inspectflow.application.order.ports.in.CompleteWorkOrderUseCase;
 import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
 import br.com.inspectflow.application.stock.dto.DeductStockRequest;
@@ -32,7 +33,8 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
     private final UserRepository userRepository;
     private final WorkOrderUpdatePermissionValidator updatePermissionValidator;
     private final DeductAllStockItemsService deductAllStockItems;
-    private final CompleteOrderNotification notification;
+    private final CompleteWorkOrderEventPublisher eventPublisher;
+
 
     @Override
     @Transactional
@@ -60,7 +62,9 @@ public class CompleteWorkOrderServer implements CompleteWorkOrderUseCase {
         order.addAllParts(dto.parts());
         order.completeOrder();
 
-        notification.execute(order);
+        eventPublisher.publisherCompleteWorkOrder(CompleteWorkOrderEvent.from(order));
+
+        repository.save(order);
 
         return OrderResponse.from(order);
     }

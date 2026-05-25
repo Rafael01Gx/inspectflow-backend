@@ -23,7 +23,8 @@ public interface PostgresWorkOrderRepository extends JpaRepository<WorkOrder, UU
 
     @EntityGraph(attributePaths = {
             "documents",
-            "parts"
+            "parts",
+            "assignee"
     })
     Optional<WorkOrder> findById(UUID id);
     @Query("SELECT wo.orderStatus, COUNT(wo) FROM WorkOrder wo GROUP BY wo.orderStatus")

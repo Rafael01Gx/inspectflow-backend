@@ -2,9 +2,9 @@ package br.com.inspectflow.application.notification.templates;
 
 import br.com.inspectflow.application.notification.dto.SendNotificationDto;
 import br.com.inspectflow.application.notification.services.NotificationService;
+import br.com.inspectflow.application.order.dto.CancelWorkOrderNotificationDto;
 import br.com.inspectflow.application.utils.FormatDateUtils;
 import br.com.inspectflow.domain.notification.enums.NotificationType;
-import br.com.inspectflow.domain.order.models.WorkOrder;
 import br.com.inspectflow.domain.user.enums.Role;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +21,22 @@ public class CancelOrderNotification {
     private final ObjectMapper mapper = new ObjectMapper();
     private final NotificationService notificationService;
 
-    public void execute(WorkOrder order) {
+    public void execute(CancelWorkOrderNotificationDto order) {
         Set<Role> grupo = Set.of(Role.ADMINISTRADOR,Role.SUPERVISOR,Role.GESTOR,Role.LIDER);
         String message = String.format(
                 "A Ordem de Serviço \"%s\" (%s) foi cancelada.",
-                order.getTitle(),
-                order.getEquipmentName()
+                order.title(),
+                order.equipmentName()
         );
 
         Map<String, Object> metadataMap = new HashMap<>();
-        metadataMap.put("equipamento", order.getEquipmentName());
-        metadataMap.put("titulo", order.getTitle());
-        metadataMap.put("resumo", order.getPerformedWork());
-        metadataMap.put("status_atual", order.getOrderStatus().getValue());
-        metadataMap.put("responsavel", order.getAssignee().getName());
-        metadataMap.put("cancelada_em", order.getCompletionDate() != null ? FormatDateUtils.format(order.getCompletionDate()) : null);
-        metadataMap.put("url", "maintenance/" + order.getId());
+        metadataMap.put("equipamento", order.equipmentName());
+        metadataMap.put("titulo", order.title());
+        metadataMap.put("resumo", order.performedWork());
+        metadataMap.put("status_atual", order.orderStatus());
+        metadataMap.put("responsavel", order.assignee());
+        metadataMap.put("cancelada_em", order.completionDate() != null ? FormatDateUtils.format(order.completionDate()) : null);
+        metadataMap.put("url", "maintenance/" + order.id());
 
         String metadata;
 

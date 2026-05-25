@@ -3,8 +3,9 @@ package br.com.inspectflow.application.order.services;
 import br.com.inspectflow.application.common.validators.IdConsistencyValidator;
 import br.com.inspectflow.application.http.handlers.UserNotFoundException;
 import br.com.inspectflow.application.http.handlers.WorkerOrderNotFoundException;
-import br.com.inspectflow.application.notification.templates.CancelOrderNotification;
 import br.com.inspectflow.application.order.dto.CancelOrderRequest;
+import br.com.inspectflow.application.order.events.CancelWorkOrderEvent;
+import br.com.inspectflow.application.order.events.publisher.CancelWorkOrderEventPublisher;
 import br.com.inspectflow.application.order.ports.in.CancelWorkOrderUseCase;
 import br.com.inspectflow.application.order.validators.WorkOrderUpdatePermissionValidator;
 import br.com.inspectflow.domain.order.models.WorkOrder;
@@ -28,7 +29,8 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
     private final UserRepository userRepository;
     private final IdConsistencyValidator<UUID> idConsistencyValidator;
     private final WorkOrderUpdatePermissionValidator permissionValidator;
-    private final CancelOrderNotification notification;
+    private final CancelWorkOrderEventPublisher eventPublisher;
+
 
     @Override
     @Transactional
@@ -56,8 +58,9 @@ public class CancelWorkOrderService implements CancelWorkOrderUseCase {
 
         workOrder.cancelOrder();
 
+        eventPublisher.publisherCancelWorkOrder(CancelWorkOrderEvent.from(workOrder));
         repository.save(workOrder);
 
-        notification.execute(workOrder);
+
     }
 }

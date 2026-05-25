@@ -45,7 +45,7 @@ public class SendWorkOrderUpdateMailService implements SendWorkOrderUpdateMailUs
             recipientEmails.add(request.assigneeEmail());
         }
 
-        List<String> distinctEmails = new java.util.ArrayList<>(new HashSet<>(recipientEmails));
+        List<String> to = new java.util.ArrayList<>(new HashSet<>(recipientEmails));
 
         String urlOrdemServico = appHosts.web() + "/maintenance/" + request.numeroOrdemServico();
 
@@ -71,14 +71,14 @@ public class SendWorkOrderUpdateMailService implements SendWorkOrderUpdateMailUs
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setFrom(springApplicationProperties.mail().from());
-            helper.setBcc(distinctEmails.toArray(new String[0]));
+            helper.setBcc(to.toArray(new String[0]));
             helper.setSubject("Atualização na Ordem de Serviço: " + request.equipmentName() + "[" + request.numeroOrdemServico().toUpperCase() + "]");
             helper.setText(htmlBody, true);
 
             mailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            log.error("Erro ao enviar e-mail... para: {}", distinctEmails, e);
+            log.error("Erro ao enviar e-mail... para: {}", to, e);
         }
     }
 
